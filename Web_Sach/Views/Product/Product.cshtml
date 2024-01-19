@@ -4,26 +4,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     //var price = Model.Price - (Model.Price * Model.Sale / 100);
     var tg = (List<Web_Sach.Models.EF.ThamGiaViewModels>)ViewBag.NameOuthur;
+    var listImageBook = ViewBag.listImageBook as List<Web_Sach.Models.Image>;
     var count = tg.Count;
     var sachDM = (List<Web_Sach.Models.Sach>)ViewBag.SachDM;
     var sachCungTacGia = (List<Web_Sach.Models.Sach>)ViewBag.SachCungTacGia;
     var countSachCungTacGia = sachCungTacGia.Count;
-    //var imagesMore = (List<string>)ViewBag.ImagesMore; // phải thêm trong csdl "<Imag />"
 
-    //var imagesMoreJson = "";
-    //if (imagesMore != null)
-    //{
-    //    var imagesMoreJsonArray = imagesMore.Select(url => new { url }).ToList();
-    //     imagesMoreJson = Newtonsoft.Json.JsonConvert.SerializeObject(imagesMoreJsonArray);
+    var imgUrl = "";
+    int? sale = 0;
+    var khuyenMai = Model.KhuyenMai_Sach.FirstOrDefault();
+    var img = Model.Images.FirstOrDefault(s => s.IsDefault);
 
-    //}
-
+    if (img != null)
+    {
+        imgUrl = img.Image1;
+    }
 
 }
 
 @section jsFooter{
 
     <script src="~/Scripts/Client/Controller/product.js"></script>
+
 }
 
 
@@ -31,65 +33,155 @@
     <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
     <div class="container">
         <div class="row">
-            <div class="col-md-4 border p-0  position-relative" id="product-info">
-                <img v-bind:src="node" class="img-fluid" alt="" >
+            @if (khuyenMai != null)
+            {// tồn tại sale
+                // kiểm tra thời gian sale
+                if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
+                {
+                    sale = khuyenMai.Sale;
+                }
+                else
+                {
+                    sale = 0;
+                }
+                var price = Model.Price - (Model.Price * sale / 100);
+                <div class="col-md-4 border p-0  position-relative" id="product-info">
+                    <img v-bind:src="node" class="img-fluid" alt="san_pham">
 
-                @*<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@Model.Sale%</span>*@
-                <div class="row" >
-                    @*@if (imagesMore != null)
-        {
-                    <div class="col-sm mt-2" v-for="(img, index) in arrImages">
-
-                        <img v-bind:src="img.url" v-on:click="changeImage(index)" class="img-fluid" />
-                    </div>
-
-        }*@
-              
-
-
-
-                </div>
-            </div>
-
-
-            <div class="col-md-8 ps-5  border">
-                <p class="border-bottom fs-2">@Model.Name</p>
-                <span class="text-danger fs-3">
-                    @*Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")*@
-
-                </span>
-                <span class="ms-2 fs-3" style="color:gray">
-                    <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
-                </span>
-
-                <p>
-                    Tác giả:
-                    @for (int i = 0; i < count; i++)
-                    {
-                        <span class="text-danger">
-                            <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
-                        </span>
-                        if (i < count - 1)
+                    <span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+                    <div class="row">
+                        @if (listImageBook.Count > 0)
                         {
-                            <span>,</span>
+                            <div class="col-sm mt-2" v-for="(img, index) in arrImages">
+
+                                <img v-bind:src="img.Image1" v-on:click="changeImage(index)" class="img-fluid" />
+                            </div>
+
                         }
+
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-8 ps-5  border">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    @if (sale != 0)
+                    {// sale còn hạn sd
+                        <span class="text-danger fs-3">
+
+                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
+
+                        </span>
+                        <span class="ms-2 fs-3" style="color:gray">
+                            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+                        </span>
+                    }
+                    else
+                    {// sale hết hạn sử dụng
+                        <span class="text-danger fs-3">
+
+                            Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
+
+                        </span>
+
                     }
 
-                </p>
-                <p>Khuôn khổ: @Model.KichThuoc</p>
-                <p>Trọng lượng: @Model.TrongLuong</p>
-                <p>Số trang: @Model.SoTrang</p>
-                <div id="buy-amount">
-                    <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                    <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
-                    <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
+
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    <div id="buy-amount">
+                        <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                        <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                        <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+
+                    <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                    <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+
                 </div>
+            }
+            else
+            {// không có sale
+                @*<div class="col-md-4 border p-0  position-relative" id="product-info">
+                    <img v-bind:src="node" class="img-fluid" alt="">
 
-                <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
 
-                <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    <div class="row">
+                        @if (listImageBook.Count > 0)
+                        {
+                            <div class="col-sm mt-2" v-for="(img, index) in arrImages">
 
-            </div>
+                                <img v-bind:src="img.Image1" v-on:click="changeImage(index)" class="img-fluid" />
+                            </div>
+
+                        }
+
+
+
+
+                    </div>
+                </div>*@
+
+
+                <div class="col-md-8 ps-5  border">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    <span class="text-danger fs-3">
+                        Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
+
+                    </span>
+                    @*<span class="ms-2 fs-3" style="color:gray">
+                            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+                        </span>*@
+
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
+
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    <div id="buy-amount">
+                        <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                        <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                        <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+
+                    <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                    <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+
+                </div>
+            }
+
 
         </div>
 
@@ -124,29 +216,87 @@
                 {
                     foreach (var item in sachCungTacGia)
                     {
-                        //var priceSale = item.Price - (item.Price * item.Sale / 100);
-                        <div class="row border-bottom author mb-1">
-                            <div class="col-sm-2 col-md-2 author-img  ">
-                                <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
-                                    @*<img src="@item.Image" class="img-fluid" alt="">*@
-                                </a>
+                        var imgUrlTacGia = "";
+                        int? saleTacGia = 0;
+                        var khuyenMaiTacGia = item.KhuyenMai_Sach.FirstOrDefault();
+                        var imgTacGia = item.Images.FirstOrDefault(s => s.IsDefault);
+
+                        if (imgTacGia != null)
+                        {
+                            imgUrlTacGia = imgTacGia.Image1;
+                        }
+                        // kiểm tra xem có sale
+                        if (khuyenMaiTacGia != null)
+                        {// có sale
+                         //kiểm tra sale còn hạn hay hết hạn
+                            if (DateTime.Now >= khuyenMaiTacGia.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMaiTacGia.KhuyenMai.NgayKeThuc)
+                            {// sale còn hạn
+                                saleTacGia = khuyenMaiTacGia.Sale;
+                            }
+                            else
+                            {// sale hết hạn
+                                saleTacGia = 0;
+                            }
+                            var priceSale = item.Price - (item.Price * saleTacGia / 100);
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
+                                        <img src="@imgUrlTacGia" class="img-fluid" alt="">
+                                    </a>
+
+                                </div>
+
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    @if (saleTacGia != 0)
+                                    {// sale còn hạn
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                                        <span style="color:gray">
+                                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                        </span>
+                                    }
+                                    else
+                                    {// sale hết hạn
+                                        <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+
+                                    }
+
+
+                                </div>
+
+
 
                             </div>
 
-                            <div class="col-sm-10  col-md-10 ">
-                                <p class="text-break">
-                                    @item.Name
-                                </p>
-                                @*<span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>*@
-                                <span style="color:gray">
-                                    <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                                </span>
+
+                        }
+                        else
+                        {// không sale
+
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
+                                        <img src="@imgUrlTacGia" class="img-fluid" alt="san_pham">
+                                    </a>
+
+                                </div>
+
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+
+
+                                </div>
+
+
 
                             </div>
+                        }
 
-
-
-                        </div>
 
 
                     }
@@ -174,23 +324,77 @@
             {
                 if (item.ID != Model.ID)
                 {
-                    //var priceSale = item.Price - (item.Price * item.Sale / 100);
+                    var imgUrlTheLoai = "";
+                    int? saleTheLoai = 0;
+                    var khuyenMaiTheLoai = item.KhuyenMai_Sach.FirstOrDefault();
+                    var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
+
+                    if (imgTheLoai != null)
+                    {
+                        imgUrlTheLoai = imgTheLoai.Image1;
+                    }
+                    // kiểm tra sale tồn tại không
+                    if (khuyenMaiTheLoai != null)
+                    {// sale tồn tại
+                     //kiểm tra sale còn hạn hay hết hạn
+                        if (DateTime.Now >= khuyenMaiTheLoai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMaiTheLoai.KhuyenMai.NgayKeThuc)
+                        {// sale còn hạn
+                            saleTheLoai = khuyenMaiTheLoai.Sale;
+                        }
+                        else
+                        {// sale hết hạn
+                            saleTheLoai = 0;
+                        }
+                        var priceSale = item.Price - (item.Price * saleTheLoai / 100);
+                        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+                            @if (saleTheLoai != 0)
+                            {// sale còn hạn
+                                <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                    <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                                <span class="text-bg-danger">
+                                    <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                </span>
+                            }
+                            else
+                            {// sale hết hạn
 
-                        @*<a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@item.Image" class="img-fluid" alt="san_pham"> </a>*@
-                        @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@item.Sale%</span>*@
-                        <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
-                        @*<span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>*@
-                        <span class="text-bg-danger">
-                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                        </span>
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                    </div>
+                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+
+                            }
+
+
+
+
+                        </div>
+
+                    }
+                    else
+                    {// sale k tồn tại
+                        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
+
+
+                            <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+
+
+                        </div>
+                    }
+
+
+
+
+
 
                 }
 
@@ -219,7 +423,7 @@
     </div>
 
 
-   
+
 
 
 
@@ -249,23 +453,47 @@
 </style>
 
 
-<script>
+@*<script>
     const { createApp, ref } = Vue
 
     createApp({
         data() {
             return {
-                @*node: "@Model.Image",
-                 arrImages: JSON.parse('@Html.Raw(imagesMoreJson)'),*@
+                node: "@imgUrl",
+                arrImages: @listImageBook,
 
             }
         },
+        mounted() {
+            console.log(this.node, this.listImageBook);
+        },
         methods: {
             changeImage(index) {
-                this.node = this.arrImages[index].url;
+                this.node = this.arrImages[index].Image1;
             },
         },
 
     }).mount('#product-info')
-</script>
+</script>*@
 
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                node: "@imgUrl",
+                arrImages:@listImageBook , //
+            }
+        },
+        mounted() {
+            console.log(this.node, this.arrImages);
+        },
+        methods: {
+            changeImage(index) {
+                this.node = this.arrImages[index].Image1;
+            },
+        },
+    }).mount('#product-info11');
+
+</script>

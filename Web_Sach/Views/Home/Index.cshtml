@@ -53,35 +53,57 @@
 
                 @foreach (var item in listProductNew)
                 {
+
                     var imgUrl = "";
                     int? sale = 0;
                     var khuyenMai = item.KhuyenMai_Sach.FirstOrDefault();
                     var img = item.Images.FirstOrDefault(s => s.IsDefault);
+                   
                     if (img != null)
                     {
                         imgUrl = img.Image1;
                     }
+
                     if (khuyenMai != null)
-                    {
-                        sale = khuyenMai.Sale;
-                    }
-                    if (khuyenMai != null)
-                    {// có khuyến mại
+                    {// có khuyến mại 
+                        // kiểm tra xem thời gian khuyến mại
+                        if( DateTime.Now >=  khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
+                        {
+                            sale = khuyenMai.Sale;
+                        }
+                        else
+                        {
+                            sale = 0;
+                        }
                         var priceSale = item.Price - (item.Price * sale / 100);
-                        <div class="col-md-12 product-item my-3 position-relative text-center">
+                <div class="col-md-12 product-item my-3 position-relative text-center">
 
-                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
-                            <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
-                            <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
-                            <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                            <span class="text-bg-danger">
-                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                            </span>
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                    @if (sale != 0)
+                    {// sale còn hạn
+                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                        </div>
+                        <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                        <span class="text-bg-danger">
+                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                        </span>
+                    }
+                    else
+                    {// sale hết hạn
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+
+
+                      
+                        <span class="text-dark">
+                            @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))
+                        </span>
+
+                    }
+
+
+                </div>
                     }
                     else
                     {// không có khuyến mại
@@ -94,8 +116,8 @@
 
 
                             @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
-                            <span class="text-bg-danger">
-                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            <span class="text-dark">
+                               @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))
                             </span>
 
 
@@ -141,27 +163,46 @@
                     {
                         imgUrl = img.Image1;
                     }
-                    if(khuyenMai != null)
-                    {
-                        sale = khuyenMai.Sale;
-                    }
+                   
                     if (khuyenMai != null)
                     {// có sale
+
+                        if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <=khuyenMai.KhuyenMai.NgayKeThuc)
+                        {
+                            sale = khuyenMai.Sale;
+                        }
+                        else
+                        {
+                            sale = 0;
+                        }
                         var priceSale = item.Price - (item.Price * sale / 100);
-                        <div class="col-md-12 product-item my-3 position-relative text-center">
+                <div class="col-md-12 product-item my-3 position-relative text-center">
 
-                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
-                            <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@(item.KhuyenMai_Sach.FirstOrDefault().Sale)%</span>
-                            <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
-                            <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                            <span class="text-bg-danger">
-                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                            </span>
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                    @if (sale != 0)
+                    {// sale còn hạn
+                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                        </div>
+                        <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                        <span class="text-bg-danger">
+                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                        </span>
+                    }
+                    else
+                    {// sale hết  hạn
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+
+
+                        <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+                        
+
+                    }
+
+
+
+                </div>
                     }
                     else
                     {// chưa có sale
@@ -173,8 +214,8 @@
 
 
                             @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
-                            <span class="text-bg-danger">
-                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            <span class="text-dark">
+                               @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))
                             </span>
 
 

@@ -22,6 +22,12 @@ namespace Web_Sach.Controllers
         //[Route("chi-tiet/{metatilte}-{detailId}")]
         public ActionResult Product(int detailId)
         {
+            // lấy nhiều ảnh từ bảng Images
+            var imagesBook = from img in db.Images
+                             join s in db.Saches on img.MaSP equals s.ID
+                             where img.MaSP == detailId
+                             select img;
+            ViewBag.listImageBook = imagesBook.ToList();
 
             // lấy tên tác giả
             var tacgia = (from s in db.Saches
@@ -72,22 +78,6 @@ namespace Web_Sach.Controllers
                              select s;
                 ViewBag.SachDM = sachDM.ToList();
                 ViewBag.NameDM = danhmuc.FirstOrDefault();
-
-
-                // Kiểm tra xem thuộc tính ImagesMore có giá trị hay không
-                //if (!string.IsNullOrEmpty(productDetail.MoreImages))
-                //{
-                //    // Tạo một đối tượng XDocument từ thuộc tính ImagesMore
-                //    XDocument xdoc = XDocument.Parse(productDetail.MoreImages);
-
-                //    // Truy xuất danh sách các đường dẫn ảnh từ XDocument
-                //    var imagePaths = xdoc.Root.Elements("Images")
-                //                             .Select(e => e.Value)
-                //                             .ToList();
-
-                //    // In danh sách đường dẫn ảnh
-                //    ViewBag.ImagesMore = imagePaths;
-                //}
 
 
 
