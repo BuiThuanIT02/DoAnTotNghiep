@@ -1,0 +1,454 @@
+﻿@model Web_Sach.Models.Sach
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var bookImages = (List<Web_Sach.Models.Image>)ViewBag.bookImages;
+    bool checkImage = false;
+    var countImage = 0;
+    if(bookImages != null)
+    {// có ảnh
+        checkImage = true;
+        countImage = bookImages.Count;
+    }
+
+}
+
+@section jsFooter{
+    <script>
+        //$('#btnSelectImage').on('click', function (e) {// jquery
+        //    e.preventDefault();
+        //    var finder = new CKFinder();
+        //    finder.selectActionFunction = function (url) {// function này là call back của selectActionFunction
+        //        $('#txtImage').val(url);
+        //    };
+        //    finder.popup(); // hiện thỉ cửa sổ lấy ảnh
+        //})
+
+        //var editor = CKEDITOR.replace('txtContent', {
+        //    customConfig: "/Assets/plugins/ckeditor/config.js",
+
+        //});
+
+
+        // update hình ảnh 
+
+        // hình ảnh cho giao diện người dùng
+        $('#iTaiAnh').on('click', function (e) {// jquery
+            e.preventDefault();
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (url) {// function này là call back của selectActionFunction
+                addImageProduct(url);
+
+
+            };
+            finder.popup(); // hiện thỉ cửa sổ lấy ảnh
+        });
+        // kích nút tải ảnh lên
+        function addImageProduct(url) {
+            var temp = $('#tCurrentId').val();// id
+            var str = "";
+            var currentId = parseInt(temp) + 1; // id
+            if (currentId == 1) {
+                str += `
+                 <tr id="row_${currentId}">
+                     <td class="text-center stt">${currentId}</td>
+                     <td class="text-center">
+                     <img src="${url}" class="img-fluid" width="80" />
+                     <input type='hidden' value="${url}" name="Images" />
+                     </td>
+                     <td class="text-center">
+                    <input type="radio" name="rDefault" value="${currentId}" checked/>
+                      </td>
+                     <td class="text-center">
+                     <a href="#" data-id="${currentId}" class="btn  btn-danger btnXoaAnh">Xóa</a>
+                      </td>
+               </tr>`;
+            }
+            else {
+                str += `
+                 <tr id="row_${currentId}">
+                     <td class="text-center stt ">${currentId}</td>
+                     <td class="text-center ">
+                     <img src="${url}" class="img-fluid" width="80" />
+                     <input type='hidden' value="${url}" name="Images" />
+                     </td>
+                     <td class="text-center ">
+                     <input type="radio" name="rDefault" value="${currentId}" />
+                      </td>
+                      <td class="text-center ">
+                    <a href="#" data-id="${currentId}" class="btn  btn-danger btnXoaAnh">Xóa</a>
+                     </td>
+                 </tr>`;
+            }
+
+            $('#tbHtml').append(str);
+            $('#tCurrentId').val(currentId);
+            //Xóa
+            //$('#tbHtml tr td a').each(function () {
+            //    $(this).click(function () {
+            //        var conf = confirm("Bạn có muốn xóa ảnh này không !");
+            //        if (conf === true) {
+            //            var _id = $(this).data('id');
+            //            /* $('#row_' + _id).remove();*/
+            //            $('#row_' + _id).fadeTo('fast', 0, function () {
+            //                $(this).slideUp('fast', function () {
+            //                    $(this).remove();
+            //                });
+            //            });
+            //            var temp = $('#tCurrentId').val();
+
+            //            var currentId = parseInt(temp) - 1; // id
+            //            $('#tCurrentId').val(currentId);
+            //        }
+            //    });
+
+            //});
+
+
+        }
+
+
+
+
+        $(document).ready(function () {
+            //var editor = CKEDITOR.replace('txtContent', {
+            //    customConfig: "/Assets/plugins/ckeditor/config.js",
+
+            //}); // ckeditor
+
+            // xóa ảnh
+            $('body').on('click', '.btnXoaAnh', function () {
+                var conf = confirm("Bạn có muốn xóa ảnh này không !!");
+                if (conf === true) {
+                    var id = $(this).data('id');
+                    console.log("id:", typeof id);
+                    $('#row_' + id).fadeTo('fast', 1, function () {
+                        $(this).slideUp('fast', function () {
+                            $(this).remove();
+                            var currentId;
+                            // Cập nhật số thứ tự của tất cả các hàng
+                            $('tr[id^="row_"]').each(function (index) {
+                                currentId = index + 1;
+                                console.log(`index: ${index}`);
+                                $(this).find('.btnXoaAnh').data('id', currentId);
+                                $(this).attr('id', 'row_' + currentId);
+                                $(this).find('.stt').text(currentId);
+                                $(this).find('[name="rDefault"]').val(currentId);
+                                console.log(`CurrentId: ${currentId}`);
+                                console.log("Xóa", $(this).find('.btnXoaAnh').data('id'));
+
+                            });
+
+                            // Cập nhật giá trị của trường input hidden
+                            $('#tCurrentId').val(currentId);
+
+
+
+
+
+
+                        });
+                    });
+                    //var temp = $('#tCurrentId').val();
+
+                    //var currentId = parseInt(temp) -1; // id
+                    //$('#tCurrentId').val(currentId);
+
+                }
+            });
+        });
+
+
+    </script>
+
+}
+<h2 style="text-align:center">SỬA BẢN GHI SÁCH</h2>
+
+<div class="wrad">
+    <div class="container mt-3">
+
+        @using (Html.BeginForm("Update", "Product", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card">
+                <div class="card-header">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#addUser">Thêm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#addImage">Ảnh</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    @*add*@
+                    <div class="card-body container tab-pane active" id="addUser">
+
+                        <div class="form-group mb-3 ">
+                            @Html.LabelFor(model => model.DanhMucID, new { @class = "control-label col-md-2 " })
+                            <div class="col-md-10 ">
+                                @Html.DropDownListFor(model => model.DanhMucID, null, new { htmlAttributes = new { @class = "form-control " }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.DanhMucID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @*<div class="form-group  mb-3">
+                                @Html.LabelFor(model => model.MoTa, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.MoTa, new { htmlAttributes = new { @class = "form-control" }, id = "txtContent" })
+                                    @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+                                </div>
+                            </div>*@
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.MoTa, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(model => model.MoTa, new { @class = "form-control", @row = "20", @column = "10" })
+                                @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.KichThuoc, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.KichThuoc, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.KichThuoc, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.TrongLuong, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.TrongLuong, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.TrongLuong, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.NhaCungCapID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.NhaCungCapID, null, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.NhaCungCapID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.SoTrang, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.SoTrang, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.SoTrang, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.NgayCapNhat, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.NgayCapNhat, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+                                @Html.ValidationMessageFor(model => model.NgayCapNhat, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.NhaXuatBanID, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.NhaXuatBanID, null, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.NhaXuatBanID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.MetaTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.MetaTitle, new { htmlAttributes = new { @class = "form-control" }, style = "width:50%" })
+                                @Html.ValidationMessageFor(model => model.MetaTitle, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group  mb-3">
+                            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.Status)
+                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card-footer">
+                            <div class="form-group ">
+                                <div class="row flex-row justify-content-around   me-5">
+
+                                    <button type="submit" class="btn  btn-dark w-25 ml-5" id="creat">Tạo</button>
+
+                                    <button type="reset" class="btn w-25 btn-dark">Xóa</button>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    @*ảnh*@
+                    <div id="addImage" class="container tab-pane fade">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align:right;">
+                                <input type="button" class="btn btn-info" id="iTaiAnh" value="Tải ảnh" />
+                            </div>
+                            <div class="col-md-12">
+                                <table class="table table-hover table-bordered" id="tbAnhSanPham">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th class="text-center" width="50%">Ảnh</th>
+                                            <th class="text-center">Ảnh đại diện</th>
+                                            <th class="text-center">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbHtml">
+                                        @if (checkImage)
+                                        {
+                                            for (int i = 0; i < bookImages.Count(); i++)
+                                            {
+                                                if (bookImages[i].IsDefault == true)
+                                                {
+
+                                                    <tr id="row_@(i + 1)">
+                                                        <td class="text-center stt">@(i+1)</td>
+                                                        <td class="text-center">
+                                                            <img src="@bookImages[i].Image1" class="img-fluid" width="80" />
+                                                            <input type='hidden' value="@bookImages[i].Image1" name="Images" />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <input type="radio" name="rDefault" value="@(i+1)" checked />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a href="#" data-id="@(i+1)" class="btn  btn-danger btnXoaAnh">Xóa</a>
+                                                        </td>
+                                                    </tr>
+
+                                                }
+                                                else
+                                                {
+                                                    <tr id="row_@(i + 1)">
+                                                        <td class="text-center stt ">@(i+1)</td>
+                                                        <td class="text-center ">
+                                                            <img src="@bookImages[i].Image1" class="img-fluid" width="80" />
+                                                            <input type='hidden' value="@bookImages[i].Image1" name="Images" />
+                                                        </td>
+                                                        <td class="text-center ">
+                                                            <input type="radio" name="rDefault" value="@(i+1)" />
+                                                        </td>
+                                                        <td class="text-center ">
+                                                            <a href="#" data-id="@(i+1)" class="btn  btn-danger btnXoaAnh">Xóa</a>
+                                                        </td>
+                                                    </tr>
+
+
+                                                }
+
+                                            }
+
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                                @if (checkImage)
+                                {
+                                    <input type="hidden" id="tCurrentId" value="@countImage" />
+                                }
+                                else
+                                {
+                                    <input type="hidden" id="tCurrentId" value="0" />
+                                }
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script src="~/Assets/plugins/ckeditor/ckeditor.js"></script>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

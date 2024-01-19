@@ -1,0 +1,221 @@
+﻿@model PagedList.IPagedList<Web_Sach.Models.Sach>
+@using PagedList.Mvc;
+@using System.Web.Mvc.Ajax;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section jsFooter{
+
+
+    <script src="~/Scripts/Admin/Controller/productController.js"></script>
+
+}
+<h2 style="text-align:center">QUẢN LÝ SẢN PHẨM</h2>
+@*card mb-4 w-100*@
+<div class="card mb-4 " style="border:none">
+    <!--card-header-->
+
+    <div class="card-header">
+
+        @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+        {
+            <div class="row justify-content-sm-end">
+
+                <div class="col-sm-2 ">
+                    <input type="text" value="@ViewBag.Search" name="search" />
+
+                </div>
+                <div class="col-sm-2 ">
+                    <button type="submit">Tìm kiếm</button>
+
+                </div>
+
+            </div>
+        }
+
+
+
+
+
+    </div>
+
+
+
+    <div class="card-body">
+        <div class="container-fluid">
+
+            <a href="/Admin/Product/Create">Thêm mới</a>
+            <table class="table table-sm table-bordered " style="text-align:center;vertical-align:middle;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Ảnh</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Kích thước</th>
+                        <th>Trọng lượng</th>
+                        <th>Số trang</th>
+                      
+                        <th>Meta Title</th>
+
+                        <th>Trạng thái</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+                            <td>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <a href="#" class="btn-images" data-id="@item.ID">Ảnh</a>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <a href="/Admin/Product/Update/@item.ID" style="text-decoration:none;color:green">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            Sửa
+                                        </a>
+                                    </div>
+                                    <div class="col-xs-4">
+
+                                        <span style="text-decoration:none ;color:red">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                                         {
+                                             Confirm = "Bạn có muốn xóa bản ghi này!!",
+                                            OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                             HttpMethod = "Delete"
+                                         },
+                                         new
+                                          {
+                                               @class = "btn text-danger p-0"
+                                          }
+
+                                                )
+
+                                        </span>
+                                    </div>
+
+                                </div>
+                               
+                                
+
+
+
+
+
+
+                            </td>
+                            <td>@item.Name</td>
+                            <td class="text-center w-50">
+                                @if (item.Images.Count > 0)
+                                {
+                                    <img src="@item.Images.FirstOrDefault(x=>x.IsDefault==true).Image1" class="img-fluid w-25" />
+                                }
+
+
+                            </td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+
+                            @*<td>@item.Sale</td>*@
+
+                            <td>@item.KichThuoc </td>
+                            <td>@item.TrongLuong </td>
+                            <td>@item.SoTrang </td>
+                          
+                            <td>@item.MetaTitle </td>
+                          
+
+                            @if (item.Status)
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-start-text text-success " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+
+                            }
+                            else
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-block-text text-danger " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+                            }
+                        </tr>
+                    }
+
+
+
+                </tbody>
+
+            </table>
+
+
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @ViewBag.Search }))
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!--<div class="modal fade" id="imagesManage" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quản lý ảnh</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div--> @*id="imageList"*@ <!--class="imageList" style="margin:5px">
+
+                </div>
+
+                <input type="button"--> @*id="btnChooImages"*@ <!--class="btn btn-primary btnChooImages" value="Chọn ảnh" />
+                <input type="hidden" id="hidProductID" value="0" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btnSaveImages"--> @*id="btnSaveImages"*@<!-->Save</button>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script src="~/Assets/plugins/ckeditor/ckeditor.js"></script>
