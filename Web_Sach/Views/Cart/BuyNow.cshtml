@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "BuyNow";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    double total = 0;
+   
 
     var userPaymeny = (Web_Sach.Session.UserLoginSession)ViewBag.user;
 
@@ -13,46 +13,81 @@
 
 <div class=" d-block my-5 p-0">
    
-        <table class="table table-bordered w-100 table-striped ">
-            <tr class="text-center">
+    <table class="table table-bordered w-100 table-striped ">
+        <tr class="text-center">
 
-                <th>Mã sản phẩm</th>
-                <th>Tên sản phẩm</th>
-                <th>Ảnh sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Đơn giá</th>
-                <th>Thành tiền</th>
+            <th>Mã sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Ảnh sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
 
-            </tr>
+        </tr>
 
 
-            @{ 
-//var price = Model.sach.Price - (Model.sach.Price * (decimal)Model.sach.Sale / 100);
-//total += Convert.ToInt32(Model.Quantity * price);
+        @{ 
+            double total = 0;
+            var imgUrl = "";
+            int? sale = 0;
+            var khuyenMai = Model.sach.KhuyenMai_Sach.FirstOrDefault();
+            var img = Model.sach.Images.FirstOrDefault(s => s.IsDefault);
+            if (img != null)
+            {
+                imgUrl = img.Image1;
             }
-                
+            if (khuyenMai != null)
+            {
+                sale = khuyenMai.Sale;
+            }
+            var price = Model.sach.Price;
+            var priceSale = Model.sach.Price - (Model.sach.Price * sale / 100);
+           
+        }
 
 
-                <tr class="text-center " style="vertical-align: middle;">
-                    <td class="p-0">@Model.sach.ID</td>
-                    <td>@Model.sach.Name</td>
-                    <td>
-                        @*<img src="@Model.sach.Image" width="100px" />*@
-                    </td>
-                    <td>
-                        <span>@Model.Quantity</span>
-                    </td>
-                    @*<td>@price.GetValueOrDefault(0).ToString("N0")</td>
-                    <td>@((Model.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>*@
+        @if (khuyenMai != null)
+        {// có sale
+            total += Convert.ToInt32(Model.Quantity * priceSale);
+            <tr class="text-center " style="vertical-align: middle;">
+                <td class="p-0">@Model.sach.ID</td>
+                <td>@Model.sach.Name</td>
+                <td>
+                    <img src="@imgUrl" width="100px" alt="san_pham" />
+                </td>
+                <td>
+                    <span>@Model.Quantity</span>
+                </td>
+                <td>@priceSale.GetValueOrDefault(0).ToString("N0")</td>
+                <td>@((Model.Quantity * priceSale.GetValueOrDefault(0)).ToString("N0"))</td>
 
-                </tr>
-
-
-
-            
-            <tr>
-                <th colspan="6" style="text-align:right " class="text-dark fs-5 ">Tổng tiền:@total.ToString("N0")</th>
             </tr>
+        }
+        else
+        {// không có sale
+            total += Convert.ToInt32(Model.Quantity * price);
+            <tr class="text-center " style="vertical-align: middle;">
+                <td class="p-0">@Model.sach.ID</td>
+                <td>@Model.sach.Name</td>
+                <td>
+                    <img src="@imgUrl" width="100px" alt="san_pham" />
+                </td>
+                <td>
+                    <span>@Model.Quantity</span>
+                </td>
+                <td>@price.GetValueOrDefault(0).ToString("N0")</td>
+                <td>@((Model.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>
+
+            </tr>
+        }
+
+
+
+
+
+        <tr>
+            <th colspan="6" style="text-align:right " class="text-dark fs-5 ">Tổng tiền:@total.ToString("N0")</th>
+        </tr>
 
 
 
@@ -60,7 +95,7 @@
 
 
 
-        </table>
+    </table>
 
 
 

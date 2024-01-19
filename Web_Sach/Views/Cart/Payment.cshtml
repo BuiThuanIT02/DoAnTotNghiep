@@ -13,38 +13,75 @@
     {
     <table class="table table-bordered w-100 table-striped ">
         <tr class="text-center">
-   
+
             <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
             <th>Ảnh sản phẩm</th>
             <th>Số lượng</th>
             <th>Đơn giá</th>
             <th>Thành tiền</th>
-           
-        </tr>
 
+        </tr>
 
         @foreach (var item in Model)
         {
 
-            //var price = item.sach.Price - (item.sach.Price * (decimal)item.sach.Sale / 100);
-            //total += Convert.ToInt32(item.Quantity * price);
 
 
-            <tr class="text-center " style="vertical-align: middle;">
-               
-                <td class="p-0">@item.sach.ID</td>
-                <td>@item.sach.Name</td>
-                <td>
-                    @*<img src="@item.sach.Image" width="100px" />*@
-                </td>
-                <td>
-                    <span>@item.Quantity</span>
-                </td>
-                @*<td>@price.GetValueOrDefault(0).ToString("N0")</td>
-                <td>@((item.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>*@
 
-            </tr>
+            var imgUrl = "";
+            int? sale = 0;
+            var khuyenMai = item.sach.KhuyenMai_Sach.FirstOrDefault();
+            var img = item.sach.Images.FirstOrDefault(s => s.IsDefault);
+            if (img != null)
+            {
+                imgUrl = img.Image1;
+            }
+            if (khuyenMai != null)
+            {
+                sale = khuyenMai.Sale;
+            }
+            var price = item.sach.Price;
+            var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
+
+
+
+
+            if (khuyenMai != null)
+            {// có sale
+                total += Convert.ToInt32(item.Quantity * priceSale);
+                <tr class="text-center " style="vertical-align: middle;">
+                    <td class="p-0">@item.sach.ID</td>
+                    <td>@item.sach.Name</td>
+                    <td>
+                        <img src="@imgUrl" width="100px" alt="san_pham" />
+                    </td>
+                    <td>
+                        <span>@item.Quantity</span>
+                    </td>
+                    <td>@priceSale.GetValueOrDefault(0).ToString("N0")</td>
+                    <td>@((item.Quantity * priceSale.GetValueOrDefault(0)).ToString("N0"))</td>
+
+                </tr>
+            }
+            else
+            {// không có sale
+                total += Convert.ToInt32(item.Quantity * price);
+                <tr class="text-center " style="vertical-align: middle;">
+                    <td class="p-0">@item.sach.ID</td>
+                    <td>@item.sach.Name</td>
+                    <td>
+                        <img src="@imgUrl" width="100px" alt="san_pham" />
+                    </td>
+                    <td>
+                        <span>@item.Quantity</span>
+                    </td>
+                    <td>@price.GetValueOrDefault(0).ToString("N0")</td>
+                    <td>@((item.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>
+
+                </tr>
+            }
+
 
 
 

@@ -53,21 +53,55 @@
 
                 @foreach (var item in listProductNew)
                 {
-                    //var priceSale = item.Price - (item.Price * item.Sale / 100);
-                    <div class="col-md-12 product-item my-3 position-relative text-center">
+                    var imgUrl = "";
+                    int? sale = 0;
+                    var khuyenMai = item.KhuyenMai_Sach.FirstOrDefault();
+                    var img = item.Images.FirstOrDefault(s => s.IsDefault);
+                    if (img != null)
+                    {
+                        imgUrl = img.Image1;
+                    }
+                    if (khuyenMai != null)
+                    {
+                        sale = khuyenMai.Sale;
+                    }
+                    if (khuyenMai != null)
+                    {// có khuyến mại
+                        var priceSale = item.Price - (item.Price * sale / 100);
+                        <div class="col-md-12 product-item my-3 position-relative text-center">
 
-                        @*<a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@item.Image" class="img-fluid" alt="san_pham"> </a>*@
-                        @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
-                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                            <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                        @*<span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>*@
-                        <span class="text-bg-danger">
-                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                        </span>
+                            <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                            <span class="text-bg-danger">
+                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            </span>
 
 
-                    </div>
+                        </div>
+                    }
+                    else
+                    {// không có khuyến mại
+                     //var priceSale = item.Price - (item.Price * item.Sale / 100);
+                        <div class="col-md-12 product-item my-3 position-relative text-center">
+
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                            @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
+
+
+                            @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
+                            <span class="text-bg-danger">
+                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            </span>
+
+
+                        </div>
+                    }
+
 
                 }
 
@@ -99,21 +133,54 @@
 
                 @foreach (var item in listProductTopHot)
                 {
-                    //var priceSale = item.Price - (item.Price * item.Sale / 100);
-                    <div class="col-md-12 product-item my-3 position-relative text-center">
+                    var imgUrl = "";
+                    int? sale = 0;
+                    var khuyenMai = item.KhuyenMai_Sach.FirstOrDefault();
+                    var img = item.Images.FirstOrDefault(s => s.IsDefault);
+                    if(img!= null)
+                    {
+                        imgUrl = img.Image1;
+                    }
+                    if(khuyenMai != null)
+                    {
+                        sale = khuyenMai.Sale;
+                    }
+                    if (khuyenMai != null)
+                    {// có sale
+                        var priceSale = item.Price - (item.Price * sale / 100);
+                        <div class="col-md-12 product-item my-3 position-relative text-center">
 
-                        @*<a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@item.Image" class="img-fluid" alt="san_pham"> </a>*@
-                        @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
-                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                            <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@(item.KhuyenMai_Sach.FirstOrDefault().Sale)%</span>
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
 
 
-                        @*<span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>*@
-                        <span class="text-bg-danger">
-                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                        </span>
+                            <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                            <span class="text-bg-danger">
+                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            </span>
 
 
-                    </div>
+                        </div>
+                    }
+                    else
+                    {// chưa có sale
+                        <div class="col-md-12 product-item my-3 position-relative text-center">
+
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                            @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
+
+
+                            @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
+                            <span class="text-bg-danger">
+                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                            </span>
+
+
+                        </div>
+                    }
+
 
                 }
 

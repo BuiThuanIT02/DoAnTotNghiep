@@ -17,11 +17,12 @@ namespace Web_Sach.Controllers
         public ActionResult Index()
         {
             if (Session[SessionHelper.USER_KEY] == null)
-            {
+            {// user chưa tồn tại
                 Session[SessionHelper.CART_KEY] = null;
                 return RedirectToAction("Cart", "Cart");
 
             }
+            // user đã tồn tại
             var cart = Session[SessionHelper.CART_KEY];
             var list = new List<CartItem>();
             if (cart != null)
@@ -192,13 +193,13 @@ namespace Web_Sach.Controllers
 
 
             var sach = new Book().GetBookById(id);
-            var priceRoot = (int)sach.Price;
-            //var priceNow = (int)(priceRoot - sach.Sale / 100);
+            int priceRoot = (int)sach.Price;
+            int priceSale = (int)(priceRoot - sach.KhuyenMai_Sach.FirstOrDefault().Sale / 100);
             var orderDetails = new ChiTietDonHang();
             orderDetails.MaDonHang = idOrder;
             orderDetails.MaSach = id;
-            //orderDetails.SoLuong = Quantity;
-            //orderDetails.DonGia = priceNow;
+            orderDetails.Quantity = Quantity;
+            orderDetails.Price = priceSale;
 
 
 
@@ -275,8 +276,20 @@ namespace Web_Sach.Controllers
                 var orderDetails = new ChiTietDonHang();
                 orderDetails.MaDonHang = idOrder;
                 orderDetails.MaSach = item.sach.ID;
-                //orderDetails.SoLuong = item.Quantity;
-                //orderDetails.DonGia = (int)item.sach.Price;
+                orderDetails.Quantity = item.Quantity;
+                int priceRoot = (int)item.sach.Price;
+                int priceSale = 0;
+                var khuyenmai = item.sach.KhuyenMai_Sach.FirstOrDefault();
+                if(khuyenmai != null)
+                {// có sale
+                    priceSale = (int)(priceRoot - (priceRoot * khuyenmai.Sale / 100) );
+                }
+                else
+                {// không sale
+                    priceSale = priceRoot;
+                }
+               
+                orderDetails.Price = priceSale;
                 orderDetail.Add(orderDetails);
 
             }
