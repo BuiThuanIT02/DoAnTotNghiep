@@ -25,10 +25,6 @@
 
         @foreach (var item in Model)
         {
-
-
-
-
             var imgUrl = "";
             int? sale = 0;
             var khuyenMai = item.sach.KhuyenMai_Sach.FirstOrDefault();
@@ -37,18 +33,22 @@
             {
                 imgUrl = img.Image1;
             }
-            if (khuyenMai != null)
-            {
-                sale = khuyenMai.Sale;
-            }
-            var price = item.sach.Price;
-            var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
+
+            //var price = item.sach.Price;
+            //var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
 
 
 
 
             if (khuyenMai != null)
             {// có sale
+
+                if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
+                {
+                    sale = khuyenMai.Sale;
+                }
+                
+                var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
                 total += Convert.ToInt32(item.Quantity * priceSale);
                 <tr class="text-center " style="vertical-align: middle;">
                     <td class="p-0">@item.sach.ID</td>
@@ -66,7 +66,7 @@
             }
             else
             {// không có sale
-                total += Convert.ToInt32(item.Quantity * price);
+                total += Convert.ToInt32(item.Quantity * item.sach.Price);
                 <tr class="text-center " style="vertical-align: middle;">
                     <td class="p-0">@item.sach.ID</td>
                     <td>@item.sach.Name</td>
@@ -76,8 +76,8 @@
                     <td>
                         <span>@item.Quantity</span>
                     </td>
-                    <td>@price.GetValueOrDefault(0).ToString("N0")</td>
-                    <td>@((item.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>
+                    <td>@item.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
+                    <td>@((item.Quantity * item.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
 
                 </tr>
             }

@@ -28,10 +28,9 @@ namespace Web_Sach.Controllers
                 var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id).ToList();
                 foreach(var item in orderDetail)
                 {// cập nhật số lượng
-                    var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm và số lượng tồn kho
-                    //sachUpdate.SoLuongTon = sachUpdate.SoLuongTon + item.SoLuong;
-                    //sachUpdate.Quantity = sachUpdate.Quantity + item.SoLuong;
-                    db.SaveChanges();
+                    var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
+                    sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
+                 
                 }
                 order.Status = 0;
                

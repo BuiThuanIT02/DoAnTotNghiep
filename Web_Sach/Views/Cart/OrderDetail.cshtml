@@ -19,20 +19,20 @@
             </tr>
             @foreach (var item in orderDetail)
             {
-                //var price = item.PriceBuy - item.PriceBuy * item.Sale / 100;
-                //var totalItem = price * item.QuantityBuy;
 
-                //totalAll += totalItem;
+                var totalItem = item.PriceBuy * item.QuantityBuy;
+
+                totalAll += totalItem;
 
                 <tr>
                     <td>@item.sachId</td>
                     <td>@item.sachName</td>
-                    @*<td>@price.ToString("N0")</td>*@
+                    <td>@item.PriceBuy.ToString("N0")</td>
 
                     <td>
                         @item.QuantityBuy
                     </td>
-                    @*<td>@totalItem.ToString("N0")</td>*@
+                    <td>@totalItem.ToString("N0")</td>
 
                 </tr>
 

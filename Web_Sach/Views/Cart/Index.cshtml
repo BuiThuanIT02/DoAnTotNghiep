@@ -31,12 +31,13 @@
             {
                 imgUrl = img.Image1;
             }
-            if (khuyenMai != null)
-            {
-                sale = khuyenMai.Sale;
-            }
+
             if (khuyenMai != null)
             {// có khuyến mại
+                if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
+                {
+                    sale = khuyenMai.Sale;
+                }
                 var price = item.sach.Price - (item.sach.Price * sale / 100);
                 <tr class="text-center " style="vertical-align: middle;">
                     <td class="p-0">@item.sach.ID</td>
@@ -68,7 +69,7 @@
             }
             else
             {// không có sale
-             //var price = item.sach.Price - (item.sach.Price * item.sach.Sale / 100);
+           
                 <tr class="text-center " style="vertical-align: middle;">
                     <td class="p-0">@item.sach.ID</td>
                     <td>@item.sach.Name</td>
