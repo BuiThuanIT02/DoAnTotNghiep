@@ -2,19 +2,16 @@
 @{
     ViewBag.Title = "Chi tiết sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    //var price = Model.Price - (Model.Price * Model.Sale / 100);
     var tg = (List<Web_Sach.Models.EF.ThamGiaViewModels>)ViewBag.NameOuthur;
-    var listImageBook = ViewBag.listImageBook as List<Web_Sach.Models.Image>;
+    var listImageBook = (List<Web_Sach.Models.Image>)ViewBag.listImageBook;
     var count = tg.Count;
     var sachDM = (List<Web_Sach.Models.Sach>)ViewBag.SachDM;
     var sachCungTacGia = (List<Web_Sach.Models.Sach>)ViewBag.SachCungTacGia;
     var countSachCungTacGia = sachCungTacGia.Count;
-
     var imgUrl = "";
     int? sale = 0;
     var khuyenMai = Model.KhuyenMai_Sach.FirstOrDefault();
     var img = Model.Images.FirstOrDefault(s => s.IsDefault);
-
     if (img != null)
     {
         imgUrl = img.Image1;
@@ -29,13 +26,13 @@
 }
 
 
-<section id="product-info11">
+<section id="product-info">
     <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
     <div class="container">
         <div class="row">
             @if (khuyenMai != null)
             {// tồn tại sale
-                // kiểm tra thời gian sale
+             // kiểm tra thời gian sale
                 if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
                 {
                     sale = khuyenMai.Sale;
@@ -45,28 +42,36 @@
                     sale = 0;
                 }
                 var price = Model.Price - (Model.Price * sale / 100);
-                <div class="col-md-4 border p-0  position-relative" id="product-info">
-                    <img v-bind:src="node" class="img-fluid" alt="san_pham">
+                //hình ảnh
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-3" style="width:10%">
 
-                    <span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
-                    <div class="row">
-                        @if (listImageBook.Count > 0)
-                        {
-                            <div class="col-sm mt-2" v-for="(img, index) in arrImages">
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
+                                {
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
 
-                                <img v-bind:src="img.Image1" v-on:click="changeImage(index)" class="img-fluid" />
+                                }
                             </div>
 
-                        }
-
-
-
+                        </div>
 
                     </div>
+                }
+                <div class="col-md-4 border p-0  position-relative">
+
+                    <!-- Hiển thị ảnh chính -->
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                    <span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+
+
                 </div>
 
 
-                <div class="col-md-8 ps-5  border">
+                <div class="col-md-5 ps-5  border">
                     <p class="border-bottom fs-2">@Model.Name</p>
                     @if (sale != 0)
                     {// sale còn hạn sd
@@ -121,32 +126,33 @@
             }
             else
             {// không có sale
-                @*<div class="col-md-4 border p-0  position-relative" id="product-info">
-                    <img v-bind:src="node" class="img-fluid" alt="">
 
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-3" style="width:10%">
 
-                    <div class="row">
-                        @if (listImageBook.Count > 0)
-                        {
-                            <div class="col-sm mt-2" v-for="(img, index) in arrImages">
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
+                                {
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
 
-                                <img v-bind:src="img.Image1" v-on:click="changeImage(index)" class="img-fluid" />
+                                }
                             </div>
 
-                        }
-
-
-
+                        </div>
 
                     </div>
-                </div>*@
+                }
+                <div class="col-md-4 p-0  position-relative">
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                </div>
 
-
-                <div class="col-md-8 ps-5  border">
+                <div class="col-md-5 ps-5">
                     <p class="border-bottom fs-2">@Model.Name</p>
                     <span class="text-danger fs-3">
                         Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
-
                     </span>
                     @*<span class="ms-2 fs-3" style="color:gray">
                             <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
@@ -184,15 +190,6 @@
 
 
         </div>
-
-
-
-
-
-
-
-
-
 
 
         <!--Hàng 2-->
@@ -316,8 +313,6 @@
         </div>
 
 
-
-
         <h4 class="text-center mt-5">SÁCH CÙNG THỂ LOẠI</h4>
         <div class="row cateBook-together  mb-4">
             @foreach (var item in sachDM)
@@ -347,14 +342,11 @@
                         }
                         var priceSale = item.Price - (item.Price * saleTheLoai / 100);
                         <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
-
                             <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
                             @if (saleTheLoai != 0)
                             {// sale còn hạn
                                 <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
                                 <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
                                 <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
                                 <span class="text-bg-danger">
                                     <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
@@ -362,70 +354,31 @@
                             }
                             else
                             {// sale hết hạn
-
                                 <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
                                 <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-
                             }
 
-
-
-
                         </div>
-
                     }
                     else
                     {// sale k tồn tại
                         <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
-
                             <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
-
                             <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
                             <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
-
-
                         </div>
                     }
 
-
-
-
-
-
                 }
-
             }
-
-
-
-
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-
-
-
-
-
+    <!-- JavaScript để cập nhật ảnh chính -->
+    <script>
+        function changeMainImage(imagePath) {
+            document.getElementById('mainImage').src = imagePath;
+        }
+    </script>
 
 
 </section>
@@ -452,48 +405,3 @@
     }
 </style>
 
-
-@*<script>
-    const { createApp, ref } = Vue
-
-    createApp({
-        data() {
-            return {
-                node: "@imgUrl",
-                arrImages: @listImageBook,
-
-            }
-        },
-        mounted() {
-            console.log(this.node, this.listImageBook);
-        },
-        methods: {
-            changeImage(index) {
-                this.node = this.arrImages[index].Image1;
-            },
-        },
-
-    }).mount('#product-info')
-</script>*@
-
-<script>
-    const { createApp } = Vue;
-
-    createApp({
-        data() {
-            return {
-                node: "@imgUrl",
-                arrImages:@listImageBook , //
-            }
-        },
-        mounted() {
-            console.log(this.node, this.arrImages);
-        },
-        methods: {
-            changeImage(index) {
-                this.node = this.arrImages[index].Image1;
-            },
-        },
-    }).mount('#product-info11');
-
-</script>

@@ -120,7 +120,7 @@ namespace Web_Sach
             routes.MapRoute(
      name: "Tìm kiếm",
      url: "tim-kiem",
-     defaults: new { controller = "Product", action = "findsimilarbooks", id = UrlParameter.Optional },
+     defaults: new { controller = "Product", action = "Search", id = UrlParameter.Optional },
      namespaces: new[] { "Web_Sach.Controllers" }
 
  );
