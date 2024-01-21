@@ -32,7 +32,8 @@ namespace Web_Sach.Models.EF
 
         public TacGia Compare(string tk)
         {
-            return db.TacGias.Where(x => x.TenTacGia == tk).FirstOrDefault();
+            string trimmedTk = tk.ToLower().Replace(" ", ""); // Loại bỏ tất cả các khoảng trắng
+            return db.TacGias.Where(x => x.TenTacGia.ToLower().Replace(" ", "") == trimmedTk).FirstOrDefault();
            
         }
 
@@ -47,7 +48,8 @@ namespace Web_Sach.Models.EF
         //update
         public bool Compare(TacGia tk)
         {
-            var user = db.TacGias.FirstOrDefault(x => x.ID != tk.ID && x.TenTacGia == tk.TenTacGia);
+         
+            var user = db.TacGias.FirstOrDefault(x => x.ID != tk.ID && x.TenTacGia.ToLower().Replace(" ","") == tk.TenTacGia.ToLower().Replace(" ",""));
             if (user != null)
             {// đã tồn tại
                 return true;

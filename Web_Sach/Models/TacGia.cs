@@ -1,4 +1,4 @@
-namespace Web_Sach.Models
+﻿namespace Web_Sach.Models
 {
     using System;
     using System.Collections.Generic;
@@ -17,10 +17,13 @@ namespace Web_Sach.Models
         }
 
         public int ID { get; set; }
+        [Display(Name ="Tên tác giả")]
+        [Required]
 
         [StringLength(50)]
         public string TenTacGia { get; set; }
-
+        [Display(Name = "Tiểu sử")]
+        [Required]
         public string TieuSu { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -40,23 +40,18 @@ namespace Web_Sach.Areas.Admin.Controllers
                     ModelState.AddModelError("Name", "Tên danh mục đã tồn tại");
                     return View(dm);
                 }
-               
-                    var productCategoryID = new ProductCategory().Insert(dm);
+                dm.CreatedDate = DateTime.Now;
+                var productCategoryID = new ProductCategory().Insert(dm);
                 if(productCategoryID > 0)
                 {
                     SetAlert("Thêm danh mục thành công", "success");
                     return RedirectToAction("Index");
-                }
-               
-                
-
+                }                             
             }
             else
-            {
-                
-                    SetAlert("Thêm danh mục thất bại", "error");
-                
-            }
+            {                
+                    SetAlert("Thêm danh mục thất bại", "error");                
+           }
 
             return View("Create");
         }
@@ -85,7 +80,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     ModelState.AddModelError("Name", "Tên danh mục đã tồn tại");
                     return View(dm);
                 }
-
+                dm.CreatedDate= DateTime.Now;
                 if (category.Update(dm))
                 {
                     SetAlert("Cập nhật thành công", "success");

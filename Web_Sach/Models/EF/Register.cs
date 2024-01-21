@@ -36,5 +36,7 @@ namespace Web_Sach.Models.EF
         public string Phone { get; set; }
         [Display(Name = "Giới tính")]
         public string GioiTinh { get; set; }
+        [Display(Name = "Ngày sinh")]
+        public DateTime NgaySinh { get; set; }
     }
 }

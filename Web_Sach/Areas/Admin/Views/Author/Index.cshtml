@@ -34,16 +34,7 @@
 
             </div>
         }
-
-
-
-
-
     </div>
-
-
-
-
     <div class="card-body">
         <div class="container-fluid">
             <a href="~/Admin/Author/Create">Thêm mới</a>
@@ -51,10 +42,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>ID</th>
                         <th>Tên tác giả</th>
-                        <th>Địa chỉ</th>
-                        
-                        <th>Số điện thoại</th>
+                        <th>Tiểu sử</th>
+
+
 
                     </tr>
                 </thead>
@@ -87,14 +79,11 @@
                                     )
 
                             </span>
-
-
-
-
-
                         </td>
+                        <td>@item.ID</td>
                         <td>@item.TenTacGia</td>
-                      
+                        <td>@item.TieuSu</td>
+
                     </tr>
                     }
 

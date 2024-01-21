@@ -62,8 +62,8 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10  mt-1  mb-3">
-                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @type = "tel", @pattern = "[0-9]{3} [0-9]{3} [0-9]{4}", @placeholder = "035 456 9871" })
-                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" }) 
+                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @type = "tel", @pattern = "[0-9]{3}[0-9]{3}[0-9]{4}", @placeholder = "0354569871" })
+                    @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -75,13 +75,6 @@
                 </div>
             </div>
 
-            @*<div class="form-group mb-3 ">
-                @Html.LabelFor(model => model.GroupID, new { @class = "control-label col-md-2 " })
-                <div class="col-md-10 ">
-                    @Html.DropDownListFor(model => model.GroupID, null, new { @class = "form-control " })
-                    @Html.ValidationMessageFor(model => model.GroupID, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
 
 
             <div class="form-group">
@@ -150,6 +143,13 @@
                 </div>
             </div>
 
+            <div class="form-group mb-3 ">
+                @Html.LabelFor(model => model.Role, new { @class = "control-label col-md-2 " })
+                <div class="col-md-10 ">
+                    @Html.DropDownListFor(model => model.Role, null, new { @class = "form-control " })
+                    @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10  mt-1 mb-3">
@@ -158,6 +158,7 @@
                     @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
                 </div>
             </div>
+
 
 
             <div class="form-group ">

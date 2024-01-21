@@ -28,7 +28,7 @@ namespace Web_Sach.Models.EF
         // tìm tên danh mục để tạo danh mục xem có trùng tên không
         public DanhMucSP uniqueName(string name)
         {
-            return db.DanhMucSPs.FirstOrDefault(x=>x.Name==name);
+            return db.DanhMucSPs.FirstOrDefault(x=>x.Name.ToLower().Replace(" ", "")  == name.ToLower().Replace(" ", ""));
         }
 
 
@@ -54,7 +54,7 @@ namespace Web_Sach.Models.EF
         // tm 
         public bool  Compare(DanhMucSP dm)
         {
-           var category=  db.DanhMucSPs.FirstOrDefault(x => x.ID != dm.ID && x.Name == dm.Name);
+           var category=  db.DanhMucSPs.FirstOrDefault(x => x.ID != dm.ID && x.Name.ToLower().Replace(" ", "") == dm.Name.ToLower().Replace(" ", ""));
             if(category != null)
             {// đã tồn tại
                 return true;

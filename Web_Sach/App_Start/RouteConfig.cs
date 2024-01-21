@@ -163,8 +163,10 @@ namespace Web_Sach
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "Web_Sach.Controllers" }
-                
+
             );
+          
+
         }
     }
 }

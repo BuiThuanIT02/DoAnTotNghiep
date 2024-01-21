@@ -25,7 +25,7 @@ namespace Web_Sach.Models.EF
         // kiểm tra tên sách trc khi tạo
         public bool Compare(Sach sach)
         {
-            var book = db.Saches.FirstOrDefault( x=>x.Name == sach.Name);
+            var book = db.Saches.FirstOrDefault( x=>x.Name.ToLower().Replace(" ", "") == sach.Name.ToLower().Replace(" ", ""));
            if(book != null)
             {
                 return true;
@@ -60,7 +60,7 @@ namespace Web_Sach.Models.EF
         // update check tên sách
         public bool CompareUpdate(Sach sach)
         {
-            var book = db.Saches.FirstOrDefault(x => x.ID != sach.ID && x.Name == sach.Name);
+            var book = db.Saches.FirstOrDefault(x => x.ID != sach.ID && x.Name.ToLower().Replace(" ", "") == sach.Name.ToLower().Replace(" ", ""));
             if(book != null)
             {// đã tồn tại
                 return true;

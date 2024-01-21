@@ -55,7 +55,7 @@ namespace Web_Sach.Models.EF
         //tìm theo tên tài khoản
         public TaiKhoan UniqueUserName(string userName)
         {
-            return db.TaiKhoans.FirstOrDefault(x=>x.TaiKhoan1 == userName);
+            return db.TaiKhoans.FirstOrDefault(x=>x.TaiKhoan1.ToLower().Replace(" ","") == userName.ToLower().Replace(" ", ""));
 
         }
         // end tìm theo tên tài khoản
@@ -70,7 +70,7 @@ namespace Web_Sach.Models.EF
         //  tm khi update không cho trùng tên
         public bool Compare(TaiKhoan tk)
         {
-            var user = db.TaiKhoans.FirstOrDefault(x => x.ID != tk.ID && x.TaiKhoan1 == tk.TaiKhoan1);
+            var user = db.TaiKhoans.FirstOrDefault(x => x.ID != tk.ID && x.TaiKhoan1.ToLower().Replace(" ", "") == tk.TaiKhoan1.ToLower().Replace(" ", ""));
             if(user != null)
             {
                 return true;
@@ -99,6 +99,7 @@ namespace Web_Sach.Models.EF
                 user.Email = tk.Email;
                 user.NgaySinh = tk.NgaySinh;
                 user.Status = tk.Status;
+                user.Role = tk.Role;
                 db.SaveChanges();
                 return true;
             }
