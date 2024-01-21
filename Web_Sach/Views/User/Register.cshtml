@@ -32,12 +32,30 @@
                 @using(Html.BeginForm("Register", "User", FormMethod.Post))
                 {
             <div class="form-group">
-               
+
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @*@if (ViewBag.Success != null)
+        {
+            <div class=" alert alert-success">@ViewBag.Success</div>
+        }*@
                 @if (ViewBag.Success != null)
                 {
-                    <div class=" alert alert-success">@ViewBag.Success</div>
+                   
+
+                <script>
+
+        setTimeout(function () {
+            // Hiển thị thông báo trong một khoảng thời gian ngắn
+            var isConfirmed = confirm("Đăng ký thành công! Nhấn OK để chuyển hướng đến trang đăng nhập.");
+
+            // Nếu người dùng nhấn OK, chuyển hướng đến trang đăng nhập
+            if (isConfirmed) {
+                window.location.href = '/dang-nhap';
+            }
+        }, 2000);
+                </script>
                 }
+
 
             </div>
 

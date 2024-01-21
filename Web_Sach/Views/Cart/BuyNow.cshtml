@@ -2,113 +2,69 @@
 @{
     ViewBag.Title = "BuyNow";
     Layout = "~/Views/Shared/_Layout.cshtml";
-   
-
     var userPaymeny = (Web_Sach.Session.UserLoginSession)ViewBag.user;
-
-
-
 }
 
 
 <div class=" d-block my-5 p-0">
-   
     <table class="table table-bordered w-100 table-striped ">
         <tr class="text-center">
-
             <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
             <th>Ảnh sản phẩm</th>
             <th>Số lượng</th>
             <th>Đơn giá</th>
             <th>Thành tiền</th>
-
         </tr>
-
-
-        @{ 
+        @{
             double total = 0;
             var imgUrl = "";
-            //int? sale = 0;
-            //var khuyenMai = Model.sach.KhuyenMai_Sach.ToList();
+            int? sale = 0;
+            var khuyenMai = Model.sach.KhuyenMai_Sach.ToList();
             var img = Model.sach.Images.FirstOrDefault(s => s.IsDefault);
             if (img != null)
             {
                 imgUrl = img.Image1;
             }
-            //if(khuyenMai != null)
-            //{
-            //    foreach (var itemKM in khuyenMai)
-            //    {// lặp qua danh sách khuyến mại
-            //        if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
-            //        {
-            //            sale = itemKM.Sale;
-            //            break;
-            //        }
-            //    }
+            if (khuyenMai.Count > 0)
+            {
+                foreach (var itemKM in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                    {
+                        sale = itemKM.Sale;
+                        break;
+                    }
+                }
 
-            //}
-            //var price = Model.sach.Price;
-            //var priceSale = Model.sach.Price - (Model.sach.Price * sale / 100);
+            }
+            var price = Model.sach.Price;
+            int priceSale = (int)(price - (price * sale / 100)); // giá bán
+            total += Convert.ToInt32(Model.Quantity * priceSale);
 
         }
 
 
-        @*@if (khuyenMai != null)
-        {*@// có sale
-            total += Convert.ToInt32(Model.Quantity * Model.sach.Price);
-            <tr class="text-center " style="vertical-align: middle;">
-                <td class="p-0">@Model.sach.ID</td>
-                <td>@Model.sach.Name</td>
-                <td>
-                    <img src="@imgUrl" width="100px" alt="san_pham" />
-                </td>
-                <td>
-                    <span>@Model.Quantity</span>
-                </td>
-                <td>@Model.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
-                <td>@((Model.Quantity * Model.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
-
-            </tr>
-        @*}*@
-        @*else
-        {// không có sale
-            total += Convert.ToInt32(Model.Quantity * price);
-            <tr class="text-center " style="vertical-align: middle;">
-                <td class="p-0">@Model.sach.ID</td>
-                <td>@Model.sach.Name</td>
-                <td>
-                    <img src="@imgUrl" width="100px" alt="san_pham" />
-                </td>
-                <td>
-                    <span>@Model.Quantity</span>
-                </td>
-                <td>@price.GetValueOrDefault(0).ToString("N0")</td>
-                <td>@((Model.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>
-
-            </tr>
-        }*@
 
 
+        <tr class="text-center " style="vertical-align: middle;">
+            <td class="p-0">@Model.sach.ID</td>
+            <td>@Model.sach.Name</td>
+            <td>
+                <img src="@imgUrl" width="100px" alt="san_pham" />
+            </td>
+            <td>
+                <span>@Model.Quantity</span>
+            </td>
+            <td>@priceSale.ToString("N0")</td>
+            <td>@((Model.Quantity * priceSale).ToString("N0"))</td>
 
-
-
+        </tr>
         <tr>
             <th colspan="6" style="text-align:right " class="text-dark fs-5 ">Tổng tiền:@total.ToString("N0")</th>
         </tr>
 
-
-
-
-
-
-
     </table>
-
-
-
-   
-
 
 </div>
 
@@ -153,7 +109,7 @@
 
                     </div>
                     <div class="form-group">
-                        <input type="hidden" name="PriceSale" value="@Model.sach.Price" />
+                        <input type="hidden" name="PriceSale" value="@priceSale" />
 
                     </div>
                     <button type="submit" class="btn btn-dark">Thanh toán</button>

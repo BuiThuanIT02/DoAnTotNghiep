@@ -82,12 +82,8 @@ namespace Web_Sach.Controllers
                             }
                         }
                     }
-
                     item.sach.Price = (int)item.sach.Price - (item.sach.Price * sale / 100);
                     item.Quantity = Quantity;
-
-
-
                     list.Add(item);
 
                 }
@@ -100,9 +96,7 @@ namespace Web_Sach.Controllers
                 /// list = (List<CartItem>)cart; 
                 var item = new CartItem();
                 item.sach = sach.FirstOrDefault();
-
                 int? sale = 0;
-
                 var khuyenMai = sach.FirstOrDefault().KhuyenMai_Sach.ToList();
                 if (khuyenMai.Count >0)
                 {
@@ -122,19 +116,10 @@ namespace Web_Sach.Controllers
                 // var list = new List<CartItem>();
                 list.Add(item);
                 Session[SessionHelper.CART_KEY] = list;
-
-
             }
-
-
-
-
-
-
 
             return RedirectToAction("Index");
         }
-
 
         [HttpPost]
 
@@ -207,8 +192,6 @@ namespace Web_Sach.Controllers
         public ActionResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity, int PriceSale)
         {
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
-
-
             var order = new DonHang();
             order.TenNguoiNhan = TenKH;
             order.Moblie = Mobile;
@@ -222,27 +205,15 @@ namespace Web_Sach.Controllers
             db.SaveChanges();
             var idOrder = order.ID;
 
-
-
-            var sach = new Book().GetBookById(id);
-            // cập nhật lại số lượng
-            sach.Quantity = sach.Quantity - Quantity;
-            //int priceRoot = (int)sach.Price;
-            //int sale =0;
-            //if(sach.KhuyenMai_Sach.FirstOrDefault() != null)
-            //{// sách có sale
-            //    if(DateTime.Now >= sach.KhuyenMai_Sach.FirstOrDefault().KhuyenMai.NgayBatDau && DateTime.Now <= sach.KhuyenMai_Sach.FirstOrDefault().KhuyenMai.NgayKeThuc)
-            //    {
-            //        sale = (int)sach.KhuyenMai_Sach.FirstOrDefault().Sale;
-            //    }
-            //}
-
-            //int priceSale = (int)(priceRoot - (priceRoot * sale / 100));
+           
             var orderDetails = new ChiTietDonHang();
             orderDetails.MaDonHang = idOrder;
             orderDetails.MaSach = id;
             orderDetails.Quantity = Quantity;
             orderDetails.Price = PriceSale;
+            var sach = db.Saches.Find(id);
+            // cập nhật lại số lượng
+            sach.Quantity = sach.Quantity - Quantity;
             db.ChiTietDonHangs.Add(orderDetails);
             db.SaveChanges();
             return Redirect("/hoan-thanh");
@@ -251,8 +222,6 @@ namespace Web_Sach.Controllers
         [HttpGet]
         public ActionResult Payment()
         {
-
-
             var cart = Session[SessionHelper.CART_KEY];
             var userPayment = (UserLoginSession)Session[SessionHelper.USER_KEY];
             ViewBag.user = userPayment;
@@ -261,21 +230,7 @@ namespace Web_Sach.Controllers
             if (cart != null)
             {
                 list = cart as List<CartItem>;
-
-                //foreach (var item in list)
-                //{
-                //    var sachUpdate = db.Saches.Find(item.sach.ID);
-
-                //    sachUpdate.Quantity = sachUpdate.Quantity - item.Quantity;
-                //    db.SaveChanges();
-                //}
             }
-
-
-
-
-
-
             return View(list);
         }
 
@@ -309,34 +264,15 @@ namespace Web_Sach.Controllers
                 orderDetails.Price = (int)item.sach.Price;
                 // cập nhật lại số lượng sách 
                 var sachPayMent = db.Saches.Find(item.sach.ID);
-                sachPayMent.Quantity = sachPayMent.Quantity - item.sach.Quantity;
-
-
-                //int priceRoot = (int)item.sach.Price;
-                //int? sale = 0;
-                //var khuyenmai = item.sach.KhuyenMai_Sach.FirstOrDefault();
-                //if (khuyenmai != null)
-                //{// có sale
-                //    if (DateTime.Now >= khuyenmai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenmai.KhuyenMai.NgayKeThuc)
-                //    {
-                //        sale = khuyenmai.Sale;
-                //    }
-                //}
-
-
-                /*- (priceRoot *sale /100)*/
-                ;
+                sachPayMent.Quantity = sachPayMent.Quantity - item.Quantity;
                 orderDetail.Add(orderDetails);
 
             }
             db.ChiTietDonHangs.AddRange(orderDetail);
             db.SaveChanges();
-            //  TempData["Order"] = order;
-            //  TempData["OrderDetail"] = orderDetail;
-
+            //TempData["Order"] = order;
+            //TempData["OrderDetail"] = orderDetail;
             Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
-
-
             return Redirect("/hoan-thanh");
 
 

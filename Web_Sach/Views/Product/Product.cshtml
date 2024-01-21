@@ -30,7 +30,7 @@
     <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
     <div class="container">
         <div class="row">
-            @if (khuyenMai != null)
+            @if (khuyenMai.Count >0)
             {// tồn tại sale
              // kiểm tra thời gian sale
                 foreach(var item in khuyenMai)
@@ -246,7 +246,7 @@
                             imgUrlTacGia = imgTacGia.Image1;
                         }
                         // kiểm tra xem có sale
-                        if (khuyenMaiTacGia != null)
+                        if (khuyenMaiTacGia.Count >0)
                         {// có sale
                          //kiểm tra sale còn hạn hay hết hạn
 
@@ -353,7 +353,7 @@
                         imgUrlTheLoai = imgTheLoai.Image1;
                     }
                     // kiểm tra sale tồn tại không
-                    if (khuyenMaiTheLoai != null)
+                    if (khuyenMaiTheLoai.Count >0)
                     {// sale tồn tại
                      //kiểm tra sale còn hạn hay hết hạn
                         foreach (var itemKM in khuyenMaiTheLoai)

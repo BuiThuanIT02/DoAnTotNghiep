@@ -26,7 +26,7 @@
         @foreach (var item in Model)
         {
             var imgUrl = "";
-            int? sale = 0;
+            //int? sale = 0;
             var khuyenMai = item.sach.KhuyenMai_Sach.ToList();
             var img = item.sach.Images.FirstOrDefault(s => s.IsDefault);
             if (img != null)
@@ -43,17 +43,17 @@
             if (khuyenMai != null)
             {// có sale
 
-                foreach (var itemKM in khuyenMai)
-                {// lặp qua danh sách khuyến mại
-                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
-                    {
-                        sale = itemKM.Sale;
-                        break;
-                    }
-                }
+                //foreach (var itemKM in khuyenMai)
+                //{// lặp qua danh sách khuyến mại
+                //    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                //    {
+                //        sale = itemKM.Sale;
+                //        break;
+                //    }
+                //}
 
-                var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
-                total += Convert.ToInt32(item.Quantity * priceSale);
+                //var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
+                total += Convert.ToInt32(item.Quantity * item.sach.Price);
                 <tr class="text-center " style="vertical-align: middle;">
                     <td class="p-0">@item.sach.ID</td>
                     <td>@item.sach.Name</td>
@@ -63,8 +63,8 @@
                     <td>
                         <span>@item.Quantity</span>
                     </td>
-                    <td>@priceSale.GetValueOrDefault(0).ToString("N0")</td>
-                    <td>@((item.Quantity * priceSale.GetValueOrDefault(0)).ToString("N0"))</td>
+                    <td>@item.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
+                    <td>@((item.Quantity * item.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
 
                 </tr>
             }

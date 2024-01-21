@@ -125,7 +125,7 @@ namespace Web_Sach.Controllers
                 }
                 var user = new TaiKhoan();
                 user.TaiKhoan1 = model.UserName;
-                user.Password = EncryptMD5.MD5Hash(model.Password);
+                user.Password = (model.Password);
                 user.Email = model.Email;
                 user.FullName = model.Name;
                 user.Address = model.Address;
@@ -138,9 +138,9 @@ namespace Web_Sach.Controllers
                 if(user.ID > 0)
                 {
                     ViewBag.Success = "Đăng ký thành công!!";
-                    // model = null;
+                    //model = null;
                     ModelState.Clear();
-                    model.UserName =string.Empty;
+                    model.UserName = string.Empty;
                     model.Password = string.Empty;
                     model.Email = string.Empty;
                     model.Name = string.Empty;
@@ -148,7 +148,8 @@ namespace Web_Sach.Controllers
                     model.Phone = string.Empty;
                     model.GioiTinh = "Nam";
 
-                    return View(model);
+                    //return RedirectToAction("LoignClients","User");
+                    return View();
 
                 }
                 else
