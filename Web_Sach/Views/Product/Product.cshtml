@@ -10,7 +10,7 @@
     var countSachCungTacGia = sachCungTacGia.Count;
     var imgUrl = "";
     int? sale = 0;
-    var khuyenMai = Model.KhuyenMai_Sach.FirstOrDefault();
+    var khuyenMai = Model.KhuyenMai_Sach.ToList(); // lấy danh sách khuyến mại
     var img = Model.Images.FirstOrDefault(s => s.IsDefault);
     if (img != null)
     {
@@ -33,11 +33,16 @@
             @if (khuyenMai != null)
             {// tồn tại sale
              // kiểm tra thời gian sale
-                if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
-                {
-                    sale = khuyenMai.Sale;
+                foreach(var item in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= item.KhuyenMai.NgayBatDau && DateTime.Now <= item.KhuyenMai.NgayKeThuc)
+                    {
+                        sale = item.Sale;
+                        break;
+                    }
                 }
-                
+
+
                 var price = Model.Price - (Model.Price * sale / 100);
                 //hình ảnh
                 if (listImageBook != null)
@@ -58,14 +63,18 @@
 
                     </div>
                 }
-                <div class="col-md-4 border p-0  position-relative">
+        <div class="col-md-4 border p-0  position-relative">
 
-                    <!-- Hiển thị ảnh chính -->
-                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
-                    <span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+            <!-- Hiển thị ảnh chính -->
+            <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+            @if (sale != 0)
+            {<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+
+        }
 
 
-                </div>
+
+        </div>
 
 
                 <div class="col-md-5 ps-5  border">
@@ -85,7 +94,7 @@
                     {// sale hết hạn sử dụng
                         <span class="text-danger fs-3">
 
-                            Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
+                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
 
                         </span>
 
@@ -109,15 +118,24 @@
                     <p>Khuôn khổ: @Model.KichThuoc</p>
                     <p>Trọng lượng: @Model.TrongLuong</p>
                     <p>Số trang: @Model.SoTrang</p>
-                    <div id="buy-amount">
-                        <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                        <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
-                        <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
-                    </div>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
 
-                    <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
 
-                    <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                        <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết hàng
+
+                <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
+
 
                 </div>
             }
@@ -152,8 +170,8 @@
                         Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
                     </span>
                     @*<span class="ms-2 fs-3" style="color:gray">
-                            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
-                        </span>*@
+            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+        </span>*@
 
                     <p>
                         Tác giả:
@@ -172,15 +190,23 @@
                     <p>Khuôn khổ: @Model.KichThuoc</p>
                     <p>Trọng lượng: @Model.TrongLuong</p>
                     <p>Số trang: @Model.SoTrang</p>
-                    <div id="buy-amount">
-                        <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                        <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
-                        <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
-                    </div>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
 
-                    <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
 
-                    <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                        <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết số lượng
+                        <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
+
 
                 </div>
             }
@@ -212,7 +238,7 @@
                     {
                         var imgUrlTacGia = "";
                         int? saleTacGia = 0;
-                        var khuyenMaiTacGia = item.KhuyenMai_Sach.FirstOrDefault();
+                        var khuyenMaiTacGia = item.KhuyenMai_Sach.ToList();
                         var imgTacGia = item.Images.FirstOrDefault(s => s.IsDefault);
 
                         if (imgTacGia != null)
@@ -223,13 +249,14 @@
                         if (khuyenMaiTacGia != null)
                         {// có sale
                          //kiểm tra sale còn hạn hay hết hạn
-                            if (DateTime.Now >= khuyenMaiTacGia.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMaiTacGia.KhuyenMai.NgayKeThuc)
-                            {// sale còn hạn
-                                saleTacGia = khuyenMaiTacGia.Sale;
-                            }
-                            else
-                            {// sale hết hạn
-                                saleTacGia = 0;
+
+                            foreach (var itemKM in khuyenMaiTacGia)
+                            {// lặp qua danh sách khuyến mại
+                                if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                                {
+                                    saleTacGia = itemKM.Sale;
+                                    break;
+                                }
                             }
                             var priceSale = item.Price - (item.Price * saleTacGia / 100);
                             <div class="row border-bottom author mb-1">
@@ -318,7 +345,7 @@
                 {
                     var imgUrlTheLoai = "";
                     int? saleTheLoai = 0;
-                    var khuyenMaiTheLoai = item.KhuyenMai_Sach.FirstOrDefault();
+                    var khuyenMaiTheLoai = item.KhuyenMai_Sach.ToList();
                     var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
 
                     if (imgTheLoai != null)
@@ -329,13 +356,13 @@
                     if (khuyenMaiTheLoai != null)
                     {// sale tồn tại
                      //kiểm tra sale còn hạn hay hết hạn
-                        if (DateTime.Now >= khuyenMaiTheLoai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMaiTheLoai.KhuyenMai.NgayKeThuc)
-                        {// sale còn hạn
-                            saleTheLoai = khuyenMaiTheLoai.Sale;
-                        }
-                        else
-                        {// sale hết hạn
-                            saleTheLoai = 0;
+                        foreach (var itemKM in khuyenMaiTheLoai)
+                        {// lặp qua danh sách khuyến mại
+                            if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                            {
+                                saleTheLoai = itemKM.Sale;
+                                break;
+                            }
                         }
                         var priceSale = item.Price - (item.Price * saleTheLoai / 100);
                         <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">

@@ -75,7 +75,7 @@
 
                 var imgUrl = "";
                 int? sale = 0;
-                var khuyenMai = item.KhuyenMai_Sach.FirstOrDefault();
+                var khuyenMai = item.KhuyenMai_Sach.ToList();
                 var img = item.Images.FirstOrDefault(s => s.IsDefault);
 
                 if (img != null)
@@ -86,13 +86,13 @@
                 if (khuyenMai != null)
                 {// có khuyến mại
                  // kiểm tra xem thời gian khuyến mại
-                    if (DateTime.Now >= khuyenMai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenMai.KhuyenMai.NgayKeThuc)
-                    {
-                        sale = khuyenMai.Sale;
-                    }
-                    else
-                    {
-                        sale = 0;
+                    foreach (var itemKM in khuyenMai)
+                    {// lặp qua danh sách khuyến mại
+                        if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                        {
+                            sale = itemKM.Sale;
+                            break;
+                        }
                     }
                     var priceSale = item.Price - (item.Price * sale / 100);
                     <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">

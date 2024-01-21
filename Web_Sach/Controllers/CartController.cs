@@ -68,7 +68,26 @@ namespace Web_Sach.Controllers
                 { // sản phẩm đó chưa có trong giỏ  hàng
                     var item = new CartItem();
                     item.sach = sach.FirstOrDefault();
+                    int? sale = 0;
+
+                    var khuyenMai = sach.FirstOrDefault().KhuyenMai_Sach.ToList();
+                    if (khuyenMai.Count >0)
+                    {
+                        foreach (var itemKM in khuyenMai)
+                        {// lặp qua danh sách khuyến mại
+                            if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                            {
+                                sale = itemKM.Sale;
+                                break;
+                            }
+                        }
+                    }
+
+                    item.sach.Price = (int)item.sach.Price - (item.sach.Price * sale / 100);
                     item.Quantity = Quantity;
+
+
+
                     list.Add(item);
 
                 }
@@ -81,6 +100,23 @@ namespace Web_Sach.Controllers
                 /// list = (List<CartItem>)cart; 
                 var item = new CartItem();
                 item.sach = sach.FirstOrDefault();
+
+                int? sale = 0;
+
+                var khuyenMai = sach.FirstOrDefault().KhuyenMai_Sach.ToList();
+                if (khuyenMai.Count >0)
+                {
+                    foreach (var itemKM in khuyenMai)
+                    {// lặp qua danh sách khuyến mại
+                        if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                        {
+                            sale = itemKM.Sale;
+                            break;
+                        }
+                    }
+                }
+
+                item.sach.Price = (int)item.sach.Price - (item.sach.Price * sale / 100);
                 item.Quantity = Quantity;
 
                 // var list = new List<CartItem>();
@@ -168,7 +204,7 @@ namespace Web_Sach.Controllers
 
         }
         [HttpPost]
-        public ActionResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity,int PriceSale)
+        public ActionResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity, int PriceSale)
         {
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
 
@@ -200,7 +236,7 @@ namespace Web_Sach.Controllers
             //        sale = (int)sach.KhuyenMai_Sach.FirstOrDefault().Sale;
             //    }
             //}
-           
+
             //int priceSale = (int)(priceRoot - (priceRoot * sale / 100));
             var orderDetails = new ChiTietDonHang();
             orderDetails.MaDonHang = idOrder;
@@ -229,7 +265,7 @@ namespace Web_Sach.Controllers
                 //foreach (var item in list)
                 //{
                 //    var sachUpdate = db.Saches.Find(item.sach.ID);
-                    
+
                 //    sachUpdate.Quantity = sachUpdate.Quantity - item.Quantity;
                 //    db.SaveChanges();
                 //}
@@ -270,19 +306,26 @@ namespace Web_Sach.Controllers
                 orderDetails.MaDonHang = idOrder;
                 orderDetails.MaSach = item.sach.ID;
                 orderDetails.Quantity = item.Quantity;
-                int priceRoot = (int)item.sach.Price;
-                int? sale = 0;
-                var khuyenmai = item.sach.KhuyenMai_Sach.FirstOrDefault();
-                if (khuyenmai != null)
-                {// có sale
-                    if (DateTime.Now >= khuyenmai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenmai.KhuyenMai.NgayKeThuc)
-                    {
-                        sale = khuyenmai.Sale;
-                    }
-                }
-               
+                orderDetails.Price = (int)item.sach.Price;
+                // cập nhật lại số lượng sách 
+                var sachPayMent = db.Saches.Find(item.sach.ID);
+                sachPayMent.Quantity = sachPayMent.Quantity - item.sach.Quantity;
 
-                orderDetails.Price = priceRoot - (priceRoot *sale /100);
+
+                //int priceRoot = (int)item.sach.Price;
+                //int? sale = 0;
+                //var khuyenmai = item.sach.KhuyenMai_Sach.FirstOrDefault();
+                //if (khuyenmai != null)
+                //{// có sale
+                //    if (DateTime.Now >= khuyenmai.KhuyenMai.NgayBatDau && DateTime.Now <= khuyenmai.KhuyenMai.NgayKeThuc)
+                //    {
+                //        sale = khuyenmai.Sale;
+                //    }
+                //}
+
+
+                /*- (priceRoot *sale /100)*/
+                ;
                 orderDetail.Add(orderDetails);
 
             }

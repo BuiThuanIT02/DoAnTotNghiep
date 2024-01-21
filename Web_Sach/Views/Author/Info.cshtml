@@ -32,18 +32,23 @@
     {
         var imgUrl = "";
         int? sale = 0;
-        var khuyenMai = item.KhuyenMai_Sach.FirstOrDefault();
+        var khuyenMai = item.KhuyenMai_Sach.ToList();
         var img = item.Images.FirstOrDefault(s => s.IsDefault);
         if (img != null)
         {
             imgUrl = img.Image1;
         }
-        if (khuyenMai != null)
-        {
-            sale = khuyenMai.Sale;
-        }
+
         if (khuyenMai != null)
         {// có sale
+            foreach (var itemKM in khuyenMai)
+            {// lặp qua danh sách khuyến mại
+                if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                {
+                    sale = itemKM.Sale;
+                    break;
+                }
+            }
             var priceSale = item.Price - (item.Price * sale / 100);
             <div class="col-md-3 product-item my-3 position-relative text-center">
 

@@ -29,26 +29,34 @@
         @{ 
             double total = 0;
             var imgUrl = "";
-            int? sale = 0;
-            var khuyenMai = Model.sach.KhuyenMai_Sach.FirstOrDefault();
+            //int? sale = 0;
+            //var khuyenMai = Model.sach.KhuyenMai_Sach.ToList();
             var img = Model.sach.Images.FirstOrDefault(s => s.IsDefault);
             if (img != null)
             {
                 imgUrl = img.Image1;
             }
-            if (khuyenMai != null)
-            {
-                sale = khuyenMai.Sale;
-            }
-            var price = Model.sach.Price;
-            var priceSale = Model.sach.Price - (Model.sach.Price * sale / 100);
-           
+            //if(khuyenMai != null)
+            //{
+            //    foreach (var itemKM in khuyenMai)
+            //    {// lặp qua danh sách khuyến mại
+            //        if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+            //        {
+            //            sale = itemKM.Sale;
+            //            break;
+            //        }
+            //    }
+
+            //}
+            //var price = Model.sach.Price;
+            //var priceSale = Model.sach.Price - (Model.sach.Price * sale / 100);
+
         }
 
 
-        @if (khuyenMai != null)
-        {// có sale
-            total += Convert.ToInt32(Model.Quantity * priceSale);
+        @*@if (khuyenMai != null)
+        {*@// có sale
+            total += Convert.ToInt32(Model.Quantity * Model.sach.Price);
             <tr class="text-center " style="vertical-align: middle;">
                 <td class="p-0">@Model.sach.ID</td>
                 <td>@Model.sach.Name</td>
@@ -58,12 +66,12 @@
                 <td>
                     <span>@Model.Quantity</span>
                 </td>
-                <td>@priceSale.GetValueOrDefault(0).ToString("N0")</td>
-                <td>@((Model.Quantity * priceSale.GetValueOrDefault(0)).ToString("N0"))</td>
+                <td>@Model.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
+                <td>@((Model.Quantity * Model.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
 
             </tr>
-        }
-        else
+        @*}*@
+        @*else
         {// không có sale
             total += Convert.ToInt32(Model.Quantity * price);
             <tr class="text-center " style="vertical-align: middle;">
@@ -79,7 +87,7 @@
                 <td>@((Model.Quantity * price.GetValueOrDefault(0)).ToString("N0"))</td>
 
             </tr>
-        }
+        }*@
 
 
 
@@ -145,7 +153,7 @@
 
                     </div>
                     <div class="form-group">
-                        <input type="hidden" name="PriceSale" value="@priceSale" />
+                        <input type="hidden" name="PriceSale" value="@Model.sach.Price" />
 
                     </div>
                     <button type="submit" class="btn btn-dark">Thanh toán</button>
