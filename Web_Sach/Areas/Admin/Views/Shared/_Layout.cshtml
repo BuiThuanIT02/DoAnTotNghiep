@@ -55,11 +55,11 @@
 
                         <a class="nav-link" href="~/Admin/User/Index">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Quản lý User
+                            Quản lý người dùng
                         </a>
                         <a class="nav-link" href="~/Admin/ProductCategory/Index">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Quản lý danh mục SP
+                            Quản lý danh mục
                         </a>
 
                         <a class="nav-link" href="~/Admin/Product/Index">
@@ -75,7 +75,10 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Quản lý tác giả
                         </a>
-
+                        <a class="nav-link" href="~/Admin/Silde/Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Quản lý Silde
+                        </a>
 
 
 
@@ -91,18 +94,18 @@
 
             @* view Home biểu đồ *@
             @RenderSection("Home", false)
-            @* end view Home biểu đồ *@
 
 
             @* view quản lý User  *@
             @RenderSection("User", false)
-            @* end view quản lý user *@
+
 
 
             @* view danh mục sản phẩm *@
             @RenderSection("ProductCategory", false)
 
-            @* end view danh mục sản phẩm *@
+            @* view quản lý Silde  *@
+            @RenderSection("Silde", false)
 
 
 
@@ -113,10 +116,10 @@
 
             @if (TempData["AlertContent"] != null)
             {
-<div id="AlertBox" class="alert  @TempData["AlertMessage"] hide">
-    @TempData["AlertContent"]
+        <div id="AlertBox" class="alert  @TempData["AlertMessage"] hide">
+            @TempData["AlertContent"]
 
-</div>}
+        </div>}
 
 
             @RenderBody()

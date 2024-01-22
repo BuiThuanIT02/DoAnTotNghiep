@@ -1,0 +1,104 @@
+﻿
+@model PagedList.IPagedList<Web_Sach.Models.Silde>
+@using PagedList.Mvc
+
+@using System.Web.Mvc.Ajax
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section Silde{
+
+    <h2 style="text-align:center">DANH SÁCH QUẢN LÝ SILDE</h2>
+
+}
+
+<div class="card mb-4">
+   
+    <div class="card-body">
+        <div class="container-fluid">
+            <a href="~/Admin/Silde/Create">Thêm mới</a>
+            <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Image</th>                      
+                        <th>Ngày tạo</th>                     
+                        <th>Trạng thái</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+                            <td>
+                                <a href="/Admin/Silde/Update/@item.ID" style="text-decoration:none;color:green">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    Sửa
+                                </a>
+
+                                <span style="text-decoration:none ;color:red">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                                 {
+                                     Confirm = "Bạn có muốn xóa bản ghi này!!",
+                                    OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                     HttpMethod = "Delete"
+                                 },
+                                 new
+                                  {
+                                       @class = "btn text-danger p-0"
+                                  }
+
+                                        )
+
+                                </span>
+
+                            </td>
+                            <td>@item.ID</td>
+                            <td class="w-50">
+                                <img src="@item.Image" class="img-fluid w-25"/>
+                            </td>
+                         
+                            
+                            <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("yyyy-MM-dd") : "")</td>
+                            @if (item.Status)
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-start-text text-success " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+
+                            }
+                            else
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-block-text text-danger " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+</div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+@section jsFooter{
+
+    <script src="~/Scripts/Admin/Controller/sildeController.js"></script>
+
+}
+

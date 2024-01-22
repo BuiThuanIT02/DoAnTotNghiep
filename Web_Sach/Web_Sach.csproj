@@ -155,6 +155,7 @@
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SildeController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Data\UserLogin.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
@@ -1268,6 +1269,7 @@
     <Content Include="Scripts\Admin\Controller\AlertMessage.js" />
     <Content Include="Scripts\Admin\Controller\productCategoryController.js" />
     <Content Include="Scripts\Admin\Controller\productController.js" />
+    <Content Include="Scripts\Admin\Controller\sildeController.js" />
     <Content Include="Scripts\Admin\Controller\StatusOrder.js" />
     <Content Include="Scripts\Admin\Controller\UniqueUser.js" />
     <Content Include="Scripts\Admin\Controller\userController.js" />
@@ -1313,6 +1315,9 @@
     <Content Include="Areas\Admin\Views\Author\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Author\Update.cshtml" />
     <Content Include="Areas\Admin\Views\Product\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Silde\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Silde\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Silde\Update.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\Contact.js" />

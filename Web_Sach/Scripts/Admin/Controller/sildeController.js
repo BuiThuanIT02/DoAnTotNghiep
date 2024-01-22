@@ -1,23 +1,23 @@
 ﻿
-var user =  {
-    init: function() {
-        user.registerEvents();
+    var silde = {
+        init: function () {
+        silde.registerEvents();
 
-    },
-    registerEvents: function() {
+         },
+    registerEvents: function () {
         // sk trangj thai
         $('.btn-active').off('click').on("click", function (e) {
             e.preventDefault();
             var btn = $(this);
             var id = btn.data('id');
             $.ajax({
-                url: '/Admin/User/ChangeStatus',
+                url: '/Admin/Silde/ChangeStatus',
                 data: { id: id },
                 dataType: 'json',
                 type: 'POST',
                 success: function (res) {
 
-                    if (res.status==true) {
+                    if (res.status == true) {
                         btn.text("Kích hoạt");
                         btn.addClass('btn-start-text text-success');
                         btn.removeClass('btn-block-text text-danger')
@@ -34,9 +34,8 @@ var user =  {
 
         });
 
+         }
+         //end su kien trang thai
+     }
+silde.init();
 
-        //end su kien trang thai
-
-    }
-}
-user.init();

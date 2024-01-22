@@ -27,7 +27,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             setViewBagRole();
             return View();
         }
-        // dropdowlist GroupID
+       
         public void setViewBagRole(string selectedId = "")
         {
             if (string.IsNullOrEmpty(selectedId))
@@ -80,12 +80,8 @@ namespace Web_Sach.Areas.Admin.Controllers
                
             }
             else
-            {
-                
-                SetAlert("Thêm User thất bại", "error");
-             
-               
-
+            {               
+                SetAlert("Thêm User thất bại", "error");                         
             }
             setViewBagRole();
             return View("Create");
