@@ -79,8 +79,14 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Quản lý Silde
                         </a>
-
-
+                        <a class="nav-link" href="~/Admin/NhaXuatBan/Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Quản lý nhà xuất bản
+                        </a>
+                        <a class="nav-link" href="~/Admin/NhaCungCap/Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Quản lý nhà cung cấp
+                        </a>
 
                     </div>
                 </div>
@@ -107,9 +113,11 @@
             @* view quản lý Silde  *@
             @RenderSection("Silde", false)
 
+            @* view quản lý nhà xuất bản  *@
+            @RenderSection("NXB", false)
 
-
-
+            @* view quản lý nhà cung cấp *@
+            @RenderSection("NCC", false)
 
 
 

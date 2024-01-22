@@ -1,4 +1,4 @@
-namespace Web_Sach.Models
+﻿namespace Web_Sach.Models
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +16,8 @@ namespace Web_Sach.Models
         }
 
         public int ID { get; set; }
-
+        [Display(Name ="Tên nhà xuất bản")]
+        [Required]
         [StringLength(50)]
         public string TenNXB { get; set; }
 
