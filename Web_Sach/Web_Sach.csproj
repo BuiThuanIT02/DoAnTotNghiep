@@ -152,6 +152,7 @@
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\KhuyenMaiController.cs" />
+    <Compile Include="Areas\Admin\Controllers\KhuyenMai_SachController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaCungCapController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaXuatBanController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\EF\CartItem.cs" />
     <Compile Include="Models\EF\ImageMore.cs" />
     <Compile Include="Models\EF\kmModels.cs" />
+    <Compile Include="Models\EF\kmSachModels.cs" />
     <Compile Include="Models\EF\NXB.cs" />
     <Compile Include="Models\EF\Order.cs" />
     <Compile Include="Models\EF\OrderDetail.cs" />
@@ -1341,6 +1343,9 @@
     <Content Include="Areas\Admin\Views\ThamGia\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ThamGia\Create.cshtml" />
     <Content Include="Areas\Admin\Views\ThamGia\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai_Sach\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai_Sach\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai_Sach\Update.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\Contact.js" />

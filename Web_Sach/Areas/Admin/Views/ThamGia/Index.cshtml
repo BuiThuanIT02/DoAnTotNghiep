@@ -7,11 +7,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-
-
-
-
-
 @section thamGia{
 
     <h2 style="text-align:center">QUẢN LÝ TÁC GIẢ THAM GIA VIẾT SÁCH</h2>
@@ -108,7 +103,7 @@
 
 
 
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @ViewBag.SearchString }))
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page}))
             @* get trang mới *@
 
 

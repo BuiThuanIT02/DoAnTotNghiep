@@ -68,7 +68,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 TempData.Keep("maTacGia");
                 var tgModel = new thamGiaModels();
                 int maSach = (int)TempData["maSach"] ;
-                var maTacGia = (int)TempData["maTacGia"];
+                int maTacGia = (int)TempData["maTacGia"];
                 if (tgModel.Update(maSach,maTacGia,km))
                 {
                     SetAlert("Cập nhật thành công", "success");
