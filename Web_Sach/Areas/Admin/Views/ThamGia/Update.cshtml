@@ -1,0 +1,44 @@
+﻿@model Web_Sach.Models.ThamGia
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrap">
+    <div class="container-fluid  mt-5 w-50">
+        @using (Html.BeginForm("UpdatePost", "ThamGia", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            @*@Html.HiddenFor(model => model.MaSach)
+            @Html.HiddenFor(model => model.MaTacGia)*@
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group mt-2">
+                <label>Tên sách</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("MaSach", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MaSach, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                @*@Html.LabelFor(model => model.MaTacGia, "MaTacGia", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                <label>Tên tác giả</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("MaTacGia", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MaTacGia, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Tạo" class="btn btn-dark" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+

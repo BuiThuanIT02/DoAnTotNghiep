@@ -1,4 +1,4 @@
-namespace Web_Sach.Models
+﻿namespace Web_Sach.Models
 {
     using System;
     using System.Collections.Generic;
@@ -16,12 +16,15 @@ namespace Web_Sach.Models
         }
 
         public int ID { get; set; }
-
+        [Display(Name ="Tên khuyến mại")]
+        [Required]
         [StringLength(250)]
         public string TenKhuyenMai { get; set; }
-
+        [Display(Name = "Ngày bắt đầu")]
+        [Required]
         public DateTime? NgayBatDau { get; set; }
-
+        [Display(Name = "Ngày kết thúc")]
+        [Required]
         public DateTime? NgayKeThuc { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

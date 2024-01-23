@@ -14,6 +14,11 @@ namespace Web_Sach.Models.EF
         {
             db = new WebSachDb();
         }
+        public List<TacGia> ListAll()
+        {
+            return db.TacGias.ToList();
+        }
+
 
         // Phân trang bảng tác giả
         public IEnumerable<TacGia> listPage(string searchString, int page, int pageSize)

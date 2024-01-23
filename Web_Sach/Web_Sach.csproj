@@ -151,6 +151,7 @@
     <Compile Include="Areas\Admin\Controllers\AuthorController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\KhuyenMaiController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaCungCapController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaXuatBanController.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Areas\Admin\Controllers\ProductCategoryController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\SildeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ThamGiaController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\Admin\Controllers\VoucherController.cs" />
     <Compile Include="Areas\Admin\Data\UserLogin.cs" />
@@ -181,6 +183,7 @@
     <Compile Include="Models\EF\Book.cs" />
     <Compile Include="Models\EF\CartItem.cs" />
     <Compile Include="Models\EF\ImageMore.cs" />
+    <Compile Include="Models\EF\kmModels.cs" />
     <Compile Include="Models\EF\NXB.cs" />
     <Compile Include="Models\EF\Order.cs" />
     <Compile Include="Models\EF\OrderDetail.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="Models\EF\TacGiaModels.cs" />
     <Compile Include="Models\EF\TaiKhoanModels.cs" />
     <Compile Include="Models\EF\LoginModels.cs" />
+    <Compile Include="Models\EF\thamGiaModels.cs" />
     <Compile Include="Models\EF\ThamGiaViewModels.cs" />
     <Compile Include="Models\EF\UserLoginClients.cs" />
     <Compile Include="Models\EF\VoucherModels.cs" />
@@ -1331,6 +1335,12 @@
     <Content Include="Areas\Admin\Views\Voucher\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Voucher\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Voucher\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\ThamGia\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ThamGia\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\ThamGia\Update.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\Contact.js" />

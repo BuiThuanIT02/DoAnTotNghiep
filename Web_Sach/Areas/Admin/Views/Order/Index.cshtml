@@ -42,14 +42,15 @@
             <table class="table table-bordered" style="text-align:center">
                 <thead>
                     <tr>
-                       
-                        <th>Mã đơn hàng</th>
-                        <th>Tên khách hàng</th>
+
+                        <th>Mã đơn hàng</th>                       
+                        <th>Tên người nhận</th>
                         <th>Điện thoại</th>
                         <th>Email</th>
-                        <th>Ngày đặt</th>
-
                         <th>Địa chỉ</th>
+                        <th>Ngày đặt</th>      
+                        @*<th>Ngày giao</th>*@
+                        @*<th>Đã thanh toán</th>*@
                         <th>Tổng tiền</th>
                         <th>Tình trạng</th>
                         <th>#</th>
@@ -66,33 +67,45 @@
                     @foreach (var item in Model)
                     {
                     <tr id="row_@item.ID">
-                       
 
 
 
 
-                      
+
+
                         <td>@item.ID</td>
-                        @*<td>@item.TenKH</td>*@
+                        <td>@item.TenNguoiNhan</td>
                         <td>@item.Moblie</td>
                         <td>@item.Email</td>
+                        <td>@item.DiaChiNguoiNhan</td>
                         <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("yyyy-MM-dd") : "")</td>
+                        @if (item.NgayGiao != null)
+                        {
+                            <td>@(item.NgayGiao.HasValue ? item.NgayGiao.Value.ToString("yyyy-MM-dd") : "")</td>
+                        }
 
-                        @*<td>@item.Address</td>*@
+
+
+                        @if (item.DaThanhToan != null)
+                        {
+                            <td>@item.DaThanhToan</td>
+                        }
+
                         <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") : "")</td>
                         @if (item.Status == 1)
                         {
                             <td>
-                                <a href="~/Admin/Order/ChangeStatus/@item.ID" class="text-danger" >
+                                <a href="~/Admin/Order/ChangeStatus/@item.ID" class="text-danger">
                                     Chờ xử lý
                                 </a>
                             </td>
                         }
-                        else if(item.Status ==2){
+                        else if (item.Status == 2)
+                        {
                             <td>
                                 <p class="text-warning">Đang vận chuyển</p>
                             </td>
-                            
+
                         }
 
 

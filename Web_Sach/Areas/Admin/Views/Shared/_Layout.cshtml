@@ -91,6 +91,14 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Quản lý voucher
                         </a>
+                        <a class="nav-link" href="~/Admin/KhuyenMai/Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Quản lý khuyến mại
+                        </a>
+                        <a class="nav-link" href="~/Admin/ThamGia/Index">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Quản lý tác giả tham gia
+                        </a>
 
                     </div>
                 </div>
@@ -124,6 +132,10 @@
             @RenderSection("NCC", false)
             @* view quản lý voucher *@
             @RenderSection("Voucher", false)
+            @* view quản lý khuyến mại *@
+            @RenderSection("khuyenMai", false)
+            @* view quản lý TÁC GIẢ THAM GIA VIẾT SÁCH *@
+            @RenderSection("thamGia", false)
 
 
 

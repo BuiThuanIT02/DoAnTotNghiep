@@ -15,6 +15,11 @@ namespace Web_Sach.Models.EF
         {
             db = new WebSachDb();
         }
+        public List<Sach> ListAll()
+        {
+            return db.Saches.Where(x => x.Status == true && x.Quantity >0).ToList();
+        }
+
 
         //lấy ra 1 đối tượng sách
         public Sach GetBookById(int id)

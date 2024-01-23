@@ -12,11 +12,13 @@
         [Key]
         [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name ="Mã sách")]
         public int MaSach { get; set; }
 
         [Key]
         [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "Mã tác giả")]
         public int MaTacGia { get; set; }
 
        

@@ -22,7 +22,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Họ tên khách hàng</label>
-                    @*<p class="form-control"> @order.TenKH</p>*@
+                    <p class="form-control"> @order.TenNguoiNhan</p>
 
                 </div>
             </div>
@@ -116,19 +116,19 @@
                    @foreach(var item in Model)
                    {
 
-                       //var price = item.PriceBuy - item.PriceBuy * item.Sale / 100;
-                       //var total = price * item.QuantityBuy;
-                       //tong += total;
+
+                       var total = item.PriceBuy * item.QuantityBuy;
+                       tong += total;
                         <tr>
                             <td>@count</td>
                             <td>@item.sachName</td>
-                            @*<td>@price.ToString("N0")</td>*@
+                            <td>@item.PriceBuy.ToString("N0")</td>
                             <td>@item.QuantityBuy</td>
-                            @*<td>@(total.ToString("N0"))</td>*@
+                            <td>@(total.ToString("N0"))</td>
 
 
                         </tr>
-                       count++;
+                       //count++;
 
                    }
                         <tr>

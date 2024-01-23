@@ -33,8 +33,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                          {
                              sachId = sach.ID,
                              sachName = sach.Name,
-                             PriceBuy = (double)sach.Price,
-                             //Sale = (int)sach.Sale,
+                             PriceBuy = (double)dt.Price,                           
                              QuantityBuy = (int)dt.Quantity
                          };
             
