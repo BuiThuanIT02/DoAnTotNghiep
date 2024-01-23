@@ -159,6 +159,7 @@
     <Compile Include="Areas\Admin\Controllers\ProductController.cs" />
     <Compile Include="Areas\Admin\Controllers\SildeController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VoucherController.cs" />
     <Compile Include="Areas\Admin\Data\UserLogin.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Models\EF\LoginModels.cs" />
     <Compile Include="Models\EF\ThamGiaViewModels.cs" />
     <Compile Include="Models\EF\UserLoginClients.cs" />
+    <Compile Include="Models\EF\VoucherModels.cs" />
     <Compile Include="Models\FeedBack.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\KhuyenMai.cs" />
@@ -1326,6 +1328,9 @@
     <Content Include="Areas\Admin\Views\NhaCungCap\Index.cshtml" />
     <Content Include="Areas\Admin\Views\NhaCungCap\Create.cshtml" />
     <Content Include="Areas\Admin\Views\NhaCungCap\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\Voucher\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Voucher\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Voucher\Update.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\Contact.js" />

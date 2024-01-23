@@ -1,4 +1,4 @@
-namespace Web_Sach.Models
+﻿namespace Web_Sach.Models
 {
     using System;
     using System.Collections.Generic;
@@ -16,20 +16,27 @@ namespace Web_Sach.Models
         }
 
         public int ID { get; set; }
-
+        [Display(Name = "Đơn giá tối thiểu")]
+        [Required]
         public double? DonGiaToiThieu { get; set; }
-
+        [Display(Name = "Ngày tạo")]
+        [Required]
         public DateTime? NgayTao { get; set; }
-
+        [Display(Name = "Ngày hết hạn")]
+        [Required]
         public DateTime? NgayHetHan { get; set; }
-
+        [Display(Name = "Mã voucher")]
+        [Required]
         [StringLength(150)]
         public string MaVoucher { get; set; }
-
+        [Display(Name = "Số tiền giảm")]
+        [Required]
         public double? SoTienGiam { get; set; }
-
+        [Display(Name = "Số lần sử dụng")]
+        [Required]
         public int? SoLanSuDung { get; set; }
-
+        [Display(Name = "Số lần đã sử dụng")]
+        
         public int? SoLanDaSuDung { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

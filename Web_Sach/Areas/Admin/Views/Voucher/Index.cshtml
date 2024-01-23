@@ -1,0 +1,156 @@
+﻿
+@model PagedList.IPagedList<Web_Sach.Models.Voucher>
+@using PagedList.Mvc;
+@using System.Web.Mvc.Ajax;
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section Voucher{
+
+    <h2 style="text-align:center">QUẢN LÝ VOUCHER</h2>
+
+}
+
+<div class="card mb-4">
+    <div class="card-header   ">
+
+        @using (Html.BeginForm("Index", "Voucher", FormMethod.Get))
+        {
+            <div class="row justify-content-sm-end">
+
+                <div class="col-sm-2 ">
+                    <input type="text" value="@ViewBag.SearchString" name="searchString" />
+
+                </div>
+                <div class="col-sm-2 ">
+                    <button type="submit">Tìm kiếm</button>
+
+                </div>
+
+            </div>
+        }
+
+
+
+
+
+    </div>
+
+
+
+
+    <div class="card-body">
+        <div class="container-fluid">
+            <a href="~/Admin/Voucher/Create">Thêm mới</a>
+            <table class="table table-bordered" style="text-align:center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mã voucher</th>
+                        <th>Đơn giá tối thiểu</th>
+                        <th>Số tiền giảm</th>
+                        <th>Số lần sử dụng</th>
+                        <th>Số lần đã sử dụng</th>
+                        <th>Ngày tạo</th>
+                        <th>Ngày hết hạn</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr id="row_@item.ID">
+                        <td>
+                            <a href="/Admin/Voucher/Update/@item.ID" style="text-decoration:none ;color:forestgreen">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Sửa
+                            </a>
+
+
+
+
+                            <span style="text-decoration:none ;color:red">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                                @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                           {
+                               Confirm = "Bạn có muốn xóa bản ghi này!!",
+                               OnComplete = "$('#row_" + @item.ID + "').remove()",
+
+                               HttpMethod = "Delete"
+
+                           },
+                           new
+                           {
+                               @class = "btn text-danger p-0"
+                          }
+                           )
+                            </span>
+
+
+
+
+
+
+
+                        </td>
+                        <td>@item.MaVoucher</td>
+                        <td>@item.DonGiaToiThieu</td>
+                        <td>@item.SoTienGiam</td>
+                        <td>@item.SoLanSuDung</td>
+                        <td>@item.SoLanDaSuDung</td>
+                        <td>@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("yyyy-MM-dd") : "")</td>
+                        <td>@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("yyyy-MM-dd") : "")</td>
+
+                        @*@if (item.Status)
+        {
+            <td><a href="#" style="text-decoration:none" class="btn-active btn-start-text text-success " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+
+        }
+        else
+        {
+            <td><a href="#" style="text-decoration:none" class="btn-active btn-block-text text-danger " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+        }*@
+
+                    </tr>
+                    }
+
+
+
+                </tbody>
+
+            </table>
+
+
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @ViewBag.SearchString }))
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+@*<script>
+    function changeLinkColor() {
+
+        // Thay đổi màu sắc của liên kết sau khi xóa thành công
+        $("a:contains('Xóa')").css("color", "red"); // Thay đổi màu sắc thành màu xanh
+
+    }
+</script>*@
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+

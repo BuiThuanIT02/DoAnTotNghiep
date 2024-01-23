@@ -78,6 +78,30 @@ namespace Web_Sach.Areas.Admin.Controllers
                     setViewBagNXB();
                     return View(sach);
                 }
+                if (sach.Price < 0)
+                {
+                    ModelState.AddModelError("Price", "Giá sách phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.Quantity < 0)
+                {
+                    ModelState.AddModelError("Quantity", "Số lượng sách phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.SoTrang < 0)
+                {
+                    ModelState.AddModelError("SoTrang", "Số trang phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
+                }
 
                 if (book.Insert(sach) > 0)
                 {// chèn thành công
@@ -129,93 +153,100 @@ namespace Web_Sach.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var idSach = sach.ID;
-                var imgSql = db.Images.Where(a => a.MaSP == idSach).ToList();// danh sách ảnh của 1 SP
-                var countImageSql = imgSql.Count; // số lượng ảnh có trong CSDL
-                var countImageCurrent = Images.Count; // số lượng ảnh hiện tại
-                var countSurPlus = (countImageCurrent - countImageSql);// số dư khi lớn hơn
-                if (countImageCurrent >= countImageSql)
-                {// ảnh trong CSDL nhở hơn ảnh đầu vào >> nên thêm ảnh vào CSDL
-                    var arrCount = countImageSql + countSurPlus;
-                    for (int i = 0; i < arrCount; i++)
-                    {
-                        if (i < countImageSql)
-                        {// thay thế cho hết image trong CSDL
-                            if (i + 1 == rDefault[0])
-                            {
-                                imgSql[i].Image1 = Images[i];
-                                imgSql[i].IsDefault = true;
+
+                if (Images != null && Images.Count > 0)
+                {
+                    var imgSql = db.Images.Where(a => a.MaSP == idSach).ToList();// danh sách ảnh của 1 SP
+                    
+                    var countImageSql = imgSql.Count; // số lượng ảnh có trong CSDL
+                    var countImageCurrent = Images.Count; // số lượng ảnh hiện tại
+                    var countSurPlus = (countImageCurrent - countImageSql);// số dư khi lớn hơn
+                    if (countImageCurrent >= countImageSql)
+                    {// ảnh trong CSDL nhở hơn ảnh đầu vào >> nên thêm ảnh vào CSDL
+                        var arrCount = countImageSql + countSurPlus;
+                        for (int i = 0; i < arrCount; i++)
+                        {
+                            if (i < countImageSql)
+                            {// thay thế cho hết image trong CSDL
+                                if (i + 1 == rDefault[0])
+                                {
+                                    imgSql[i].Image1 = Images[i];
+                                    imgSql[i].IsDefault = true;
+                                }
+                                else
+                                {
+                                    imgSql[i].Image1 = Images[i];
+                                    imgSql[i].IsDefault = false;
+                                }
                             }
+
                             else
-                            {
-                                imgSql[i].Image1 = Images[i];
-                                imgSql[i].IsDefault = false;
+                            {// hết index trong mảng ảnh CSDL nên ===> add ảnh vào
+                                var imgNew = new Image();
+
+                                if (i + 1 == rDefault[0])
+                                {
+                                    imgNew.MaSP = idSach;
+                                    imgNew.Image1 = Images[i];
+                                    imgNew.IsDefault = true;
+                                }
+                                else
+                                {
+                                    imgNew.MaSP = idSach;
+                                    imgNew.Image1 = Images[i];
+                                    imgNew.IsDefault = false;
+                                }
+
+                                db.Images.Add(imgNew);
+
                             }
                         }
 
-                        else
-                        {// hết index trong mảng ảnh CSDL nên ===> add ảnh vào
-                            var imgNew = new Image();
 
-                            if (i + 1 == rDefault[0])
+                        db.SaveChanges();
+
+                    }
+                    else
+                    {// ảnh trong CSDL lớn hơn ảnh đc đầu vào  (muốn xóa ảnh)
+
+                        // Sử dụng vòng lặp ngược để tránh vấn đề với việc xóa phần tử trong quá trình duyệt
+                        for (int i = imgSql.Count - 1; i >= 0; i--)
+                        {
+                            // Kiểm tra nếu vẫn còn phần tử trong danh sách Images và còn phần tử trong danh sách từ cơ sở dữ liệu
+                            if (i < Images.Count && i < imgSql.Count)
                             {
-                                imgNew.MaSP = idSach;
-                                imgNew.Image1 = Images[i];
-                                imgNew.IsDefault = true;
+                                // Kiểm tra nếu đây là vị trí hình ảnh mặc định (tính từ danh sách rDefault)
+                                if (i + 1 == rDefault[0])
+                                {
+                                    imgSql[i].Image1 = Images[i];
+                                    imgSql[i].IsDefault = true;
+                                }
+                                else
+                                {
+                                    imgSql[i].Image1 = Images[i];
+                                    imgSql[i].IsDefault = false;
+                                }
                             }
+                            // Nếu không còn phần tử trong danh sách Images hoặc danh sách từ cơ sở dữ liệu, xóa đối tượng từ cơ sở dữ liệu
                             else
                             {
-                                imgNew.MaSP = idSach;
-                                imgNew.Image1 = Images[i];
-                                imgNew.IsDefault = false;
+                                // Kiểm tra xem index i có hợp lệ không trước khi xóa
+                                if (i >= 0 && i < imgSql.Count)
+                                {
+                                    // Xóa đối tượng tại vị trí i
+                                    db.Images.Remove(imgSql[i]);
+                                }
                             }
-
-                            db.Images.Add(imgNew);
-
                         }
+
+                        db.SaveChanges();
+
+
+
                     }
 
-
-                    db.SaveChanges();
-
                 }
-                else
-                {// ảnh trong CSDL lớn hơn ảnh đc đầu vào  (muốn xóa ảnh)
 
-                    // Sử dụng vòng lặp ngược để tránh vấn đề với việc xóa phần tử trong quá trình duyệt
-                    for (int i = imgSql.Count - 1; i >= 0; i--)
-                    {
-                        // Kiểm tra nếu vẫn còn phần tử trong danh sách Images và còn phần tử trong danh sách từ cơ sở dữ liệu
-                        if (i < Images.Count && i < imgSql.Count)
-                        {
-                            // Kiểm tra nếu đây là vị trí hình ảnh mặc định (tính từ danh sách rDefault)
-                            if (i + 1 == rDefault[0])
-                            {
-                                imgSql[i].Image1 = Images[i];
-                                imgSql[i].IsDefault = true;
-                            }
-                            else
-                            {
-                                imgSql[i].Image1 = Images[i];
-                                imgSql[i].IsDefault = false;
-                            }
-                        }
-                        // Nếu không còn phần tử trong danh sách Images hoặc danh sách từ cơ sở dữ liệu, xóa đối tượng từ cơ sở dữ liệu
-                        else
-                        {
-                            // Kiểm tra xem index i có hợp lệ không trước khi xóa
-                            if (i >= 0 && i < imgSql.Count)
-                            {
-                                // Xóa đối tượng tại vị trí i
-                                db.Images.Remove(imgSql[i]);
-                            }
-                        }
-                    }
-
-                    db.SaveChanges();
-
-
-
-                }
                 // kiểm tra trùng tên
                 var bookUpdate = new Book();
                 if (bookUpdate.CompareUpdate(sach))
@@ -227,6 +258,30 @@ namespace Web_Sach.Areas.Admin.Controllers
                     setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
 
+                }
+                if (sach.Price < 0)
+                {
+                    ModelState.AddModelError("Price", "Giá sách phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.Quantity < 0)
+                {
+                    ModelState.AddModelError("Quantity", "Số lượng sách phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.SoTrang < 0)
+                {
+                    ModelState.AddModelError("SoTrang", "Số trang phải lớn hơn 0");
+                    setViewBagCategory();
+                    setViewBagNCC();
+                    setViewBagNXB();
+                    return View(sach);
                 }
                 if (bookUpdate.Update(sach))
                 {// update thành công

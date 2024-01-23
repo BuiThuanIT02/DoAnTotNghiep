@@ -1,4 +1,4 @@
-namespace Web_Sach.Models
+﻿namespace Web_Sach.Models
 {
     using System;
     using System.Collections.Generic;
@@ -16,6 +16,8 @@ namespace Web_Sach.Models
         }
 
         public int ID { get; set; }
+        [Display(Name="Tên nhà cung cấp")]
+        [Required]
 
         [StringLength(150)]
         public string Name { get; set; }
