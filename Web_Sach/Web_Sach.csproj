@@ -206,6 +206,7 @@
     <Compile Include="Models\KhuyenMai_Sach.cs" />
     <Compile Include="Models\NhaCungCap.cs" />
     <Compile Include="Models\NhaXuatBan.cs" />
+    <Compile Include="Models\Payments\VnPayLibrary.cs" />
     <Compile Include="Models\Sach.cs" />
     <Compile Include="Models\Silde.cs" />
     <Compile Include="Models\sysdiagram.cs" />
@@ -1403,6 +1404,7 @@
     <Content Include="Views\Product\FindSimilarBooks.cshtml" />
     <Content Include="Views\ViewAll\Index.cshtml" />
     <Content Include="Views\ViewAll\TopHot.cshtml" />
+    <Content Include="Views\Cart\VnpayReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
