@@ -114,7 +114,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {// chèn thất bại
                     SetAlert("Thêm bản ghi thất bại", "error");
 
-                    return RedirectToAction("Create", "Product");
+                    //return RedirectToAction("Create", "Product");
                 }
 
             }
@@ -262,25 +262,25 @@ namespace Web_Sach.Areas.Admin.Controllers
                 if (sach.Price < 0)
                 {
                     ModelState.AddModelError("Price", "Giá sách phải lớn hơn 0");
-                    setViewBagCategory();
-                    setViewBagNCC();
-                    setViewBagNXB();
+                    setViewBagCategory(sach.DanhMucID);
+                    setViewBagNCC(sach.NhaCungCapID);
+                    setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
                 else if (sach.Quantity < 0)
                 {
                     ModelState.AddModelError("Quantity", "Số lượng sách phải lớn hơn 0");
-                    setViewBagCategory();
-                    setViewBagNCC();
-                    setViewBagNXB();
+                    setViewBagCategory(sach.DanhMucID);
+                    setViewBagNCC(sach.NhaCungCapID);
+                    setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
                 else if (sach.SoTrang < 0)
                 {
                     ModelState.AddModelError("SoTrang", "Số trang phải lớn hơn 0");
-                    setViewBagCategory();
-                    setViewBagNCC();
-                    setViewBagNXB();
+                    setViewBagCategory(sach.DanhMucID);
+                    setViewBagNCC(sach.NhaCungCapID);
+                    setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
                 if (bookUpdate.Update(sach))
@@ -294,9 +294,9 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     SetAlert("Cập nhật thất bại", "error");
                     //mới thêm ngày 15-10-2023
-                    setViewBagCategory(sach.DanhMucID);
-                    setViewBagNCC(sach.NhaCungCapID);
-                    setViewBagNXB(sach.NhaXuatBanID);
+                    //setViewBagCategory(sach.DanhMucID);
+                    //setViewBagNCC(sach.NhaCungCapID);
+                    //setViewBagNXB(sach.NhaXuatBanID);
                 }
 
 

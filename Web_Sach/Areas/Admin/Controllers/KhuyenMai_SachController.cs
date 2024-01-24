@@ -58,9 +58,10 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Update(int maSach, int maKM)
         {
+            
             var kmItem = new kmSachModels().Edit(maSach, maKM);
-            setViewBagMaSach();
-            setViewBagMaKM();
+            setViewBagMaSach(kmItem.MaSach);
+            setViewBagMaKM(kmItem.MaKhuyenMai);
             TempData["maSach"] = maSach;
             TempData["maKM"] = maKM;
             return View(kmItem);
@@ -74,8 +75,8 @@ namespace Web_Sach.Areas.Admin.Controllers
                 if (km.Sale < 0)
                 {
                     ModelState.AddModelError("Sale", "Sale phải lớn hơn 0");
-                    setViewBagMaSach();
-                    setViewBagMaKM();
+                    setViewBagMaSach(km.MaSach);
+                    setViewBagMaKM(km.MaKhuyenMai);
                     return View("Update");
                 }
                 TempData.Keep("maSach");
@@ -90,8 +91,8 @@ namespace Web_Sach.Areas.Admin.Controllers
 
                 }
             }
-            setViewBagMaSach();
-            setViewBagMaKM();
+            setViewBagMaSach(km.MaSach);
+            setViewBagMaKM(km.MaKhuyenMai);
             SetAlert("Cập nhật thất bại", "error");
             return View("Update");
         }

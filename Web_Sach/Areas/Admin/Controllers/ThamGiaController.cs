@@ -52,8 +52,8 @@ namespace Web_Sach.Areas.Admin.Controllers
         public ActionResult Update(int maSach, int maTacGia)
         {
             var tgItem = new thamGiaModels().Edit(maSach,maTacGia);
-            setViewBagMaSach();
-            setViewBagMaTacGia();
+            setViewBagMaSach(tgItem.MaSach);
+            setViewBagMaTacGia(tgItem.MaTacGia);
             TempData["maSach"] = maSach;
             TempData["maTacGia"] = maTacGia;
             return View(tgItem);
@@ -76,8 +76,8 @@ namespace Web_Sach.Areas.Admin.Controllers
 
                 }              
             }
-            setViewBagMaSach();
-            setViewBagMaTacGia();
+            setViewBagMaSach(km.MaSach);
+            setViewBagMaTacGia(km.MaTacGia);
             SetAlert("Cập nhật thất bại", "error");
             return View("Update");
         }

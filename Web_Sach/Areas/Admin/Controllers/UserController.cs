@@ -28,7 +28,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             return View();
         }
        
-        public void setViewBagRole(string selectedId = "")
+        public void setViewBagRole(string selectedId = null)
         {
             if (string.IsNullOrEmpty(selectedId))
             {
@@ -38,6 +38,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                new SelectListItem {Text="Client", Value="0"},
                new SelectListItem{Text = "Admin", Value = "1"},
             };
+          
             ViewBag.Role = new SelectList(roles, "Value", "Text", selectedId);
 
         }
@@ -96,7 +97,7 @@ namespace Web_Sach.Areas.Admin.Controllers
         public ActionResult Update(int id)
         {
             var userEdit = new TaiKhoanModels().EditUser(id);
-            setViewBagRole();
+            setViewBagRole((userEdit.Role).ToString());
             return View(userEdit);
         }
 
@@ -113,7 +114,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 if (userUpdate.Compare(tk))
                 {
                     ModelState.AddModelError("TaiKhoan1", "Tên tài khoản đã tồn tại");
-                    setViewBagRole();
+                    setViewBagRole(tk.Role.ToString());
                     return View(tk);
                 }
             
@@ -124,7 +125,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     if (!password.Any(char.IsUpper) || !password.Any(char.IsDigit) || password.Length < 8)
                     {
                         ModelState.AddModelError("Password", "Mật khẩu có độ dài lớn hơn 8 và chứa ít nhất 1 chữ viết hoa và 1 số");
-                        setViewBagRole();
+                        setViewBagRole(tk.Role.ToString());
                         return View(tk);
                     }
                     
@@ -140,10 +141,10 @@ namespace Web_Sach.Areas.Admin.Controllers
             else
                 {
                     SetAlert("Update thất bại", "error");
-                setViewBagRole();
+                setViewBagRole(tk.Role.ToString());
                 return View(tk);
             }
-            setViewBagRole();
+            setViewBagRole(tk.Role.ToString());
             return View("Index");
         }
 
