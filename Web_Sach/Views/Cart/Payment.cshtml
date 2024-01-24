@@ -110,6 +110,18 @@
 </div>
 
 
+@*@using (Ajax.BeginForm("Payment", "Cart", new AjaxOptions
+    {
+        HttpMethod = "POST",
+
+        OnSuccess = "OnSuccessCO",
+        OnFailure = "OnFailure",
+        OnBegin = "OnBeginCO",
+    }, new { @Id = "myForm" }))
+    {
+
+
+        @Html.AntiForgeryToken()*@
 <div class="section group mb-5">
     <h4 class="text-center">Xác nhận thanh toán</h4>
     <div class="container">
@@ -117,6 +129,7 @@
             <div class="col-md-6">
                 @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
                 {
+
                     <div class="form-group mb-2">
                         <label>Người nhận</label>
                         <input type="text" name="TenKH" class="form-control" value="@userPayment.FullName" required />
@@ -167,17 +180,17 @@
                         <label><input type="radio" name="TypePaymentVN" value="3" /> Thanh toan qua the quoc te </label><br />
                         @*<div class="form-group">
 
-                            <button type="submit" class="btn btn-block btn-success">Dat hang</button>
+                                <button type="submit" class="btn btn-block btn-success">Dat hang</button>
 
-                        </div>*@
+                            </div>*@
                     </div>
 
 
 
+                    <div class="form-group" id="load_send"></div>
 
 
-
-                    <button type="submit" class="btn btn-dark mt-2">Thanh toán</button>
+                    <button type="submit" class="btn btn-dark mt-2" id="btnCheckOut">Thanh toán</button>
                 }
 
             </div>
@@ -187,7 +200,6 @@
 
 
 </div>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -195,9 +207,75 @@
             var type = $(this).val();
             console.log(type);
             $('#load_form_payment').hide();
-          if (type == "2") {
+            if (type == "2") {
                 $('#load_form_payment').show();
             }
-        })
+        }) // dropw hình thức thanh toán
+
+        //function OnSuccessCO(res) {
+        //    if (res.Code == 1) {
+        //        console.log(res);
+        //        console.log("run 1");
+        //        location.href = "/hoan-thanh";
+        //    }
+        //    else {
+        //        console.log(res);
+        //        console.log("run 2");
+        //        location.href = res.Url;
+        //    }
+        //}
+        //function OnBeginCO() {
+        //    $('#btnCheckOut').attr("disabled", "disabled");
+        //    $('#load_send').html(`<h2>Đang gửi...</h2>`);
+        //}
+        $('#btnCheckOut').on("click", function (e) {
+            e.preventDefault();
+            var TenKH = $('input[name="TenKH"]').val();
+            var Mobile = $('input[name="Mobile"]').val();
+            var Address = $('input[name="Address"]').val();
+            var Email = $('input[name="Email"]').val();
+            var TypePayment = $('#drTypePayment').val();
+            var total = $('input[name="total"]').val();
+            var TypePaymentVN = $('input[name="TypePaymentVN"]').val();
+            $('#btnCheckOut').attr("disabled", "disabled");
+            $('#load_send').html(`<h2>Đang gửi...</h2>`);
+            $.ajax({
+                url: "/Cart/Payment",
+                type: "POST",
+                data: {
+                    TenKH,
+                    Mobile,
+                    Address,
+                    Email,
+                    TypePayment,
+                    total,
+                    TypePaymentVN
+                },
+
+                dataType: "json",
+
+                success: function (res) {
+                    if (res.Code == 1) {
+                        location.href = "/hoan-thanh";
+                    }
+                    else {
+                        location.href = res.Url;
+                    }
+                }
+
+
+            }); //  end ajax
+        });// end submit
+
+
+
+
+
+
+
+        // end document
     });
+
+
+
 </script>

@@ -1,9 +1,11 @@
 ﻿
 @{
     ViewBag.Title = "VnpayReturn";
-    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>VnpayReturn</h2>
-
-
+@if (ViewBag.ThanhToanThanhCong != null)
+{
+    <p>@ViewBag.ThanhToanThanhCong </p>
+}
+@ViewBag.InnerText

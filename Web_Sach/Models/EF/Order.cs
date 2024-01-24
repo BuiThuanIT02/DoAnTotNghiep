@@ -9,6 +9,13 @@ namespace Web_Sach.Models.EF
     public class Order
     {
         private WebSachDb db = null;
+        public string TenKH { get; set; }
+        public string Mobile { get; set; }
+        public string Address { get; set; }
+        public string Email { get; set; }
+        public int total { get; set; }
+        public string TypePayment { get; set; }
+        public string TypePaymentVN { get; set; }
         public Order()
         {
             db = new WebSachDb();
