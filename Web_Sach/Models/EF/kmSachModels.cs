@@ -49,47 +49,54 @@ namespace Web_Sach.Models.EF
 
         public bool Update(int maSach, int maKM, KhuyenMai_Sach dm)
         {
-
-            var km = db.KhuyenMai_Sach.Where(t => t.MaKhuyenMai == maKM && t.MaSach == maSach).FirstOrDefault();
-            if (km != null)
+            try
             {
-                // Mới chưa tồn tại, cũ đã tồn tại
-                if (km.MaSach != dm.MaSach || km.MaKhuyenMai != dm.MaKhuyenMai)
+                var km = db.KhuyenMai_Sach.Where(t => t.MaKhuyenMai == maKM && t.MaSach == maSach).FirstOrDefault();
+                if (km != null)
                 {
-                    // Tạo một đối tượng mới với giá trị mới
-                    var newKm_Sach = new KhuyenMai_Sach
+                    // Mới chưa tồn tại, cũ đã tồn tại
+                    if (km.MaSach != dm.MaSach || km.MaKhuyenMai != dm.MaKhuyenMai)
                     {
-                        MaSach = dm.MaSach,
-                        MaKhuyenMai = dm.MaKhuyenMai,
-                        Sale = dm.Sale,
-                        // Các thuộc tính khác nếu có
-                    };
-  // Xóa đối tượng cũ
-                    db.KhuyenMai_Sach.Remove(km);
-                    // Thêm đối tượng mới vào cơ sở dữ liệu
-                    db.KhuyenMai_Sach.Add(newKm_Sach);
+                        // Tạo một đối tượng mới với giá trị mới
+                        var newKm_Sach = new KhuyenMai_Sach
+                        {
+                            MaSach = dm.MaSach,
+                            MaKhuyenMai = dm.MaKhuyenMai,
+                            Sale = dm.Sale,
+                            // Các thuộc tính khác nếu có
+                        };
+                        // Xóa đối tượng cũ
+                        db.KhuyenMai_Sach.Remove(km);
+                        // Thêm đối tượng mới vào cơ sở dữ liệu
+                        db.KhuyenMai_Sach.Add(newKm_Sach);
 
-                  
 
-                    // Lưu thay đổi vào cơ sở dữ liệu
-                    db.SaveChanges();
 
-                    return true;
-                }
-                else
-                {// sách mới  == sách cũ
-                    if(km.Sale != dm.Sale)
-                    {
-                        km.Sale = dm.Sale;
+                        // Lưu thay đổi vào cơ sở dữ liệu
                         db.SaveChanges();
-                       return true;
+
+                        return true;
                     }
-                    return true;
+                    else
+                    {// sách mới  == sách cũ
+                        if (km.Sale != dm.Sale)
+                        {
+                            km.Sale = dm.Sale;
+                            db.SaveChanges();
+                            return true;
+                        }
+                        return true;
+                    }
                 }
+
+
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return false;
-
 
 
         }

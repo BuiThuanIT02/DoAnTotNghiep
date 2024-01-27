@@ -45,35 +45,43 @@ namespace Web_Sach.Models.EF
 
         public bool Update(int maSach, int maTacGia, ThamGia dm)
         {
-            var km = db.ThamGias.Where(t => t.MaTacGia == maTacGia && t.MaSach == maSach).FirstOrDefault();
-            if (km != null)
+            try
             {
-                // Mới chưa tồn tại, cũ đã tồn tại
-                if (km.MaSach != dm.MaSach || km.MaTacGia != dm.MaTacGia)
+                var km = db.ThamGias.Where(t => t.MaTacGia == maTacGia && t.MaSach == maSach).FirstOrDefault();
+                if (km != null)
                 {
-                    // Tạo một đối tượng mới với giá trị mới
-                    var newThamGia = new ThamGia
+                    // Mới chưa tồn tại, cũ đã tồn tại
+                    if (km.MaSach != dm.MaSach || km.MaTacGia != dm.MaTacGia)
                     {
-                        MaSach = dm.MaSach,
-                        MaTacGia = dm.MaTacGia
-                        // Các thuộc tính khác nếu có
-                    };
+                        // Tạo một đối tượng mới với giá trị mới
+                        var newThamGia = new ThamGia
+                        {
+                            MaSach = dm.MaSach,
+                            MaTacGia = dm.MaTacGia
+                            // Các thuộc tính khác nếu có
+                        };
 
-                    // Thêm đối tượng mới vào cơ sở dữ liệu
-                    db.ThamGias.Add(newThamGia);
+                        // Thêm đối tượng mới vào cơ sở dữ liệu
+                        db.ThamGias.Add(newThamGia);
 
-                    // Xóa đối tượng cũ
-                    db.ThamGias.Remove(km);
+                        // Xóa đối tượng cũ
+                        db.ThamGias.Remove(km);
 
-                    // Lưu thay đổi vào cơ sở dữ liệu
-                    db.SaveChanges();
+                        // Lưu thay đổi vào cơ sở dữ liệu
+                        db.SaveChanges();
 
-                    return true;
+                        return true;
+                    }
+                    else
+                    {// sách mới == sách cũ
+                        return true;
+                    }
                 }
-                else
-                {// sách mới == sách cũ
-                    return true;
-                }
+
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return false;
