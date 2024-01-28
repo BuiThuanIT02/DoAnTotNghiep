@@ -1,22 +1,25 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "ThongKeTheoNam";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
+
+
+
 
 <!-- BAR CHART -->
 <div class="card card-success">
     <div class="card-header">
-        <h3 class="card-title">Thống kê doanh thu theo ngày</h3>
+        <h3 class="card-title">Thống kê doanh thu theo năm</h3>
 
         @*<div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>*@
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>*@
     </div>
     <div class="card-body">
         <div class="row">
@@ -30,7 +33,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Ngày</th>
+                            <th>Năm</th>
                             <th>Doanh thu</th>
                             <th>Lợi nhuận</th>
                         </tr>
@@ -41,7 +44,7 @@
                 </table>
             </div>
         </div>
-       
+
     </div>
     <!-- /.card-body -->
 </div>
@@ -49,7 +52,7 @@
 @section jsFooter{
 
     @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
     <script src="~/Scripts/Admin/js/chart.js/Chart.min.js"></script>
     <script src="~/Scripts/Admin/js/moment/moment.min.js"></script>
     <script>
@@ -60,13 +63,13 @@
            let arrLoiNhuan = [];
            let arrDate = [];
             $.ajax({
-                url: '/ThongKe/GetStatistical',
+                url: '/ThongKe/GetThongKeTheoNam',
                 type: 'GET',
                 data: {},
                 success: function (res) {
                     $.each(res.Data, function (i, item) {
-                        let strDate = moment(item.Dates).format('DD/MM/yyyy');
-                        arrDate.push(strDate);
+                       /* let strDate = moment(item.Dates).format('DD/MM/yyyy');*/
+                        arrDate.push(item.Dates);
                         arrDoanThu.push(item.DoanhThu);
                         arrLoiNhuan.push(item.LoiNhuan);
                     }); // Đóng $.each() ở đây
@@ -136,13 +139,13 @@
             function load_data(data) {
                 var strHtml = "";
                 $.each(data, function (i, item) {
-                    let strDate = moment(item.Dates).format('DD/MM/yyyy');
+                   /* let strDate = moment(item.Dates).format('DD/MM/yyyy');*/
                     let doanhThu = item.DoanhThu != null ? numberWithCommas(item.DoanhThu) : "";
                     let loiNhuan = item.LoiNhuan != null ? numberWithCommas(item.LoiNhuan) : "";
 
                     strHtml += "<tr>";
                     strHtml += "<td>" + (i + 1) + "</td>";
-                    strHtml += "<td>" + strDate + "</td>";
+                    strHtml += "<td>" + item.Dates + "</td>";
                     strHtml += "<td>" + doanhThu + "</td>";
                     strHtml += "<td>" + loiNhuan + "</td>";
                     strHtml += "</tr>";
@@ -160,3 +163,7 @@
     </script>
 
 }
+
+
+
+

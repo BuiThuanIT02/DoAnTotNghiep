@@ -1499,6 +1499,8 @@
     <Content Include="Scripts\Admin\js\moment\locales.min.js.map" />
     <Content Include="Scripts\Admin\js\moment\moment-with-locales.min.js.map" />
     <Content Include="Scripts\Admin\js\moment\moment.min.js.map" />
+    <Content Include="Areas\Admin\Views\ThongKe\ThongKeTheoThang.cshtml" />
+    <Content Include="Areas\Admin\Views\ThongKe\ThongKeTheoNam.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\Contact.js" />

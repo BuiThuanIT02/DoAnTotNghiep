@@ -73,9 +73,7 @@
                         <tr id="row_@item.ID">
                             <td>
                                 <div class="row">
-                                    <div class="col-xs-4">
-                                        <a href="#" class="btn-images" data-id="@item.ID">Ảnh</a>
-                                    </div>
+                                    
                                     <div class="col-xs-4">
                                         <a href="/Admin/Product/Update/@item.ID" style="text-decoration:none;color:green">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -123,7 +121,9 @@
 
 
                             </td>
-                            <td>@item.Price</td>
+                            <td>
+                                @(item.Price.HasValue ? item.Price.Value.ToString("N0") : "")
+                            </td>
                             <td>@item.Quantity</td>
 
                             @*<td>@item.Sale</td>*@
