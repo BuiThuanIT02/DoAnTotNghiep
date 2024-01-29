@@ -90,9 +90,12 @@
 
 
             }
-            <tr>
-                <th colspan="6" style="text-align:right " class="text-dark fs-5 ">Tổng tiền:@total.ToString("N0")</th>
+        <tbody id="totalVoucher">
+            <tr >
+                <th colspan="6" style="text-align:right " class="text-dark fs-5">Tổng tiền:@total.ToString("N0")</th>
             </tr>
+        </tbody>
+          
 
 
 
@@ -143,12 +146,18 @@
 
                     <div class="form-group mb-2">
                         <label>Địa chỉ</label>
-                        <input type="text" name="Address" class="form-control" required />
+                        <input type="text" name="Address" class="form-control" value="@userPayment.Address" required />
                     </div>
 
                     <div class="form-group mb-2">
                         <label>Email</label>
                         <input type="email" name="Email" class="form-control" value="@userPayment.Email" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Mã voucher(nếu có)</label>
+                        <input type="text" name="mavoucher" class="form-control" />
+                        <p class="d-none" id="errorVoucher"></p>
                     </div>
                     <div class="form-group mb-2">
                         <label>Phương thức thanh toán</label>
@@ -190,7 +199,7 @@
                     <div class="form-group" id="load_send"></div>
 
 
-                    <button type="submit" class="btn btn-dark mt-2" id="btnCheckOut">Thanh toán</button>
+                    <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
                 }
 
             </div>
@@ -201,6 +210,8 @@
 
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('body').on('change', '#drTypePayment', function () {
@@ -212,33 +223,18 @@
             }
         }) // dropw hình thức thanh toán
 
-        //function OnSuccessCO(res) {
-        //    if (res.Code == 1) {
-        //        console.log(res);
-        //        console.log("run 1");
-        //        location.href = "/hoan-thanh";
-        //    }
-        //    else {
-        //        console.log(res);
-        //        console.log("run 2");
-        //        location.href = res.Url;
-        //    }
-        //}
-        //function OnBeginCO() {
-        //    $('#btnCheckOut').attr("disabled", "disabled");
-        //    $('#load_send').html(`<h2>Đang gửi...</h2>`);
-        //}
         $('#btnCheckOut').on("click", function (e) {
             e.preventDefault();
             var TenKH = $('input[name="TenKH"]').val();
             var Mobile = $('input[name="Mobile"]').val();
             var Address = $('input[name="Address"]').val();
             var Email = $('input[name="Email"]').val();
+            var mavoucher = $('input[name="mavoucher"]').val();
             var TypePayment = $('#drTypePayment').val();
             var total = $('input[name="total"]').val();
             var TypePaymentVN = $('input[name="TypePaymentVN"]').val();
-            $('#btnCheckOut').attr("disabled", "disabled");
-            $('#load_send').html(`<h2>Đang gửi...</h2>`);
+            //$('#btnCheckOut').attr("disabled", "disabled");
+            //$('#load_send').html(`<h2>Đang gửi...</h2>`);
             $.ajax({
                 url: "/Cart/Payment",
                 type: "POST",
@@ -247,6 +243,7 @@
                     Mobile,
                     Address,
                     Email,
+                    mavoucher,
                     TypePayment,
                     total,
                     TypePaymentVN
@@ -255,13 +252,63 @@
                 dataType: "json",
 
                 success: function (res) {
-                    if (res.Code == 1) {
+                    if (res.Code == 10 && res.Success == false) {
+                        $('#errorVoucher').addClass('d-block text-danger')
+                        $('#errorVoucher').removeClass('d-none')
+
+                        $('#errorVoucher').html('Mã voucher không tồn tại!');
+                        $('input[name="mavoucher"]').css('border', "1px solid red");
+                    }// voucher
+                    else if (res.Code == 11 && res.Success == false) {
+                        $('#errorVoucher').addClass('d-block text-danger')
+                        $('#errorVoucher').removeClass('d-none')
+
+                        $('#errorVoucher').html('Mã voucher đã hết hạn sử dụng!');
+                        $('input[name="mavoucher"]').css('border', "1px solid red");
+                    }
+                    else if (res.Code == 12 && res.Success == false) {
+                        $('#errorVoucher').addClass('d-block text-danger')
+                        $('#errorVoucher').removeClass('d-none')
+
+                        $('#errorVoucher').html(`Giá trị đơn hàng phải lớn hơn ${res.DonGia}`);
+                        $('input[name="mavoucher"]').css('border', "1px solid red");
+                    }
+                    else if (res.Code == 13 && res.Success == false) {
+                        $('#errorVoucher').addClass('d-block text-danger')
+                        $('#errorVoucher').removeClass('d-none')
+
+                        $('#errorVoucher').html("Đã sử dụng hết lượt voucher này!.");
+                        $('input[name="mavoucher"]').css('border', "1px solid red");
+                    }
+                    else if (res.Code == 14 && res.Success == true) {
+                        let str = "";
+                        let thanhtien = total - res.DonGia;
+                        let voucher = res.DonGia != null ? numberWithCommas(res.DonGia) : "";
+                        let payment = thanhtien != null ? numberWithCommas(thanhtien) : "";
+                        function numberWithCommas(x) {
+                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }
+                        str += `<tr>
+                                   <td colspan="6" style="text-align:right " class="text-dark fs-5">Voucher: -${voucher}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="6" style="text-align:right " class="text-dark fs-5">Thanh toán: ${payment}</th>
+                                </tr>
+                              
+                        `
+                        $('#totalVoucher').append(str);
+                       
+                    }
+                    else if (res.Code == 1 && res.Success == true) {
                         location.href = "/hoan-thanh";
                     }
                     else {
+                        $('#btnCheckOut').attr("disabled", "disabled");
+                        $('#load_send').html(`<h2>Đang gửi...</h2>`);
                         location.href = res.Url;
                     }
-                }
+
+                },
 
 
             }); //  end ajax

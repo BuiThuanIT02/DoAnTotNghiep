@@ -45,24 +45,22 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
-                        <a class="nav-link" href="~/Admin/Home/Index">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Trang chủ
-                        </a>
-
-                        <a class="nav-link" href="~/Admin/ThongKe/Index">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Thống kê theo ngày
-                        </a>
-                        <a class="nav-link" href="~/Admin/ThongKe/ThongKeTheoThang">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Thống kê theo tháng
-                        </a>
-                        <a class="nav-link" href="~/Admin/ThongKe/ThongKeTheoNam">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Thống kê theo năm
-                        </a>
+                        <div class="dropdown nav-link" style="height:48px">
+                            <a class="nav-link" href="#thongke" data-bs-toggle="dropdown" role="button">
+                                <div class="sb-nav-link-icon" ><i class="fas fa-tachometer-alt"></i></div>
+                                Thống kê
+                            </a>
+                            <ul class="dropdown-menu" id="thongke">
+                                <li>
+                                    <a class="dropdown-item" href="~/Admin/ThongKe/Index">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                        Thống kê theo ngày
+                                    </a>
+                                </li>
+                                <li><a class="dropdown-item" href="~/Admin/ThongKe/ThongKeTheoThang"> <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>Thống kê theo tháng</a></li>
+                                <li><a class="dropdown-item" href="~/Admin/ThongKe/ThongKeTheoNam"> <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>Thống kê theo năm</a></li>
+                            </ul>
+                        </div>
 
                         <a class="nav-link" href="~/Admin/User/Index">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

@@ -9,13 +9,16 @@ using Web_Sach.Session;
 using System.Web.Script.Serialization;
 using System.Configuration;
 using Web_Sach.Models.Payments;
+using System.Diagnostics;
+using System.Text;
 
 namespace Web_Sach.Controllers
 {
     public class CartController : Controller
     {
         // GET: Cart
-        WebSachDb db = new WebSachDb();
+        private WebSachDb db = new WebSachDb();
+       
         public ActionResult Index()
         {
             if (Session[SessionHelper.USER_KEY] == null)
@@ -73,7 +76,7 @@ namespace Web_Sach.Controllers
                     int? sale = 0;
 
                     var khuyenMai = sach.FirstOrDefault().KhuyenMai_Sach.ToList();
-                    if (khuyenMai.Count >0)
+                    if (khuyenMai.Count > 0)
                     {
                         foreach (var itemKM in khuyenMai)
                         {// lặp qua danh sách khuyến mại
@@ -100,7 +103,7 @@ namespace Web_Sach.Controllers
                 item.sach = sach.FirstOrDefault();
                 int? sale = 0;
                 var khuyenMai = sach.FirstOrDefault().KhuyenMai_Sach.ToList();
-                if (khuyenMai.Count >0)
+                if (khuyenMai.Count > 0)
                 {
                     foreach (var itemKM in khuyenMai)
                     {// lặp qua danh sách khuyến mại
@@ -207,7 +210,7 @@ namespace Web_Sach.Controllers
             db.SaveChanges();
             var idOrder = order.ID;
 
-           
+
             var orderDetails = new ChiTietDonHang();
             orderDetails.MaDonHang = idOrder;
             orderDetails.MaSach = id;
@@ -240,17 +243,73 @@ namespace Web_Sach.Controllers
         [HttpPost]
         public JsonResult Payment(Order obOrder)
         {
-            //string TenKH, string Mobile, string Address, string Email, int total, string TypePayment,string TypePaymentVN
-            var code = new { Success = false, Code = 1, Url = "" };
-            var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
-            WebSachDb db = new WebSachDb();
+            var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
             var order = new DonHang();
+            bool checkVoucher = Session["checkVoucher"] == null ? false : true;  
+            var dbVoucher = db.Vouchers.Where(x => x.MaVoucher == obOrder.mavoucher).FirstOrDefault();
+            if (checkVoucher  == false)
+            {
+                if (!string.IsNullOrEmpty(obOrder.mavoucher))
+                {// đã điền voucher
+                 //ktra xem mã có tồn tại không
+                 
+                    if (dbVoucher != null)
+                    {// voucher tồn tại
+                     // kiểm tra ngày sử dụng
+                        if (DateTime.Now >= dbVoucher.NgayTao && DateTime.Now <= dbVoucher.NgayHetHan)
+                        {// trong thời gian  sử dụng
+                         //kiểm tra đơn tối thiểu tm không
+                            if (obOrder.total >= dbVoucher.DonGiaToiThieu)
+                            {// thỏa mã đơn giá
+                             // check số lần sử dụng
+                                if (dbVoucher.SoLanDaSuDung <= dbVoucher.SoLanSuDung)
+                                {// đc add voucher
+                                    //order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+                                    dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                                    int price = (int)dbVoucher.SoTienGiam;
+                                    code = new { Success = true, Code = 14, Url = "", DonGia = price }; // chưa tồn tại
+                                    Session["checkVoucher"] = true;
+                                    db.SaveChanges();
+                                    return Json(code);
+                                }
+                                else
+                                {// không được add voucher
+                                    code = new { Success = false, Code = 13, Url = "", DonGia = 0 }; // chưa tồn tại
+                                    return Json(code);
+                                }
+                            }
+                            else
+                            {// không thỏa mãn đơn giá
+                                int price = (int)dbVoucher.DonGiaToiThieu;
+
+                                code = new { Success = false, Code = 12, Url = "", DonGia = price }; // chưa tồn tại
+                                return Json(code);
+                            }
+                        }
+                        else
+                        {// hết thời gian sử dụng
+                            code = new { Success = false, Code = 11, Url = "", DonGia = 0 }; // chưa tồn tại
+                            return Json(code);
+                        }
+
+                    }
+                    else
+                    {// voucher chưa tồn tại
+                        code = new { Success = false, Code = 10, Url = "", DonGia = 0 }; // chưa tồn tại
+                        return Json(code);
+                    }
+
+                }
+            }
+            var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
             order.TenNguoiNhan = obOrder.TenKH;
             order.Moblie = obOrder.Mobile;
             order.DiaChiNguoiNhan = obOrder.Address;
-            order.Email = obOrder.Email;
-            order.TongTien = obOrder.total;
+            order.Email = obOrder.Email;         
             order.NgayDat = DateTime.Now;
+            order.DaThanhToan = 0;
+            order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+            order.MaVoucher = dbVoucher.ID;
             order.MaKH = sessionUser.UserID;
             order.Status = 1;
             db.DonHangs.Add(order);
@@ -277,17 +336,17 @@ namespace Web_Sach.Controllers
             //TempData["Order"] = order;
             //TempData["OrderDetail"] = orderDetail;
             Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
-             
+
             int type = int.Parse(obOrder.TypePayment);
-            code = new { Success = true, Code = type, Url = ""};
+            code = new { Success = true, Code = type, Url = "", DonGia = 0 };
             // thanh toasn vnpay
-            if (type ==  2)
+            if (type == 2)
             {
-              var  url = UrlPayment(int.Parse(obOrder.TypePaymentVN), order.ID);  
-               
-                code = new { Success = true, Code =type , Url = url };
+                var url = UrlPayment(int.Parse(obOrder.TypePaymentVN), order.ID);
+
+                code = new { Success = true, Code = type, Url = url, DonGia = 0 };
             }
-         
+
 
             return Json(code);
 
@@ -297,7 +356,7 @@ namespace Web_Sach.Controllers
 
 
 
-           
+
 
 
 
@@ -355,12 +414,12 @@ namespace Web_Sach.Controllers
 
             //Build URL for VNPAY
             VnPayLibrary vnpay = new VnPayLibrary();
-            var Price = (long)order.TongTien *100;
+            var Price = (long)order.TongTien * 100;
             vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
             vnpay.AddRequestData("vnp_Command", "pay");
             vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
             vnpay.AddRequestData("vnp_Amount", Price.ToString()); //Số tiền thanh toán. Số tiền không mang các ký tự phân tách thập phân, phần nghìn, ký tự tiền tệ. Để gửi số tiền thanh toán là 100,000 VND (một trăm nghìn VNĐ) thì merchant cần nhân thêm 100 lần (khử phần thập phân), sau đó gửi sang VNPAY là: 10000000
-            if (TypePaymentVN ==1)
+            if (TypePaymentVN == 1)
             {
                 vnpay.AddRequestData("vnp_BankCode", "VNPAYQR");
             }
@@ -385,7 +444,7 @@ namespace Web_Sach.Controllers
             vnpay.AddRequestData("vnp_TxnRef", order.ID.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
 
 
-           urlPayment = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+            urlPayment = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
             //log.InfoFormat("VNPAY URL: {0}", paymentUrl);
             //Response.Redirect(paymentUrl);
             return urlPayment;
@@ -445,12 +504,12 @@ namespace Web_Sach.Controllers
                     if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                     {
                         var itemOrder = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
-                        if(itemOrder != null)
+                        if (itemOrder != null)
                         {
-                            itemOrder.Status = 2;
+                            itemOrder.DaThanhToan = 1;// đã thanh toán
 
-                            db.DonHangs.Attach(itemOrder);
-                            db.Entry(itemOrder).State = System.Data.Entity.EntityState.Modified;
+                            db.DonHangs.Attach(itemOrder);// theo dõi 
+                            db.Entry(itemOrder).State = System.Data.Entity.EntityState.Modified;// cập nhật lại trong csdl
                             db.SaveChanges();
                         }
                         //Thanh toan thanh cong
@@ -459,6 +518,21 @@ namespace Web_Sach.Controllers
                     }
                     else
                     {
+                        var order = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
+                        if (order != null)
+                        {
+                            var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == orderId).ToList();
+                            foreach (var item in orderDetail)
+                            {// cập nhật số lượng
+                                var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
+                                sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
+                                db.ChiTietDonHangs.Remove(item);
+
+                            }
+                            db.DonHangs.Remove(order);
+
+                            db.SaveChanges();
+                        }
                         //Thanh toan khong thanh cong. Ma loi: vnp_ResponseCode
                         ViewBag.InnerText = "Có lỗi xảy ra trong quá trình xử lý.Mã lỗi: " + vnp_ResponseCode;
                         //log.InfoFormat("Thanh toan loi, OrderId={0}, VNPAY TranId={1},ResponseCode={2}", orderId, vnpayTranId, vnp_ResponseCode);
@@ -469,7 +543,7 @@ namespace Web_Sach.Controllers
                     ViewBag.ThanhToanThanhCong = "Số tiền thanh toán (VND):" + vnp_Amount.ToString();
                     //displayBankCode.InnerText = "Ngân hàng thanh toán:" + bankCode;
                 }
-                
+
             }
             return View();
         }

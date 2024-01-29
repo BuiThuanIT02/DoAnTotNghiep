@@ -13,6 +13,7 @@ namespace Web_Sach.Models.EF
         public string Mobile { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
+        public string mavoucher { get; set; }
         public int total { get; set; }
         public string TypePayment { get; set; }
         public string TypePaymentVN { get; set; }

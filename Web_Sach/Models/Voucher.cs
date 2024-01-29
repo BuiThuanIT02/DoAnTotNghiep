@@ -18,7 +18,7 @@
         public int ID { get; set; }
         [Display(Name = "Đơn giá tối thiểu")]
         [Required]
-        public double? DonGiaToiThieu { get; set; }
+        public double DonGiaToiThieu { get; set; }
         [Display(Name = "Ngày tạo")]
         [Required]
         public DateTime? NgayTao { get; set; }

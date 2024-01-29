@@ -22,7 +22,7 @@ namespace Web_Sach.Controllers
         public JsonResult RemoveOrder(int id)
         {
           
-                var order = db.DonHangs.Find(id);
+            var order = db.DonHangs.Find(id);
             if(order != null)
             {
                 var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id).ToList();
@@ -30,9 +30,10 @@ namespace Web_Sach.Controllers
                 {// cập nhật số lượng
                     var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
                     sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
+                    db.ChiTietDonHangs.Remove(item);
                  
                 }
-                order.Status = 0;
+                db.DonHangs.Remove(order);
                
                 db.SaveChanges();
                 return Json(new
