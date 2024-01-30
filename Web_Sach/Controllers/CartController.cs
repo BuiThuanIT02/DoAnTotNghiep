@@ -11,6 +11,7 @@ using System.Configuration;
 using Web_Sach.Models.Payments;
 using System.Diagnostics;
 using System.Text;
+using BotDetect;
 
 namespace Web_Sach.Controllers
 {
@@ -238,24 +239,35 @@ namespace Web_Sach.Controllers
             }
             return View(list);
         }
-
-
         [HttpPost]
-        public JsonResult Payment(Order obOrder)
+        public ActionResult AddVoucher(Order obOrder)
         {
             var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
-            var order = new DonHang();
-            bool checkVoucher = Session["checkVoucher"] == null ? false : true;  
+            //var order = new DonHang();
+            var checkVoucher = new checkVoucher();
+            var sessionVoucher = Session["checkVoucher"];
+            if (sessionVoucher == null)
+            {// chưa tồn tại voucher
+
+                checkVoucher.Status = 0;
+                Session["checkVoucher"] = checkVoucher;
+            }
+            else
+            {// tồn tại voucher
+                checkVoucher = (checkVoucher)Session["checkVoucher"];              
+            }
             var dbVoucher = db.Vouchers.Where(x => x.MaVoucher == obOrder.mavoucher).FirstOrDefault();
-            if (checkVoucher  == false)
-            {
-                if (!string.IsNullOrEmpty(obOrder.mavoucher))
-                {// đã điền voucher
-                 //ktra xem mã có tồn tại không
-                 
-                    if (dbVoucher != null)
-                    {// voucher tồn tại
-                     // kiểm tra ngày sử dụng
+
+            if (!string.IsNullOrEmpty(obOrder.mavoucher))
+            {// đã điền voucher
+             //ktra xem mã có tồn tại không
+
+                if (dbVoucher != null)
+                {// voucher tồn tại
+
+                    if (checkVoucher.Status == 0)
+                    {// kiểm tra ngày sử dụng
+
                         if (DateTime.Now >= dbVoucher.NgayTao && DateTime.Now <= dbVoucher.NgayHetHan)
                         {// trong thời gian  sử dụng
                          //kiểm tra đơn tối thiểu tm không
@@ -265,11 +277,13 @@ namespace Web_Sach.Controllers
                                 if (dbVoucher.SoLanDaSuDung <= dbVoucher.SoLanSuDung)
                                 {// đc add voucher
                                     //order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
-                                    dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                                    //dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
                                     int price = (int)dbVoucher.SoTienGiam;
                                     code = new { Success = true, Code = 14, Url = "", DonGia = price }; // chưa tồn tại
-                                    Session["checkVoucher"] = true;
-                                    db.SaveChanges();
+                                    checkVoucher.maVoucher = dbVoucher.MaVoucher;
+                                    checkVoucher.Status = 1;
+                                    Session["checkVoucher"] = checkVoucher;
+                                    //db.SaveChanges();
                                     return Json(code);
                                 }
                                 else
@@ -291,29 +305,142 @@ namespace Web_Sach.Controllers
                             code = new { Success = false, Code = 11, Url = "", DonGia = 0 }; // chưa tồn tại
                             return Json(code);
                         }
-
-                    }
-                    else
-                    {// voucher chưa tồn tại
-                        code = new { Success = false, Code = 10, Url = "", DonGia = 0 }; // chưa tồn tại
-                        return Json(code);
                     }
 
+                    else if (checkVoucher.Status == 1 && checkVoucher.maVoucher != obOrder.mavoucher)
+                    {
+                        // kiểm tra ngày sử dụng
+
+                        if (DateTime.Now >= dbVoucher.NgayTao && DateTime.Now <= dbVoucher.NgayHetHan)
+                        {// trong thời gian  sử dụng
+                         //kiểm tra đơn tối thiểu tm không
+                            if (obOrder.total >= dbVoucher.DonGiaToiThieu)
+                            {// thỏa mã đơn giá
+                             // check số lần sử dụng
+                                if (dbVoucher.SoLanDaSuDung <= dbVoucher.SoLanSuDung)
+                                {// đc add voucher
+                                    //order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+                                    //dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                                    int price = (int)dbVoucher.SoTienGiam;
+                                    code = new { Success = true, Code = 14, Url = "", DonGia = price }; // chưa tồn tại
+                                    checkVoucher.maVoucher = dbVoucher.MaVoucher;
+
+                                    Session["checkVoucher"] = checkVoucher;
+                                    //db.SaveChanges();
+                                    return Json(code);
+                                }
+                                else
+                                {// không được add voucher
+                                    code = new { Success = false, Code = 13, Url = "", DonGia = 0 }; // chưa tồn tại
+                                    return Json(code);
+                                }
+                            }
+                            else
+                            {// không thỏa mãn đơn giá
+                                int price = (int)dbVoucher.DonGiaToiThieu;
+
+                                code = new { Success = false, Code = 12, Url = "", DonGia = price }; // chưa tồn tại
+                                return Json(code);
+                            }
+                        }
+                        else
+                        {// hết thời gian sử dụng
+                            code = new { Success = false, Code = 11, Url = "", DonGia = 0 }; // chưa tồn tại
+                            return Json(code);
+                        }
+                    }
+
+                    else if (checkVoucher.Status == 1 && checkVoucher.maVoucher == obOrder.mavoucher )
+                    {
+                        // kiểm tra ngày sử dụng
+
+                        if (DateTime.Now >= dbVoucher.NgayTao && DateTime.Now <= dbVoucher.NgayHetHan)
+                        {// trong thời gian  sử dụng
+                         //kiểm tra đơn tối thiểu tm không
+                            if (obOrder.total >= dbVoucher.DonGiaToiThieu)
+                            {// thỏa mã đơn giá
+                             // check số lần sử dụng
+                                if (dbVoucher.SoLanDaSuDung <= dbVoucher.SoLanSuDung)
+                                {// đc add voucher
+                                    //order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+                                    //dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                                    int price = (int)dbVoucher.SoTienGiam;
+                                    code = new { Success = true, Code = 14, Url = "", DonGia = price }; // chưa tồn tại
+                                    checkVoucher.Status = 1;
+
+                                    Session["checkVoucher"] = checkVoucher;
+                                    //db.SaveChanges();
+                                    return Json(code);
+                                }
+                                else
+                                {// không được add voucher
+                                    code = new { Success = false, Code = 13, Url = "", DonGia = 0 }; // chưa tồn tại
+                                    return Json(code);
+                                }
+                            }
+                            else
+                            {// không thỏa mãn đơn giá
+                                int price = (int)dbVoucher.DonGiaToiThieu;
+
+                                code = new { Success = false, Code = 12, Url = "", DonGia = price }; // chưa tồn tại
+                                return Json(code);
+                            }
+                        }
+                        else
+                        {// hết thời gian sử dụng
+                            code = new { Success = false, Code = 11, Url = "", DonGia = 0 }; // chưa tồn tại
+                            return Json(code);
+                        }
+                    }
                 }
+                else
+                {// voucher chưa tồn tại
+                    code = new { Success = false, Code = 10, Url = "", DonGia = 0 }; // chưa tồn tại
+                    return Json(code);
+                }
+
+
             }
+            return Json(code);
+        }
+
+
+
+        [HttpPost]
+        public JsonResult Payment(Order obOrder)
+        {
+            var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
+            var order = new DonHang();                 
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
+            if(!string.IsNullOrEmpty(obOrder.mavoucher))
+            {// mã voucher 
+                var dbVoucher = db.Vouchers.Where(x=>x.MaVoucher==obOrder.mavoucher).FirstOrDefault();
+                order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+                order.MaVoucher = dbVoucher.ID;
+                dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                db.Vouchers.Attach(dbVoucher);// theo dõi 
+                db.Entry(dbVoucher).State = System.Data.Entity.EntityState.Modified;// cập nhật lại trong csdl
+                db.SaveChanges();
+
+            }
             order.TenNguoiNhan = obOrder.TenKH;
             order.Moblie = obOrder.Mobile;
             order.DiaChiNguoiNhan = obOrder.Address;
             order.Email = obOrder.Email;         
             order.NgayDat = DateTime.Now;
             order.DaThanhToan = 0;
-            order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
-            order.MaVoucher = dbVoucher.ID;
+            if (string.IsNullOrEmpty(obOrder.mavoucher))
+            {
+                order.TongTien = obOrder.total;
+                order.MaVoucher = 0;
+            }
             order.MaKH = sessionUser.UserID;
             order.Status = 1;
+          
             db.DonHangs.Add(order);
-            db.SaveChanges();
+           
+               db.SaveChanges();          
+           
             var idOrder = order.ID;
 
             var cart = Session[SessionHelper.CART_KEY] as List<CartItem>;
@@ -331,11 +458,15 @@ namespace Web_Sach.Controllers
                 orderDetail.Add(orderDetails);
 
             }
+          
             db.ChiTietDonHangs.AddRange(orderDetail);
-            db.SaveChanges();
+            
+             db.SaveChanges();
+          
+           
             //TempData["Order"] = order;
             //TempData["OrderDetail"] = orderDetail;
-            Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
+        
 
             int type = int.Parse(obOrder.TypePayment);
             code = new { Success = true, Code = type, Url = "", DonGia = 0 };
@@ -345,6 +476,12 @@ namespace Web_Sach.Controllers
                 var url = UrlPayment(int.Parse(obOrder.TypePaymentVN), order.ID);
 
                 code = new { Success = true, Code = type, Url = url, DonGia = 0 };
+            }
+            else if(type == 1)
+            {  // thanh toán khi nhận hàng
+                Session["checkVoucher"] = null;// thiết lập lại voucher
+                Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
+
             }
 
 
@@ -390,11 +527,20 @@ namespace Web_Sach.Controllers
                               where dh.ID == Id
                               select new OrderDetail()
                               {
-                                  sachId = sach.ID,
+                                  sachId = sach.ID,                              
                                   sachName = sach.Name,
                                   PriceBuy = (double)dt.Price,
                                   QuantityBuy = (int)dt.Quantity
                               };
+            var voucherOrder = from dh in db.DonHangs
+                               join v in db.Vouchers on dh.MaVoucher equals v.ID
+                               where dh.ID == Id
+                               select new VoucherOrder()
+                               {
+                                   maVoucher = dh.MaVoucher,
+                                   SoTienGiams = v.SoTienGiam
+                               };
+            ViewBag.voucherOrder = voucherOrder.FirstOrDefault();
             ViewBag.OrderDetail = orderDetail.ToList();
             return View();
         }
@@ -506,6 +652,8 @@ namespace Web_Sach.Controllers
                         var itemOrder = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
                         if (itemOrder != null)
                         {
+                            Session["checkVoucher"] = null;// thiết lập lại voucher
+                            Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
                             itemOrder.DaThanhToan = 1;// đã thanh toán
 
                             db.DonHangs.Attach(itemOrder);// theo dõi 
@@ -518,6 +666,8 @@ namespace Web_Sach.Controllers
                     }
                     else
                     {
+                        Session["checkVoucher"] = null;// thiết lập lại voucher
+                        Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
                         var order = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
                         if (order != null)
                         {

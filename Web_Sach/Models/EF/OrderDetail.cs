@@ -8,7 +8,7 @@ namespace Web_Sach.Models.EF
     public class OrderDetail
     {
         public int sachId { get; set; }
-
+     
         public string sachName{get;set;}
         public double PriceBuy { get; set; } // giá mua phải bằng giá gốc - giá khuyến mại
         //public int Sale { get; set; }

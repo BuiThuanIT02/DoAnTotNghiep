@@ -3,6 +3,7 @@
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var orderDetail = (List<Web_Sach.Models.EF.OrderDetail>)ViewBag.OrderDetail;
+    var voucherOrder = (Web_Sach.Models.EF.VoucherOrder)ViewBag.voucherOrder;
     double totalAll = 0;
 }
 
@@ -14,7 +15,6 @@
                 <th>Tên sách</th>
                 <th>Đơn giá</th>
                 <th>Số lượng</th>
-
                 <th>Thành tiền</th>
             </tr>
             @foreach (var item in orderDetail)
@@ -40,9 +40,28 @@
 
             <tr>
                 <th colspan="5" style="text-align:right; " class="fs-5">
-                   Tổng:  @totalAll.ToString("N0")
+                    Tổng:  @totalAll.ToString("N0")
                 </th>
             </tr>
+            @if (voucherOrder != null)
+            {
+                if (voucherOrder.maVoucher != 0)
+                {
+                    <tr>
+                        <th colspan="5" style="text-align:right; " class="fs-5">
+                            Voucher : -@voucherOrder.SoTienGiams
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" style="text-align:right; " class="fs-5">
+                            @{ 
+                                double? thanhTien = totalAll - voucherOrder.SoTienGiams;
+                            }
+                            Thanh toán : @thanhTien.Value.ToString("N0")
+                        </th>
+                    </tr>
+                }
+            }
 
 
         </table>
