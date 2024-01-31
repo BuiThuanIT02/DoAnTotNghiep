@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Web_Sach.Models.KhuyenMai>
+﻿@model PagedList.IPagedList<Web_Sach.Areas.Admin.Data.KhuyenMaiModel>
 @using PagedList.Mvc;
 @using System.Web.Mvc.Ajax;
 @{
@@ -51,7 +51,9 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Tên khuyến mại</th>                                         
+                        <th>Tên khuyến mại</th>
+                        <th>Tên sách</th>
+                        <th>Sale</th>
                         <th>Ngày bắt đầu</th>
                         <th>Ngày kết thúc</th>
 
@@ -61,24 +63,21 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr id="row_@item.ID">
+                        <tr id="row_@item.MaSach@item.MaKM">
                             <td>
-                                <a href="/Admin/KhuyenMai/Update/@item.ID" style="text-decoration:none ;color:forestgreen">
+                                <a href="/Admin/KhuyenMai/Update?maSach=@item.MaSach&&maKM=@item.MaKM" style="text-decoration:none ;color:forestgreen">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     Sửa
                                 </a>
-
-
-
-
+                               
                                 <span style="text-decoration:none ;color:red">
 
                                     <i class="fa-solid fa-trash"></i>
 
-                                    @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @maSach = @item.MaSach, @maKM = @item.MaKM }, new AjaxOptions
                                {
                                    Confirm = "Bạn có muốn xóa bản ghi này!!",
-                                   OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                   OnComplete = "$('#row_" + @item.MaSach + @item.MaKM + "').remove()",
 
                                    HttpMethod = "Delete"
 
@@ -88,17 +87,13 @@
                                    @class = "btn text-danger p-0"
                               }
                                )
+
                                 </span>
-
-
-
-
-
-
 
                             </td>
                             <td>@item.TenKhuyenMai</td>
-                            
+                            <td>@item.TenSach</td>
+                            <td>@item.Sale</td>
                             <td>@(item.NgayBatDau.HasValue ? item.NgayBatDau.Value.ToString("yyyy-MM-dd") : "")</td>
                             <td>@(item.NgayKeThuc.HasValue ? item.NgayKeThuc.Value.ToString("yyyy-MM-dd") : "")</td>
 

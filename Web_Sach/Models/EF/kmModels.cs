@@ -1,29 +1,68 @@
 ﻿using PagedList;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Web_Sach.Areas.Admin.Data;
+
 
 namespace Web_Sach.Models.EF
 {
     public class kmModels
     {
 
-        private WebSachDb db = null;
+        private WebSachDb db = null;     
         public kmModels()
         {
             db = new WebSachDb();
 
         }
 
-        public IEnumerable<KhuyenMai> listPage(string searchString, int page, int pageSize)
+        public IEnumerable<KhuyenMaiModel> listPage(string searchString, int page, int pageSize)
         {
-            IQueryable<KhuyenMai> model = db.KhuyenMais;
+            //IQueryable<KhuyenMai> model = db.KhuyenMais;
+           var model = from k in db.KhuyenMais
+                        join kms in db.KhuyenMai_Sach on k.ID equals kms.MaKhuyenMai
+                        join s in db.Saches on kms.MaSach equals s.ID
+                        select new KhuyenMaiModel
+                        {
+                            //MaKM=k.ID,
+                            //MaSach= s.ID,
+                            //k.TenKhuyenMai,
+                            //k.NgayBatDau,
+                            //k.NgayKeThuc,
+                            //kms.Sale,
+                            MaKM = k.ID,
+                            MaSach = s.ID,
+                            TenSach = s.Name,
+                            TenKhuyenMai = k.TenKhuyenMai,
+                            NgayBatDau = k.NgayBatDau,
+                            NgayKeThuc = k.NgayKeThuc,
+                            Sale = kms.Sale,
+                        };
+                                            
             if (!string.IsNullOrEmpty(searchString))
             {
                 model = model.Where(x => x.TenKhuyenMai.Contains(searchString));
             }
-            return model.OrderBy(x => x.TenKhuyenMai).ToPagedList(page, pageSize);
+
+            //List<KhuyenMaiModel> listModel = model.Select(x => new KhuyenMaiModel
+            //{
+            //    MaKM = x.MaKM,
+            //    MaSach = x.MaSach,
+            //    TenKhuyenMai = x.TenKhuyenMai,
+            //    NgayBatDau=x.NgayBatDau,
+            //    NgayKeThuc = x.NgayKeThuc,
+            //    Sale = x.Sale,
+
+            //});
+            //var result = model.OrderBy(x => x.TenKhuyenMai)
+            //          .Skip((page - 1) * pageSize)
+            //          .Take(pageSize)
+            //          .ToList();
+            
+            return model.OrderBy(x=>x.TenKhuyenMai).ToPagedList(page,pageSize);
         }
 
         public KhuyenMai uniqueName(string name)
@@ -38,9 +77,23 @@ namespace Web_Sach.Models.EF
             return km.ID;
         }
 
-        public KhuyenMai Edit(int id)
+        public KhuyenMaiModel Edit(int maSach , int maKM)
         {
-            return db.KhuyenMais.Find(id);
+            var km = from k in db.KhuyenMais
+                     join kms in db.KhuyenMai_Sach on k.ID equals kms.MaKhuyenMai
+                     join s in db.Saches on kms.MaSach equals s.ID
+                     where s.ID == maSach && k.ID == maKM
+                     select new KhuyenMaiModel
+                     {
+                         MaKM = k.ID,
+                         MaSach = s.ID,
+                         TenKhuyenMai = k.TenKhuyenMai,
+                         NgayBatDau = k.NgayBatDau,
+                         NgayKeThuc = k.NgayKeThuc,
+                         Sale = kms.Sale,
+                     };
+
+            return km.FirstOrDefault();
         }
 
         public bool Compare(KhuyenMai dm)
@@ -77,12 +130,21 @@ namespace Web_Sach.Models.EF
             }
         }
 
-        public bool Delete(int id)
+        public bool Delete(int masach, int makm)
         {
             try
             {
-                var km = db.KhuyenMais.Find(id);
-                db.KhuyenMais.Remove(km);
+                var kmS = db.KhuyenMai_Sach.Where(x=>x.MaSach==masach&& x.MaKhuyenMai==makm).FirstOrDefault();
+                if(kmS != null)
+                {
+                    db.KhuyenMai_Sach.Remove(kmS);
+                }
+                var km = db.KhuyenMais.Find(makm);
+                if(km != null)
+                {
+                  db.KhuyenMais.Remove(km);
+                }
+                
                 db.SaveChanges();
                 return true;
             }

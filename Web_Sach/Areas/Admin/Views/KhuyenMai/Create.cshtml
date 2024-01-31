@@ -1,26 +1,26 @@
-﻿@model Web_Sach.Models.KhuyenMai
-
+﻿@*@model Web_Sach.Models.DTO.KhuyenMaiModel*@
+@model Web_Sach.Areas.Admin.Data.KhuyenMaiModel
+{
 @{
     ViewBag.Title = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
 <h2 style="text-align:center">THÊM MỚI KHUYẾN MẠI</h2>
-
 <div class="wrap">
     <div class="container-fluid  mt-5 w-50">
 
-        @using (Html.BeginForm("Create","KhuyenMai",FormMethod.Post))
+
+        @using (Html.BeginForm("Create", "KhuyenMai", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
 
             <div class="form-horizontal">
-                
+
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group mt-2">
-                    @Html.LabelFor(model => model.TenKhuyenMai, htmlAttributes: new { @class = "control-label col-md-2",@style="width:100%" })
+                    @Html.LabelFor(model => model.TenKhuyenMai, htmlAttributes: new { @class = "control-label col-md-2", @style = "width:100%" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.TenKhuyenMai,  new { @class = "form-control"  })
+                        @Html.EditorFor(model => model.TenKhuyenMai, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.TenKhuyenMai, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                 <div class="form-group mt-2">
                     @Html.LabelFor(model => model.NgayBatDau, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.NgayBatDau,  new { @class = "form-control",@type="date"  })
+                        @Html.EditorFor(model => model.NgayBatDau, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                         @Html.ValidationMessageFor(model => model.NgayBatDau, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -36,8 +36,25 @@
                 <div class="form-group mt-2">
                     @Html.LabelFor(model => model.NgayKeThuc, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.NgayKeThuc,  new { @class = "form-control", @type = "date"  })
+                        @Html.EditorFor(model => model.NgayKeThuc, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                         @Html.ValidationMessageFor(model => model.NgayKeThuc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    @*@Html.LabelFor(model => model.MaSach, "MaSach", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <label>Tên sách</label>
+                    <div class="col-md-10">
+                        @Html.DropDownList("MaSach", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MaSach, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.Sale, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Sale, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Sale, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -49,8 +66,8 @@
                 </div>
             </div>
         }
-</div>
     </div>
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

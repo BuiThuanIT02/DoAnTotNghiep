@@ -129,5 +129,7 @@ namespace Web_Sach.Models
                 .WithOptional(e => e.Voucher)
                 .HasForeignKey(e => e.MaVoucher);
         }
+
+        //public System.Data.Entity.DbSet<Web_Sach.Models.DTO.KhuyenMaiModel> KhuyenMaiModels { get; set; }
     }
 }
