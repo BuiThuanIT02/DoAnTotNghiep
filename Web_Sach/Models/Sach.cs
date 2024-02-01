@@ -24,9 +24,9 @@
         [Display(Name = "Danh mục")]
        
         public int? DanhMucID { get; set; }
-        [Display(Name = "Nhà cung cấp")]
+        //[Display(Name = "Nhà cung cấp")]
       
-        public int? NhaCungCapID { get; set; }
+        //public int? NhaCungCapID { get; set; }
         [Display(Name = "Mã xuất bản")]
       
         public int? NhaXuatBanID { get; set; }
@@ -34,7 +34,11 @@
         [Required]
         [StringLength(250)]
         public string Name { get; set; }
-        [Display(Name = "Giá sách")]
+
+        [Display(Name = "Giá nhập")]
+        [Required]
+        public decimal? GiaNhap { get; set; }
+        [Display(Name = "Giá sách bán")]
         [Required]
         public decimal? Price { get; set; }
         [Display(Name = "Số lượng")]
@@ -77,7 +81,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KhuyenMai_Sach> KhuyenMai_Sach { get; set; }
 
-        public virtual NhaCungCap NhaCungCap { get; set; }
+        //public virtual NhaCungCap NhaCungCap { get; set; }
 
         public virtual NhaXuatBan NhaXuatBan { get; set; }
 

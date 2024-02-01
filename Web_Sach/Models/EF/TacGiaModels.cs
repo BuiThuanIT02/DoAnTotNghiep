@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Web_Sach.Areas.Admin.Data;
 
 namespace Web_Sach.Models.EF
 {
@@ -21,14 +22,29 @@ namespace Web_Sach.Models.EF
 
 
         // Phân trang bảng tác giả
-        public IEnumerable<TacGia> listPage(string searchString, int page, int pageSize)
+        public IEnumerable<TacGiaAdmin> listPage(string searchString, int page, int pageSize)
         {
-            IQueryable<TacGia> query = db.TacGias;
+            var model = from tg in db.TacGias
+                        join tt in db.ThamGias on tg.ID equals tt.MaTacGia
+                        join s in db.Saches on tt.MaSach equals s.ID
+                        select new TacGiaAdmin
+                        {
+                            MaTacGia = tg.ID,
+                            MaSach = s.ID,
+                            TenTacGia= tg.TenTacGia,
+                            Address= tg.Address,
+                            Phone= tg.Phone,
+                            TieuSu=tg.TieuSu,
+                            TenSach=s.Name,
+                        };
+
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(x => x.TenTacGia.Contains(searchString));
+                model = model.Where(x => x.TenTacGia.Contains(searchString));
             }
-            return query.OrderBy(x => x.TenTacGia).ToPagedList(page, pageSize);
+
+
+            return model.OrderBy(x => x.TenTacGia).ToPagedList(page, pageSize);
 
         }
         // End  Phân trang bảng tác giả
@@ -85,10 +101,50 @@ namespace Web_Sach.Models.EF
         }
 
 
+        public TacGiaAdmin Edit(int maSach, int maTacGia)
+        {
+            var model = from tg in db.TacGias
+                        join tt in db.ThamGias on tg.ID equals tt.MaTacGia
+                        join s in db.Saches on tt.MaSach equals s.ID
+                        where tg.ID == maTacGia && s.ID ==maSach
+                        select new TacGiaAdmin
+                        {
+                            MaTacGia = tg.ID,
+                            MaSach = s.ID,
+                            TenTacGia = tg.TenTacGia,
+                            Address = tg.Address,
+                            Phone = tg.Phone,
+                            TieuSu = tg.TieuSu,
+                        };
+
+            return model.FirstOrDefault();
+        }
 
 
+        public bool Delete(int masach, int matg)
+        {
+            try
+            {
+                var kmS = db.ThamGias.Where(x => x.MaSach == masach && x.MaTacGia == matg).FirstOrDefault();
+                if (kmS != null)
+                {
+                    db.ThamGias.Remove(kmS);
+                }
+                var km = db.TacGias.Find(matg);
+                if (km != null)
+                {
+                    db.TacGias.Remove(km);
+                }
 
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
+        }
 
 
 

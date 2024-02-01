@@ -25,7 +25,6 @@ namespace Web_Sach.Areas.Admin.Controllers
         public ActionResult Create()
         {
             setViewBagCategory();
-            setViewBagNCC();
             setViewBagNXB();
 
             return View();
@@ -74,15 +73,31 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {// nếu trùng thông báo
                     ModelState.AddModelError("Name", "Tên sách đã tồn tại");
                     setViewBagCategory();
-                    setViewBagNCC();
+                    
                     setViewBagNXB();
                     return View(sach);
                 }
                 if (sach.Price < 0)
                 {
-                    ModelState.AddModelError("Price", "Giá sách phải lớn hơn 0");
+                    ModelState.AddModelError("Price", "Giá bán phải lớn hơn 0");
                     setViewBagCategory();
-                    setViewBagNCC();
+                    
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.GiaNhap < 0)
+                {
+                    ModelState.AddModelError("GiaNhap", "Giá nhập phải lớn hơn 0");
+                    setViewBagCategory();
+
+                    setViewBagNXB();
+                    return View(sach);
+                }
+                else if (sach.GiaNhap > sach.Price)
+                {
+                    ModelState.AddModelError("GiaNhap", "Giá nhập phải nhỏ hơn hoặc bằng giá bán");
+                    setViewBagCategory();
+
                     setViewBagNXB();
                     return View(sach);
                 }
@@ -90,7 +105,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("Quantity", "Số lượng sách phải lớn hơn 0");
                     setViewBagCategory();
-                    setViewBagNCC();
+                    
                     setViewBagNXB();
                     return View(sach);
                 }
@@ -98,7 +113,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("SoTrang", "Số trang phải lớn hơn 0");
                     setViewBagCategory();
-                    setViewBagNCC();
+                  
                     setViewBagNXB();
                     return View(sach);
                 }
@@ -120,7 +135,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             }
             // kiểm tra thông tin đầu vào thất bại
             setViewBagCategory();
-            setViewBagNCC();
+            //setViewBagNCC();
             setViewBagNXB();
             return View("Create");
         }
@@ -135,7 +150,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             var bookImages = bookEdit.Images.ToList();
             ViewBag.bookImages = bookImages;
             setViewBagCategory(bookEdit.DanhMucID);
-            setViewBagNCC(bookEdit.NhaCungCapID);
+           
             setViewBagNXB(bookEdit.NhaXuatBanID);
 
 
@@ -150,6 +165,7 @@ namespace Web_Sach.Areas.Admin.Controllers
         public ActionResult Update(Sach sach, List<string> Images, List<int> rDefault)
         {
             ModelState.Remove("Images");
+
             if (ModelState.IsValid)
             {
                 var idSach = sach.ID;
@@ -254,7 +270,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     ModelState.AddModelError("Name", "Tên sách bị trùng");
                     //mới thêm ngày 15-10-2023
                     setViewBagCategory(sach.DanhMucID);
-                    setViewBagNCC(sach.NhaCungCapID);
+                   
                     setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
 
@@ -263,7 +279,23 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("Price", "Giá sách phải lớn hơn 0");
                     setViewBagCategory(sach.DanhMucID);
-                    setViewBagNCC(sach.NhaCungCapID);
+                   
+                    setViewBagNXB(sach.NhaXuatBanID);
+                    return View(sach);
+                }
+                else if (sach.GiaNhap < 0)
+                {
+                    ModelState.AddModelError("GiaNhap", "Giá nhập phải lớn hơn 0");
+                    setViewBagCategory(sach.DanhMucID);
+                 
+                    setViewBagNXB(sach.NhaXuatBanID);
+                    return View(sach);
+                }
+                else if (sach.GiaNhap > sach.Price)
+                {
+                    ModelState.AddModelError("GiaNhap", "Giá nhập phải nhỏ hơn hoặc bằng giá bán");
+                    setViewBagCategory(sach.DanhMucID);
+                  
                     setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
@@ -271,7 +303,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("Quantity", "Số lượng sách phải lớn hơn 0");
                     setViewBagCategory(sach.DanhMucID);
-                    setViewBagNCC(sach.NhaCungCapID);
+                    
                     setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
@@ -279,7 +311,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("SoTrang", "Số trang phải lớn hơn 0");
                     setViewBagCategory(sach.DanhMucID);
-                    setViewBagNCC(sach.NhaCungCapID);
+                  
                     setViewBagNXB(sach.NhaXuatBanID);
                     return View(sach);
                 }
@@ -290,19 +322,13 @@ namespace Web_Sach.Areas.Admin.Controllers
                     return RedirectToAction("Index", "Product");
                 }
 
-                else
-                {
-                    SetAlert("Cập nhật thất bại", "error");
-                    //mới thêm ngày 15-10-2023
-                    //setViewBagCategory(sach.DanhMucID);
-                    //setViewBagNCC(sach.NhaCungCapID);
-                    //setViewBagNXB(sach.NhaXuatBanID);
-                }
+              
 
 
             }
+            SetAlert("Cập nhật thất bại", "error");
             setViewBagCategory(sach.DanhMucID);
-            setViewBagNCC(sach.NhaCungCapID);
+         
             setViewBagNXB(sach.NhaXuatBanID);
             return View("Update");
         }
@@ -334,11 +360,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             ViewBag.DanhMucID = new SelectList(drowdoad.ListAll(), "ID", "Name", selectedId);// hiện thị droplisst theo Name
         }
 
-        public void setViewBagNCC(int? selectedId = null)
-        {
-            var drowdoad = new Supplier();
-            ViewBag.NhaCungCapID = new SelectList(drowdoad.ListAll(), "ID", "Name", selectedId);
-        }
+      
         public void setViewBagNXB(int? selectedId = null)
         {
             var drowdoad = new NXB();

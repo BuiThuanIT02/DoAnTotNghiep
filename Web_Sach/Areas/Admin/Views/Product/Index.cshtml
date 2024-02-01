@@ -50,18 +50,19 @@
             <a href="/Admin/Product/Create">Thêm mới</a>
             <table class="table table-sm table-bordered " style="text-align:center;vertical-align:middle;">
                 <thead>
-                    <tr>
+                    <tr style="text-align:center;vertical-align:middle;">
                         <th>#</th>
                         <th>Tên sản phẩm</th>
+                        <th>Thể loại</th>
+                        <th>Nhà xuất bản</th>
                         <th>Ảnh</th>
-                        <th>Giá</th>
+                        <th>Giá bán</th>
+                        <th>Giá nhập vào</th>
                         <th>Số lượng</th>
                         <th>Kích thước</th>
                         <th>Trọng lượng</th>
                         <th>Số trang</th>
-                      
                         <th>Meta Title</th>
-
                         <th>Trạng thái</th>
 
                     </tr>
@@ -73,7 +74,7 @@
                         <tr id="row_@item.ID">
                             <td>
                                 <div class="row">
-                                    
+
                                     <div class="col-xs-4">
                                         <a href="/Admin/Product/Update/@item.ID" style="text-decoration:none;color:green">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -103,37 +104,31 @@
                                     </div>
 
                                 </div>
-                               
-                                
-
-
-
-
-
 
                             </td>
                             <td>@item.Name</td>
-                            <td class="text-center w-50">
+                            <td>@item.DanhMucSP.Name</td>
+                            <td>@item.NhaXuatBan.TenNXB</td>
+                            <td class="text-center w-25" >
                                 @if (item.Images.Count > 0)
                                 {
-                                    <img src="@item.Images.FirstOrDefault(x=>x.IsDefault==true).Image1" class="img-fluid w-25" />
+                                    <img src="@item.Images.FirstOrDefault(x=>x.IsDefault==true).Image1" class="img-thumbnail" style="width:50%"/>
                                 }
-
-
                             </td>
                             <td>
                                 @(item.Price.HasValue ? item.Price.Value.ToString("N0") : "")
                             </td>
-                            <td>@item.Quantity</td>
-
-                            @*<td>@item.Sale</td>*@
+                            <td>
+                                @(item.GiaNhap.HasValue ? item.GiaNhap.Value.ToString("N0") : "")
+                            </td>
+                            <td>@item.Quantity</td>                         
 
                             <td>@item.KichThuoc </td>
                             <td>@item.TrongLuong </td>
                             <td>@item.SoTrang </td>
-                          
+
                             <td>@item.MetaTitle </td>
-                          
+
 
                             @if (item.Status)
                             {

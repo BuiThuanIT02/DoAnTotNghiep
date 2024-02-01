@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -30,20 +31,28 @@ namespace Web_Sach.Areas.Admin.Controllers
                             CreatedDate = o.NgayDat,
                             Quantitys = od.Quantity,
                             Prices = od.Price,
-                            OriginalPrice = p.Price
+                            OriginalPrice = p.GiaNhap
 
                         };
 
             if (!string.IsNullOrEmpty(fromDate))
             {
-                DateTime startDate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", null);
+                if (DateTime.TryParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate))
+                {
+                    //DateTime startDate = DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 query = query.Where(x => x.CreatedDate >= startDate);
+                }
+               
             }
 
             if (!string.IsNullOrEmpty(toDate))
             {
-                DateTime endDate = DateTime.ParseExact(toDate, "dd/MM/yyyy", null);
-                query = query.Where(x => x.CreatedDate < endDate);
+                if (DateTime.TryParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime endDate))
+                {
+                     //DateTime endDate = DateTime.ParseExact(toDate, "DD/MM/yyyy", null);
+                     query = query.Where(x => x.CreatedDate < endDate);
+                }
+              
             }
 
 
@@ -79,7 +88,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                             CreatedDate = o.NgayDat,
                             Quantitys = od.Quantity,
                             Prices = od.Price,
-                            OriginalPrice = p.Price
+                            OriginalPrice = p.GiaNhap
 
                         };
             if (!string.IsNullOrEmpty(fromDate))
@@ -135,7 +144,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                             CreatedDate = o.NgayDat,
                             Quantitys = od.Quantity,
                             Prices = od.Price,
-                            OriginalPrice = p.Price
+                            OriginalPrice = p.GiaNhap
 
                         };
             if (!string.IsNullOrEmpty(fromDate))

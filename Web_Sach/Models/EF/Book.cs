@@ -86,11 +86,11 @@ namespace Web_Sach.Models.EF
                 var book = db.Saches.Find(sach.ID);
                 book.Name = sach.Name;
             
-                book.NhaCungCapID = sach.NhaCungCapID;
+                //book.NhaCungCapID = sach.NhaCungCapID;
                 book.NhaXuatBanID = sach.NhaXuatBanID;
                 book.Price = sach.Price;
                 book.Quantity = sach.Quantity;
-          
+                book.GiaNhap = sach.GiaNhap;
                 book.MoTa = sach.MoTa;
                 book.KichThuoc = sach.KichThuoc;
                 book.TrongLuong = sach.TrongLuong;
@@ -119,8 +119,17 @@ namespace Web_Sach.Models.EF
         {
             try
             {
-                var bookDelete = db.Saches.Find(id);
-                db.Saches.Remove(bookDelete);
+                var img = db.Images.Where(x => x.MaSP == id).ToList();
+                if(img.Count > 0)
+                {
+                    foreach(var item in img)
+                    {
+                        db.Images.Remove(item);
+                    }
+                    var bookDelete = db.Saches.Find(id);
+                    db.Saches.Remove(bookDelete);
+                }
+                
                 db.SaveChanges();
                 return true;
 
@@ -167,7 +176,7 @@ namespace Web_Sach.Models.EF
 
         public List<Sach> listTopHot(int top)
         {
-            return db.Saches.Where(x => x.NgayCapNhat > DateTime.Now && x.NgayCapNhat !=null).Take(top).ToList();
+            return db.Saches.Where(x => x.NgayCapNhat <= DateTime.Now && x.NgayCapNhat !=null).Take(top).ToList();
         }
 
 

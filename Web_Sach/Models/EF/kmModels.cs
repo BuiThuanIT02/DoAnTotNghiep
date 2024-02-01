@@ -26,13 +26,7 @@ namespace Web_Sach.Models.EF
                         join kms in db.KhuyenMai_Sach on k.ID equals kms.MaKhuyenMai
                         join s in db.Saches on kms.MaSach equals s.ID
                         select new KhuyenMaiModel
-                        {
-                            //MaKM=k.ID,
-                            //MaSach= s.ID,
-                            //k.TenKhuyenMai,
-                            //k.NgayBatDau,
-                            //k.NgayKeThuc,
-                            //kms.Sale,
+                        {                           
                             MaKM = k.ID,
                             MaSach = s.ID,
                             TenSach = s.Name,
@@ -47,21 +41,7 @@ namespace Web_Sach.Models.EF
                 model = model.Where(x => x.TenKhuyenMai.Contains(searchString));
             }
 
-            //List<KhuyenMaiModel> listModel = model.Select(x => new KhuyenMaiModel
-            //{
-            //    MaKM = x.MaKM,
-            //    MaSach = x.MaSach,
-            //    TenKhuyenMai = x.TenKhuyenMai,
-            //    NgayBatDau=x.NgayBatDau,
-            //    NgayKeThuc = x.NgayKeThuc,
-            //    Sale = x.Sale,
-
-            //});
-            //var result = model.OrderBy(x => x.TenKhuyenMai)
-            //          .Skip((page - 1) * pageSize)
-            //          .Take(pageSize)
-            //          .ToList();
-            
+           
             return model.OrderBy(x=>x.TenKhuyenMai).ToPagedList(page,pageSize);
         }
 

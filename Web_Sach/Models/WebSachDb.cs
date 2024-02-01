@@ -20,7 +20,7 @@ namespace Web_Sach.Models
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
         public virtual DbSet<KhuyenMai_Sach> KhuyenMai_Sach { get; set; }
-        public virtual DbSet<NhaCungCap> NhaCungCaps { get; set; }
+      
         public virtual DbSet<NhaXuatBan> NhaXuatBans { get; set; }
         public virtual DbSet<Sach> Saches { get; set; }
         public virtual DbSet<Silde> Sildes { get; set; }

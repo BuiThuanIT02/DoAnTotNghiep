@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Web_Sach.Models.TacGia>
+﻿@model PagedList.IPagedList<Web_Sach.Areas.Admin.Data.TacGiaAdmin>
 @using PagedList.Mvc
 
 @using System.Web.Mvc.Ajax
@@ -38,13 +38,14 @@
     <div class="card-body">
         <div class="container-fluid">
             <a href="~/Admin/Author/Create">Thêm mới</a>
-            <table class="table table-bordered" style="text-align:center">
+            <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>ID</th>
+                        <th>#</th>                        
                         <th>Tên tác giả</th>
-                        <th>Tiểu sử</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Tên sách</th>
 
 
 
@@ -54,35 +55,38 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr id="row_@item.ID">
-                        <td>
-                            <a href="~/Admin/Author/Update/@item.ID" style="text-decoration:none;color:green">
+                    <tr id="row_@item.MaSach@item.MaTacGia">
+                        <td style="width:10%">
+                            <a href="~/Admin/Author/Update?maSach=@item.MaSach&&maTacGia=@item.MaTacGia" style="text-decoration:none;color:green">
                                 <i class="fa-solid fa-pen-to-square"></i>
                                 Sửa
                             </a>
 
                             <span style="text-decoration:none ;color:red">
+                              
+                                    <i class="fa-solid fa-trash"></i>
 
-                                <i class="fa-solid fa-trash"></i>
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @maSach = @item.MaSach, @maTacGia = @item.MaTacGia }, new AjaxOptions
+                                 {
+                                     Confirm = "Bạn có muốn xóa bản ghi này!!",
+                                    OnComplete = "$('#row_" + @item.MaSach + @item.MaTacGia + "').remove()",
+                                     HttpMethod = "Delete"
+                                 },
+                                 new
+                                  {
+                                       @class = "btn text-danger p-0"
+                                  }
 
-                                @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
-                             {
-                                 Confirm = "Bạn có muốn xóa bản ghi này!!",
-                                OnComplete = "$('#row_" + @item.ID + "').remove()",
-                                 HttpMethod = "Delete"
-                             },
-                             new
-                              {
-                                   @class = "btn text-danger p-0"
-                              }
+                                        )
 
-                                    )
-
+                             
+                                
                             </span>
-                        </td>
-                        <td>@item.ID</td>
+                        </td>                     
                         <td>@item.TenTacGia</td>
-                        <td>@item.TieuSu</td>
+                        <td>@item.Address</td>
+                        <td>@item.Phone</td>
+                       <td>@item.TenSach</td>
 
                     </tr>
                     }
