@@ -28,7 +28,8 @@ namespace Web_Sach.Controllers
                              where img.MaSP == detailId
                              select img;
             ViewBag.listImageBook = imagesBook.ToList();
-
+            var listVoucher = db.Vouchers.ToList();
+            ViewBag.listVoucher = listVoucher;
             // lấy tên tác giả
             var tacgia = (from s in db.Saches
                           join tg in db.ThamGias on s.ID equals tg.MaSach
