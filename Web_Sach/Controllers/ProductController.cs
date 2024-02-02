@@ -57,7 +57,6 @@ namespace Web_Sach.Controllers
             }
 
 
-
             // lấy chi tiết sách
 
             var query = (from dt in db.Saches
