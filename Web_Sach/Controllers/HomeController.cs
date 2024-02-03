@@ -19,7 +19,7 @@ namespace Web_Sach.Controllers
             var slide = new SlideModel().getSilde();
             ViewBag.listProductNew = productNew.listNew(10);
             ViewBag.listProductTopHot = productNew.listTopHot(10);
-           
+            ViewBag.updateInfoUser = TempData["UserInfo"];
             return View(slide);
         }
         

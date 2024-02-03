@@ -81,6 +81,13 @@ namespace Web_Sach
 
         );
             routes.MapRoute(
+          name: "Lưu voucher",
+          url: "add-voucher",
+          defaults: new { controller = "Vouchers", action = "AddVoucher", id = UrlParameter.Optional },
+          namespaces: new[] { "Web_Sach.Controllers" }
+
+      );
+            routes.MapRoute(
          name: "Giỏ hàng",
          url: "gio-hang",
          defaults: new { controller = "Cart", action = "Index", id = UrlParameter.Optional },

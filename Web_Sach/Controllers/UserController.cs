@@ -107,11 +107,11 @@ namespace Web_Sach.Controllers
                     return View(model);
 
                 }
-                else if (!model.Password.Any(char.IsUpper)   || !model.Password.Any(char.IsDigit) )
+                else if (!model.Password.Any(char.IsUpper)   || !model.Password.Any(char.IsDigit) || model.Password.Length < 8)
                 {
 
                    
-                        ModelState.AddModelError("Password", "Mật khẩu  chứa ít nhất 1 chữ viết hoa và 1 số");
+                        ModelState.AddModelError("Password", "Mật khẩu  chứa ít nhất 1 chữ viết hoa , 1 số và hơn 8 ký tự");
                   
                 //    model.Password = pass;
                         return View(model);
@@ -132,7 +132,7 @@ namespace Web_Sach.Controllers
                 user.Phone = model.Phone;
                 user.GioiTinh = model.GioiTinh;
                 user.Status = true;
-                //user.GroupID = "MEMBER";
+                
                 db.TaiKhoans.Add(user);
                 db.SaveChanges();
                 if(user.ID > 0)
@@ -162,8 +162,6 @@ namespace Web_Sach.Controllers
             }
            
             return View(model);
-
-
 
 
         }
@@ -201,12 +199,18 @@ namespace Web_Sach.Controllers
                         ModelState.AddModelError("Password", "Mật khẩu có độ dài lớn hơn 8 và chứa ít nhất 1 chữ viết hoa và 1 số");
                         return View(tk);
                     }
-                    tk.Password = EncryptMD5.MD5Hash(tk.Password);
+                   
                 }
                 if (userUpdate.UpdateUser(tk))
                 {
                    
-                    return Redirect("/");
+                    TempData["UserInfo"] = "Cập nhật thành công!";
+
+                    return RedirectToAction("Index","Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Cập nhật thất bại");
                 }
 
 

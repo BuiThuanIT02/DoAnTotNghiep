@@ -175,6 +175,7 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ViewAllController.cs" />
+    <Compile Include="Controllers\VouchersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -182,6 +183,7 @@
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\DanhMucSP.cs" />
     <Compile Include="Models\DonHang.cs" />
+    <Compile Include="Models\EF\AlertHelp.cs" />
     <Compile Include="Models\EF\Book.cs" />
     <Compile Include="Models\EF\CartItem.cs" />
     <Compile Include="Models\EF\ImageMore.cs" />
@@ -201,6 +203,7 @@
     <Compile Include="Models\EF\UserLoginClients.cs" />
     <Compile Include="Models\EF\VoucherModels.cs" />
     <Compile Include="Models\EF\VoucherOrder.cs" />
+    <Compile Include="Models\EF\voucherSession.cs" />
     <Compile Include="Models\FeedBack.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\KhuyenMai.cs" />
@@ -218,8 +221,6 @@
     <Compile Include="Models\WebSachDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Session\checkVoucher.cs" />
-    <Compile Include="Session\EncryptMD5.cs" />
-    <Compile Include="Session\HashCredentialAttribute.cs" />
     <Compile Include="Session\SessionHelper.cs" />
     <Compile Include="Session\UserLoginSession.cs" />
   </ItemGroup>
@@ -1221,6 +1222,7 @@
     <Content Include="Data\Images\12-truong.png" />
     <Content Include="Data\Images\7-bi-an-truong-hoc.png" />
     <Content Include="Data\Images\am-thuc-the-gioi.png" />
+    <Content Include="Data\Images\cart.jpg" />
     <Content Include="Data\Images\chika.png" />
     <Content Include="Data\Images\chuot-ty-bieng-an.png" />
     <Content Include="Data\Images\con-chim.png" />
@@ -1549,6 +1551,9 @@
     <Content Include="Views\ViewAll\Index.cshtml" />
     <Content Include="Views\ViewAll\TopHot.cshtml" />
     <Content Include="Views\Cart\VnpayReturn.cshtml" />
+    <Content Include="Views\Vouchers\VoucherEmpty.cshtml" />
+    <Content Include="Views\Vouchers\Index.cshtml" />
+    <Content Include="Views\Vouchers\listVoucher.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

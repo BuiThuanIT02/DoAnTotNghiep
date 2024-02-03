@@ -11,7 +11,7 @@
         <table class="table table-bordered w-75 table-striped m-auto">
             <tr class="text-center">
 
-                <th >Mã sản phẩm</th>
+                <th>Mã sản phẩm</th>
                 <th>Tên sản phẩm</th>
                 <th>Ảnh sản phẩm</th>
                 <th>Số lượng</th>
@@ -29,32 +29,32 @@
                 {
                     imgUrl = img.Image1;
                 }
-            <tbody id="tbodyTable">
-                <tr class="text-center rowItemCart">
-                    <td class="p-0">@item.sach.ID</td>
-                    <td>@item.sach.Name</td>
-                    <td>
-                        <img src="@imgUrl" width="100px" alt="san_pham" />
-                    </td>
-                    <td>
-                        <div id="cart-amount">
-                            <button class="minus-cart" data-cart="@item.sach.ID"><i class="fa-solid fa-minus"></i></button>
-                            <input type="text" name="amount-cart" class="txtQuantity text-center amount-cart" data-cart="@item.sach.ID" max-cart="@item.sach.Quantity" value="@item.Quantity" />
+                <tbody id="tbodyTable">
+                    <tr class="text-center rowItemCart">
+                        <td class="p-0">@item.sach.ID</td>
+                        <td>@item.sach.Name</td>
+                        <td>
+                            <img src="@imgUrl" width="100px" alt="san_pham" />
+                        </td>
+                        <td>
+                            <div id="cart-amount">
+                                <button class="minus-cart" data-cart="@item.sach.ID"><i class="fa-solid fa-minus"></i></button>
+                                <input type="text" name="amount-cart" class="txtQuantity text-center amount-cart" data-cart="@item.sach.ID" max-cart="@item.sach.Quantity" value="@item.Quantity" />
 
 
-                            <button class="plus-cart" data-cart="@item.sach.ID"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                    </td>
-                    <td>@item.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
-                    <td>@((item.Quantity * item.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
-                    <td colspan="2">
-                        <a href="#" data-id="@item.sach.ID" class="btn-delete text-danger"><i class="fa-solid fa-trash"></i>Xóa</a>
-                        <a href="#" class="btn-update text-success" data-id="@item.sach.ID"><i class="fa-solid fa-pen-to-square"></i>Update</a>
+                                <button class="plus-cart" data-cart="@item.sach.ID"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </td>
+                        <td>@item.sach.Price.GetValueOrDefault(0).ToString("N0")</td>
+                        <td>@((item.Quantity * item.sach.Price.GetValueOrDefault(0)).ToString("N0"))</td>
+                        <td colspan="2">
+                            <a href="#" data-id="@item.sach.ID" class="btn-delete text-danger"><i class="fa-solid fa-trash"></i>Xóa</a>
+                            <a href="#" class="btn-update text-success" data-id="@item.sach.ID"><i class="fa-solid fa-pen-to-square"></i>Update</a>
 
-                    </td>
-                </tr>
-            </tbody>
-              
+                        </td>
+                    </tr>
+                </tbody>
+
 
             }
         </table>
@@ -69,7 +69,18 @@
     }
     else
     {
-        <span class="alert alert-danger text-dark">Giỏ hàng trống</span>
+<div class="container">
+    <div class="card m-auto" style="width: 18rem; background-color: rgb(250, 241, 228); box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);">
+        <img class="cart-img-top img-fluid" src="~/Data/Images/cart.jpg" />
+        <div class="card-body">
+            <button id="btnContinue" class="btn btn-dark">
+               Mua sắm tại đây!.
+            </button>
+        </div>
+    </div>
+</div>
+     
+       
     }
 
 </div>

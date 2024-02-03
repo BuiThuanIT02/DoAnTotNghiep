@@ -26,535 +26,553 @@
 
 }
 
-
-    <section id="product-info">
-        <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
-        <div class="container-fluid ms-5">
-            <div class="row">
-                @if (khuyenMai.Count > 0)
-                {// tồn tại sale
-                 // kiểm tra thời gian sale
-                    foreach (var item in khuyenMai)
-                    {// lặp qua danh sách khuyến mại
-                        if (DateTime.Now >= item.KhuyenMai.NgayBatDau && DateTime.Now <= item.KhuyenMai.NgayKeThuc)
-                        {
-                            sale = item.Sale;
-                            break;
-                        }
-                    }
-
-
-                    var price = Model.Price - (Model.Price * sale / 100);
-                    //hình ảnh
-                    if (listImageBook != null)
+<section id="product-info">
+    <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
+    <div class="container-fluid ms-5">
+        <div class="row">
+            @if (khuyenMai.Count > 0)
+            {// tồn tại sale
+             // kiểm tra thời gian sale
+                foreach (var item in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= item.KhuyenMai.NgayBatDau && DateTime.Now <= item.KhuyenMai.NgayKeThuc)
                     {
-                        <div class="col-sm-3" style="width:10%">
-
-                            <div class="row">
-                                <!-- Hiển thị danh sách ảnh nhỏ -->
-                                <div>
-                                    @foreach (var image in listImageBook)
-                                    {
-                                        <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
-
-                                    }
-                                </div>
-
-                            </div>
-
-                        </div>
+                        sale = item.Sale;
+                        break;
                     }
-                    <div class="col-md-3 border p-0  position-relative">
-
-                        <!-- Hiển thị ảnh chính -->
-                        <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
-                        @if (sale != 0)
-                        {<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
-
-                    }
-
-
-
-                    </div>
-
-
-                    <div class="col-md-4 ps-5  border">
-                        <p class="border-bottom fs-2">@Model.Name</p>
-                        @if (sale != 0)
-                        {// sale còn hạn sd
-                            <span class="text-danger fs-3">
-
-                                Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
-
-                            </span>
-                            <span class="ms-2 fs-3" style="color:gray">
-                                <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
-                            </span>
-                        }
-                        else
-                        {// sale hết hạn sử dụng
-                            <span class="text-danger fs-3">
-
-                                Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
-
-                            </span>
-
-                        }
-
-
-                        <p>
-                            Tác giả:
-                            @for (int i = 0; i < count; i++)
-                            {
-                                <span class="text-danger">
-                                    <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
-                                </span>
-                                if (i < count - 1)
-                                {
-                                    <span>,</span>
-                                }
-                            }
-
-                        </p>
-                        <p>Khuôn khổ: @Model.KichThuoc</p>
-                        <p>Trọng lượng: @Model.TrongLuong</p>
-                        <p>Số trang: @Model.SoTrang</p>
-                        @if (Model.Quantity > 0)
-                        {// còn số lượng
-                            <div id="buy-amount">
-                                <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                                <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
-                                <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
-                            </div>
-
-                            <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
-
-                            <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
-                        }
-                        else
-                        {// hết hàng
-
-                            <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
-                        }
-
-
-                    </div>
-                    // voucher
-                    <div class="col-md-3">
-                        <div class="container-voucher">
-                            <div class="voucher">
-                                @foreach (var item in listVoucher)
-                                {
-                                    <div class="card">
-                                        <div class="row m-1 border border-danger">
-                                            <div class="col-sm-3 contain-imgVoucher">
-                                                <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
-                                            </div>
-
-                                            <div class="col-sm-9">
-                                                <div class="card-header">
-                                                    <h6>Voucher giảm giá</h6>
-                                                </div>
-                                                <div class="card-body p-0 ps-2">
-                                                    <div class="row">
-                                                        <div class="col-sm-9 p-0">
-                                                            <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
-                                                            <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
-                                                            @{
-                                                                var donGiaToiThieu = (int)item.DonGiaToiThieu;
-                                                            }
-                                                            <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
-                                                        </div>
-                                                        <div class="col-sm-3 m-auto p-0">
-                                                            <div class="card-footer p-0">
-                                                                <button class="btn text-center btnAddVoucher">Lưu</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-                                }
-
-
-                            </div>
-                        </div>
-
-                    </div>
-
                 }
-                else
-                {// không có sale
 
-                    if (listImageBook != null)
-                    {
-                        <div class="col-sm-2" style="width:10%">
 
-                            <div class="row">
-                                <!-- Hiển thị danh sách ảnh nhỏ -->
-                                <div>
-                                    @foreach (var image in listImageBook)
-                                    {
-                                        <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
+                var price = Model.Price - (Model.Price * sale / 100);
+                //hình ảnh
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-3" style="width:10%">
 
-                                    }
-                                </div>
-
-                            </div>
-
-                        </div>
-                    }
-                    <div class="col-md-3 p-0  position-relative">
-                        <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
-                    </div>
-
-                    <div class="col-md-4 ps-5">
-                        <p class="border-bottom fs-2">@Model.Name</p>
-                        <span class="text-danger fs-3">
-                            Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
-                        </span>
-                        @*<span class="ms-2 fs-3" style="color:gray">
-                <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
-                </span>*@
-
-                        <p>
-                            Tác giả:
-                            @for (int i = 0; i < count; i++)
-                            {
-                                <span class="text-danger">
-                                    <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
-                                </span>
-                                if (i < count - 1)
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
                                 {
-                                    <span>,</span>
-                                }
-                            }
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
 
-                        </p>
-                        <p>Khuôn khổ: @Model.KichThuoc</p>
-                        <p>Trọng lượng: @Model.TrongLuong</p>
-                        <p>Số trang: @Model.SoTrang</p>
-                        @if (Model.Quantity > 0)
-                        {// còn số lượng
-                            <div id="buy-amount">
-                                <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
-                                <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
-                                <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                                }
                             </div>
 
-                            <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
-
-                            <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
-                        }
-                        else
-                        {// hết số lượng
-                            <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
-                        }
-
-
-                    </div>
-                    //voucher
-                    <div class="col-md-3">
-                        <div class="container-voucher">
-                            <div class="voucher">
-                                @foreach (var item in listVoucher)
-                                {
-                                    <div class="card">
-                                        <div class="row m-1 border border-danger">
-                                            <div class="col-sm-3 contain-imgVoucher">
-                                                <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
-                                            </div>
-
-                                            <div class="col-sm-9">
-                                                <div class="card-header">
-                                                    <h6>Voucher giảm giá</h6>
-                                                </div>
-                                                <div class="card-body p-0 ps-2">
-                                                    <div class="row">
-                                                        <div class="col-sm-9 p-0">
-                                                            <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
-                                                            <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
-                                                            @{
-                                                                var donGiaToiThieu = (int)item.DonGiaToiThieu;
-                                                            }
-                                                            <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
-                                                        </div>
-                                                        <div class="col-sm-3 m-auto p-0">
-                                                            <div class="card-footer p-0">
-                                                                <button class="btn text-center btnAddVoucher">Lưu</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-                                }
-
-
-                            </div>
                         </div>
 
                     </div>
                 }
+                <div class="col-md-3 border p-0  position-relative">
+
+                    <!-- Hiển thị ảnh chính -->
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                    @if (sale != 0)
+                    {<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+
+                }
 
 
-            </div>
-
-
-            <!--Hàng 2-->
-
-            <div class="row mt-5">
-                <div class="col-sm-8 border p-0">
-                    <ul class="nav">
-                        <li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Mô tả</a></li>
-                        @*<li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Bình luận</a></li>*@
-
-                    </ul>
-                    <p class="mt-3">
-                        @Model.MoTa
-                    </p>
 
                 </div>
 
-                <div class="col-sm-4 border " id="author-together">
-                    <h5 class="text-dark text-center">SÁCH CÙNG TÁC GIẢ</h5>
-                    @if (countSachCungTacGia > 0)
-                    {
-                        foreach (var item in sachCungTacGia)
-                        {
-                            var imgUrlTacGia = "";
-                            int? saleTacGia = 0;
-                            var khuyenMaiTacGia = item.KhuyenMai_Sach.ToList();
-                            var imgTacGia = item.Images.FirstOrDefault(s => s.IsDefault);
 
-                            if (imgTacGia != null)
-                            {
-                                imgUrlTacGia = imgTacGia.Image1;
-                            }
-                            // kiểm tra xem có sale
-                            if (khuyenMaiTacGia.Count > 0)
-                            {// có sale
-                             //kiểm tra sale còn hạn hay hết hạn
+                <div class="col-md-4 ps-5  border">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    @if (sale != 0)
+                    {// sale còn hạn sd
+                        <span class="text-danger fs-3">
 
-                                foreach (var itemKM in khuyenMaiTacGia)
-                                {// lặp qua danh sách khuyến mại
-                                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
-                                    {
-                                        saleTacGia = itemKM.Sale;
-                                        break;
-                                    }
-                                }
-                                var priceSale = item.Price - (item.Price * saleTacGia / 100);
-                                <div class="row border-bottom author mb-1">
-                                    <div class="col-sm-2 col-md-2 author-img  ">
-                                        <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
-                                            <img src="@imgUrlTacGia" class="img-fluid" alt="">
-                                        </a>
+                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
 
-                                    </div>
-
-                                    <div class="col-sm-10  col-md-10 ">
-                                        <p class="text-break">
-                                            @item.Name
-                                        </p>
-                                        @if (saleTacGia != 0)
-                                        {// sale còn hạn
-                                            <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                            <span style="color:gray">
-                                                <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                                            </span>
-                                        }
-                                        else
-                                        {// sale hết hạn
-                                            <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
-
-                                        }
-
-
-                                    </div>
-
-
-
-                                </div>
-
-
-                            }
-                            else
-                            {// không sale
-
-                                <div class="row border-bottom author mb-1">
-                                    <div class="col-sm-2 col-md-2 author-img  ">
-                                        <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
-                                            <img src="@imgUrlTacGia" class="img-fluid" alt="san_pham">
-                                        </a>
-
-                                    </div>
-
-                                    <div class="col-sm-10  col-md-10 ">
-                                        <p class="text-break">
-                                            @item.Name
-                                        </p>
-                                        <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
-
-
-                                    </div>
-
-
-
-                                </div>
-                            }
-
-
-
-                        }
-
+                        </span>
+                        <span class="ms-2 fs-3" style="color:gray">
+                            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+                        </span>
                     }
                     else
-                    {
-                        <p>Không có sản phẩm</p>
+                    {// sale hết hạn sử dụng
+                        <span class="text-danger fs-3">
+
+                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
+
+                        </span>
+
                     }
 
 
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
 
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                        <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết hàng
+
+                        <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
 
 
                 </div>
+                // voucher
+                <div class="col-md-3">
+                    <div class="container-voucher">
+                        <div class="voucher">
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="card">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
+
+                                        <div class="col-sm-9">
+
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" data-pro="@Model.ID" style=" word-wrap: break-word;">Lưu</button>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+            else
+            {// không có sale
+
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-2" style="width:10%">
+
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
+                                {
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
+
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                <div class="col-md-3 p-0  position-relative">
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                </div>
+
+                <div class="col-md-4 ps-5">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    <span class="text-danger fs-3">
+                        Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
+                    </span>
+                    @*<span class="ms-2 fs-3" style="color:gray">
+                        <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+                        </span>*@
+
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
+
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                        <button class="mt-5 bg-danger text-white" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết số lượng
+                        <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
+
+
+                </div>
+                //voucher
+                <div class="col-md-3">
+                    <div class="container-voucher">
+                        <div class="voucher">
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="card">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
+
+                                        <div class="col-sm-9">
+
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" data-pro="@Model.ID" style=" word-wrap: break-word;">Lưu</button>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+
+        </div>
+
+
+        <!--Hàng 2-->
+
+        <div class="row mt-5">
+            <div class="col-sm-8 border p-0">
+                <ul class="nav">
+                    <li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Mô tả</a></li>
+                    @*<li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Bình luận</a></li>*@
+
+                </ul>
+                <p class="mt-3">
+                    @Model.MoTa
+                </p>
 
             </div>
 
-
-            <h4 class="text-center mt-5">SÁCH CÙNG THỂ LOẠI</h4>
-            <div class="row cateBook-together  mb-4">
-                @foreach (var item in sachDM)
+            <div class="col-sm-4 border " id="author-together">
+                <h5 class="text-dark text-center">SÁCH CÙNG TÁC GIẢ</h5>
+                @if (countSachCungTacGia > 0)
                 {
-                    if (item.ID != Model.ID)
+                    foreach (var item in sachCungTacGia)
                     {
-                        var imgUrlTheLoai = "";
-                        int? saleTheLoai = 0;
-                        var khuyenMaiTheLoai = item.KhuyenMai_Sach.ToList();
-                        var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
+                        var imgUrlTacGia = "";
+                        int? saleTacGia = 0;
+                        var khuyenMaiTacGia = item.KhuyenMai_Sach.ToList();
+                        var imgTacGia = item.Images.FirstOrDefault(s => s.IsDefault);
 
-                        if (imgTheLoai != null)
+                        if (imgTacGia != null)
                         {
-                            imgUrlTheLoai = imgTheLoai.Image1;
+                            imgUrlTacGia = imgTacGia.Image1;
                         }
-                        // kiểm tra sale tồn tại không
-                        if (khuyenMaiTheLoai.Count > 0)
-                        {// sale tồn tại
+                        // kiểm tra xem có sale
+                        if (khuyenMaiTacGia.Count > 0)
+                        {// có sale
                          //kiểm tra sale còn hạn hay hết hạn
-                            foreach (var itemKM in khuyenMaiTheLoai)
+
+                            foreach (var itemKM in khuyenMaiTacGia)
                             {// lặp qua danh sách khuyến mại
                                 if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
                                 {
-                                    saleTheLoai = itemKM.Sale;
+                                    saleTacGia = itemKM.Sale;
                                     break;
                                 }
                             }
-                            var priceSale = item.Price - (item.Price * saleTheLoai / 100);
-                            <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
-                                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
-                                @if (saleTheLoai != 0)
-                                {// sale còn hạn
-                                    <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
-                                    <p class="fs-5 product-name multi-line">@item.Name</p>
-                                    <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                    <span class="text-bg-danger">
-                                        <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                                    </span>
-                                }
-                                else
-                                {// sale hết hạn
-                                    <p class="fs-5 product-name multi-line">@item.Name</p>
-                                    <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                }
+                            var priceSale = item.Price - (item.Price * saleTacGia / 100);
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
+                                        <img src="@imgUrlTacGia" class="img-fluid" alt="">
+                                    </a>
+
+                                </div>
+
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    @if (saleTacGia != 0)
+                                    {// sale còn hạn
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                                        <span style="color:gray">
+                                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                        </span>
+                                    }
+                                    else
+                                    {// sale hết hạn
+                                        <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+
+                                    }
+
+
+                                </div>
+
+
 
                             </div>
+
+
                         }
                         else
-                        {// sale k tồn tại
-                            <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
-                                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
-                                <p class="fs-5 product-name multi-line">@item.Name</p>
-                                <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+                        {// không sale
+
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item">
+                                        <img src="@imgUrlTacGia" class="img-fluid" alt="san_pham">
+                                    </a>
+
+                                </div>
+
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+
+
+                                </div>
+
+
+
                             </div>
                         }
 
+
+
                     }
+
                 }
+                else
+                {
+                    <p>Không có sản phẩm</p>
+                }
+
+
+
+
+
             </div>
+
         </div>
 
-        <!-- JavaScript để cập nhật ảnh chính -->
-        <script type="text/javascript">
-            function changeMainImage(imagePath) {
-                document.getElementById('mainImage').src = imagePath;
+
+        <h4 class="text-center mt-5">SÁCH CÙNG THỂ LOẠI</h4>
+        <div class="row cateBook-together  mb-4">
+            @foreach (var item in sachDM)
+            {
+                if (item.ID != Model.ID)
+                {
+                    var imgUrlTheLoai = "";
+                    int? saleTheLoai = 0;
+                    var khuyenMaiTheLoai = item.KhuyenMai_Sach.ToList();
+                    var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
+
+                    if (imgTheLoai != null)
+                    {
+                        imgUrlTheLoai = imgTheLoai.Image1;
+                    }
+                    // kiểm tra sale tồn tại không
+                    if (khuyenMaiTheLoai.Count > 0)
+                    {// sale tồn tại
+                     //kiểm tra sale còn hạn hay hết hạn
+                        foreach (var itemKM in khuyenMaiTheLoai)
+                        {// lặp qua danh sách khuyến mại
+                            if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                            {
+                                saleTheLoai = itemKM.Sale;
+                                break;
+                            }
+                        }
+                        var priceSale = item.Price - (item.Price * saleTheLoai / 100);
+                        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+                            @if (saleTheLoai != 0)
+                            {// sale còn hạn
+                                <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
+                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                                <span class="text-bg-danger">
+                                    <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                </span>
+                            }
+                            else
+                            {// sale hết hạn
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
+                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {// sale k tồn tại
+                        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
+                            <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+                        </div>
+                    }
+
+                }
             }
+        </div>
+    </div>
 
-        </script>
-
-
-    </section>
-
-
-
-
-    <style>
-        #author-together .author:hover {
-            color: red;
+    <!-- JavaScript để cập nhật ảnh chính -->
+    <script type="text/javascript">
+        function changeMainImage(imagePath) {
+            document.getElementById('mainImage').src = imagePath;
         }
 
-        .author-img {
-            position: relative;
-            overflow: hidden;
-        }
+    </script>
 
-        #author-together .author-img img {
-            /* position:absolute;*/
-            transition: all 0.5s ease;
-        }
 
-        #author-together .author:hover img {
-            transform: scale(1.1);
-        }
+</section>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>*@
+@*<script type="text/javascript">
+        //$(document).ready(function () {
+        //    // lưu voucher
+        //    $('.btnAddVoucher').on("click", function () {
+        //        var id = $(this).data('id');
+        //        var prId = $(this).data('pro');
+        //        var url = "/add-voucher?voucherId=" + id + "&detailIds=" + prId;
+        //        $('.btnCheckOut').attr("disabled", "disabled");
+        //        window.location.href = url;
 
-        .container-voucher {
-            height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
-            overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
-        }
+        //    })
+        //});
 
-        .dateCreated, .dateEnd {
-            font-size: 10px;
-        }
 
-        .contain-imgVoucher, .btnAddVoucher {
+
+    </script>*@
+
+
+<style>
+    #author-together .author:hover {
+        color: red;
+    }
+
+    .author-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+    #author-together .author-img img {
+        /* position:absolute;*/
+        transition: all 0.5s ease;
+    }
+
+    #author-together .author:hover img {
+        transform: scale(1.1);
+    }
+
+    .container-voucher {
+        height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
+        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+
+        .btnAddVoucher:hover {
             background-color: #FC6736;
         }
 
-        .contain-imgVoucher {
-            position: relative;
-        }
+    .contain-imgVoucher {
+        position: relative;
+    }
 
-        .imgVoucher {
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 100%;
-            max-height: 100%;
-        }
-    </style>
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
 
 

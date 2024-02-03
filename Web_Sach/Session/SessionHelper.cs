@@ -10,6 +10,7 @@ namespace Web_Sach.Session
     {
         public static string USER_KEY = "USER_KEY"; // admin
         public static string CART_KEY = "CART_KEY"; // giỏ hàng client
+        public static string VOUCHER_KEY = "VOUCHER_KEY"; // voucher client
         //public static string SESSION_CREDENTIALS = "SESSION_CREDENTIALS";
         //public static string CurrentCulture { get; set; }
     }

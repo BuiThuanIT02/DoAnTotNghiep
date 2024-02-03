@@ -24,10 +24,6 @@
 
         })
 
-     
-    
-
-
         $('#amount').on("blur", function () {
             var amountValue = $('#amount').val();// giá trị input
             var max = $('#amount').attr("max");
@@ -79,9 +75,15 @@
         })
 
 
+        // lưu voucher
+        $('.btnAddVoucher').on("click", function () {
+            var id = $(this).data('id');
+            var prId = $(this).data('pro');
+            var url = "/add-voucher?voucherId=" + id + "&detailIds=" + prId;
+           /* $('.btnCheckOut').attr("disabled", "disabled");*/
+            window.location.href = url;
 
-
-
+        })
 
 
    
