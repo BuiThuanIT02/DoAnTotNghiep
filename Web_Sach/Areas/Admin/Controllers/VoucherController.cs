@@ -53,6 +53,12 @@ namespace Web_Sach.Areas.Admin.Controllers
                     ModelState.AddModelError("SoTienGiam", "Số tiền giảm phải lớn hơn 0");
                     return View(voucher);
                 }
+                else if (voucher.NgayTao > voucher.NgayHetHan)
+                {
+                    ModelState.AddModelError("NgayHetHan", "Ngày hết hạn phải lớn hơn ngày tạo!");
+
+                    return View(voucher);
+                }
 
                 var voucherIndex = new VoucherModels().Insert(voucher);
                 if (voucherIndex > 0)
@@ -101,6 +107,12 @@ namespace Web_Sach.Areas.Admin.Controllers
                 else if (dm.SoTienGiam < 0)
                 {
                     ModelState.AddModelError("SoTienGiam", "Số tiền giảm phải lớn hơn 0");
+                    return View(dm);
+                }
+                else if (dm.NgayTao > dm.NgayHetHan)
+                {
+                    ModelState.AddModelError("NgayHetHan", "Ngày hết hạn phải lớn hơn ngày tạo!");
+                   
                     return View(dm);
                 }
 

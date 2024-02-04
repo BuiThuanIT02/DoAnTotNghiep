@@ -4,9 +4,59 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     double total = 0;
     var userPayment = (Web_Sach.Session.UserLoginSession)ViewBag.User;
+    var listVoucher = Session[Web_Sach.Session.SessionHelper.VOUCHER_KEY] as List<Web_Sach.Models.EF.voucherSession>;
 }
 
 
+<style>
+    .container-voucher {
+        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .vouchers {
+        width: 100%;
+        margin-left: 10%;
+        display: flex;
+        flex-wrap: wrap; /* Allow flex items to wrap to the next line if needed */
+    }
+
+
+    .cardItem {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+
+    .btnAddVoucher {
+        /* tràn chữ sẽ xg dòng*/
+        word-wrap: break-word;
+    }
+
+        .btnAddVoucher:hover {
+            background-color: #FC6736;
+        }
+
+    .contain-imgVoucher {
+        position: relative;
+    }
+
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
 
 <div class=" d-block my-5 p-0">
     @if (Model.Count > 0)
@@ -158,7 +208,7 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <label>Mã voucher(nếu có)</label>
-                                <input type="text" name="mavoucher" class="form-control" />
+                                @*<input type="text" name="mavoucher" class="form-control" />*@
                                 <p class="d-none" id="errorVoucher"></p>
                             </div>
                             <div class="col-sm-4">
@@ -217,9 +267,82 @@
 
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade m-auto" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Danh sách voucher</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (listVoucher != null)
+                {
+                    <div class="container-voucher">
+                        <div class="vouchers">
+
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="cardItem">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
+
+                                        <div class="col-sm-9">
+
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.voucher.NgayTao.HasValue ? item.voucher.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.voucher.NgayHetHan.HasValue ? item.voucher.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.voucher.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+                                                        <button class="btn text-center btnAddVoucher p-0 d-block w-100" data-id="@item.voucher.MaVoucher">Áp dụng</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                </div>
+                            }
+
+
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p>Voucher rỗng!.</p>
+                }
+
+
+            </div> <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+       
+    </div>
+</div>
+
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
 @section jsFooter{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -232,111 +355,122 @@
                 }
             }) // dropw hình thức thanh toán
             let mavoucher = "";
+            // Khi click vào nút "Áp dụng"
             $('#addVoucher').on("click", function (e) {
                 e.preventDefault();
-                var total = $('input[name="total"]').val();
-                mavoucher = $('input[name="mavoucher"]').val();
+                // Hiển thị modal danh sách voucher
+                $('#voucherModal').modal('show');
+            });
+            $('.btnAddVoucher').each(function () {
+                $(this).off("click").on("click", function () {
+                    let total = $('input[name="total"]').val();
+                    mavoucher = $(this).data('id');
+                    $.ajax({
+                        url: "/Cart/AddVoucher",
+                        type: "POST",
+                        data: {
+                            mavoucher,
+                            total
+                        },
 
-                $.ajax({
-                    url: "/Cart/AddVoucher",
-                    type: "POST",
-                    data: {
-                        mavoucher,
-                        total
-                    },
+                        dataType: "json",
 
-                    dataType: "json",
+                        success: function (res) {
+                            if (res.Code == 10 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
 
-                    success: function (res) {
-                        if (res.Code == 10 && res.Success == false) {
-                            $('#errorVoucher').addClass('d-block text-danger')
-                            $('#errorVoucher').removeClass('d-none')
+                                $('#errorVoucher').html('Mã voucher không tồn tại!');
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }// voucher
+                            else if (res.Code == 11 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
 
-                            $('#errorVoucher').html('Mã voucher không tồn tại!');
-                            $('input[name="mavoucher"]').css('border', "1px solid red");
-                            $('#totalVoucher tr').each(function () {
-                                // lấy id row
-                                let idRow = $(this).attr('id');
-                                if (idRow == 'row_14') {
-                                    $(this).remove();
-                                }
-                            });
-                        }// voucher
-                        else if (res.Code == 11 && res.Success == false) {
-                            $('#errorVoucher').addClass('d-block text-danger')
-                            $('#errorVoucher').removeClass('d-none')
-
-                            $('#errorVoucher').html('Mã voucher đã hết hạn sử dụng!');
-                            $('input[name="mavoucher"]').css('border', "1px solid red");
-                            $('#totalVoucher tr').each(function () {
-                                // lấy id row
-                                let idRow = $(this).attr('id');
-                                if (idRow == 'row_14') {
-                                    $(this).remove();
-                                }
-                            });
-                        }
-                        else if (res.Code == 12 && res.Success == false) {
-                            $('#errorVoucher').addClass('d-block text-danger')
-                            $('#errorVoucher').removeClass('d-none')
-
-                            $('#errorVoucher').html(`Giá trị đơn hàng phải lớn hơn ${res.DonGia}`);
-                            $('input[name="mavoucher"]').css('border', "1px solid red");
-                            $('#totalVoucher tr').each(function () {
-                                // lấy id row
-                                let idRow = $(this).attr('id');
-                                if (idRow == 'row_14') {
-                                    $(this).remove();
-                                }
-                            });
-                        }
-                        else if (res.Code == 13 && res.Success == false) {
-                            $('#errorVoucher').addClass('d-block text-danger')
-                            $('#errorVoucher').removeClass('d-none')
-
-                            $('#errorVoucher').html("Đã sử dụng hết lượt voucher này!.");
-                            $('input[name="mavoucher"]').css('border', "1px solid red");
-                            $('#totalVoucher tr').each(function () {
-                                // lấy id row
-                                let idRow = $(this).attr('id');
-                                if (idRow == 'row_14') {
-                                    $(this).remove();
-                                }
-                            });
-                        }
-                        else if (res.Code == 14 && res.Success == true) {
-                            $('#errorVoucher').addClass('d-block text-success')
-                            $('#errorVoucher').removeClass('d-none text-danger')
-                            $('#errorVoucher').html("Đã sử dụng!.");
-                            $('input[name="mavoucher"]').css('border', "1px solid green");
-
-                            let str = "";
-                            let resCode = res.Code;
-                            let thanhtien = total - res.DonGia;
-                            let voucher = res.DonGia != null ? numberWithCommas(res.DonGia) : "";
-                            let payment = thanhtien != null ? numberWithCommas(thanhtien) : "";
-                            function numberWithCommas(x) {
-                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                $('#errorVoucher').html('Mã voucher đã hết hạn sử dụng!');
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
                             }
-                            str += `<tr id="row_${resCode}">
-                                           <td colspan="6" style="text-align:right " class="text-dark fs-5">Voucher: -${voucher}</td>
-                                        </tr>
-                                        <tr id="row_${resCode}">
-                                            <th colspan="6" style="text-align:right " class="text-dark fs-5">Thanh toán: ${payment}</th>
-                                        </tr>
+                            else if (res.Code == 12 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
 
-                                `
-                            $('#totalVoucher').append(str);
+                                $('#errorVoucher').html(`Giá trị đơn hàng phải lớn hơn ${res.DonGia}`);
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                            else if (res.Code == 13 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
 
-                        }
+                                $('#errorVoucher').html("Đã sử dụng hết lượt voucher này!.");
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                            else if (res.Code == 14 && res.Success == true) {
+                                $('#errorVoucher').addClass('d-block text-success')
+                                $('#errorVoucher').removeClass('d-none text-danger')
+                                $('#errorVoucher').html("Đã sử dụng!.");
+                                $('input[name="mavoucher"]').css('border', "1px solid green");
+                                $('#voucherModal').modal('hide');
+
+                                let str = "";
+                                let resCode = res.Code;
+                                let thanhtien = total - res.DonGia;
+                                let voucher = res.DonGia != null ? numberWithCommas(res.DonGia) : "";
+                                let payment = thanhtien != null ? numberWithCommas(thanhtien) : "";
+                                function numberWithCommas(x) {
+                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }
+                                str += `<tr id="row_${resCode}">
+                                   <td colspan="6" style="text-align:right " class="text-dark fs-5">Voucher: -${voucher}</td>
+                                </tr>
+                                <tr id="row_${resCode}">
+                                    <th colspan="6" style="text-align:right " class="text-dark fs-5">Thanh toán: ${payment}</th>
+                                </tr>
+
+                        `
+                                $('#totalVoucher').append(str);
+
+                            }
 
 
-                    },
+                        },
 
 
-                }); //  end ajax
-            });// end add voucher
-
+                    }); //  end ajax
+                });// end sk Áp dụng
+            });// duyệt tưng Áp dụng
+       
 
             $('#btnCheckOut').on("click", function (e) {
                 e.preventDefault();
