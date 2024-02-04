@@ -22,12 +22,12 @@ namespace Web_Sach.Controllers
        
         public ActionResult Index()
         {
-            if (Session[SessionHelper.USER_KEY] == null)
-            {// user chưa tồn tại
-                Session[SessionHelper.CART_KEY] = null;
-                return RedirectToAction("Cart", "Cart");
+            //if (Session[SessionHelper.USER_KEY] == null)
+            //{// user chưa tồn tại
+            //    Session[SessionHelper.CART_KEY] = null;
+            //    return RedirectToAction("Cart", "Cart");
 
-            }
+            //}
             // user đã tồn tại
             var cart = Session[SessionHelper.CART_KEY];
             var list = new List<CartItem>();
@@ -39,15 +39,16 @@ namespace Web_Sach.Controllers
 
             return View(list);
         }
-        // đăng nhập mới cho thêm vào Cart
-        public ActionResult Cart()
-        {
-            return View();
-        }
+        
 
         public ActionResult AddCart(int productId, int Quantity)
         {
+            if (Session[SessionHelper.USER_KEY] == null)
+            {// user chưa tồn tại
+                Session[SessionHelper.CART_KEY] = null;
+                return Json(new { status = false, role =0});
 
+            }
             var cart = Session[SessionHelper.CART_KEY]; // lấy giỏ hàng
             var list = new List<CartItem>();
             // lấy 1 đối tượng sách
@@ -123,10 +124,14 @@ namespace Web_Sach.Controllers
                 list.Add(item);
                 Session[SessionHelper.CART_KEY] = list;
             }
-
-            return RedirectToAction("Index");
+            return Json(new {status=true});
+            //return RedirectToAction("Index");
         }
-
+// đăng nhập mới cho thêm vào Cart
+        public ActionResult Cart()
+        {
+            return View();
+        }
         [HttpPost]
 
         public JsonResult Update(string cartList)

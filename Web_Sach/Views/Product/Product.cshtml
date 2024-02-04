@@ -20,11 +20,57 @@
 
 }
 
-@section jsFooter{
 
-    <script src="~/Scripts/Client/Controller/product.js"></script>
+<style>
+    #author-together .author:hover {
+        color: red;
+    }
 
-}
+    .author-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+    #author-together .author-img img {
+        /* position:absolute;*/
+        transition: all 0.5s ease;
+    }
+
+    #author-together .author:hover img {
+        transform: scale(1.1);
+    }
+
+    .container-voucher {
+        height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
+        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+
+        .btnAddVoucher:hover {
+            background-color: #FC6736;
+        }
+
+    .contain-imgVoucher {
+        position: relative;
+    }
+
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
 
 <section id="product-info">
     <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
@@ -166,7 +212,7 @@
                                                     </div>
                                                     <div class="col-sm-3 m-auto p-0">
 
-                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" data-pro="@Model.ID" style=" word-wrap: break-word;">Lưu</button>
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" style=" word-wrap: break-word;">Lưu</button>
 
                                                     </div>
                                                 </div>
@@ -286,7 +332,7 @@
                                                     </div>
                                                     <div class="col-sm-3 m-auto p-0">
 
-                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" data-pro="@Model.ID" style=" word-wrap: break-word;">Lưu</button>
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" style=" word-wrap: break-word;">Lưu</button>
 
                                                     </div>
                                                 </div>
@@ -505,7 +551,7 @@
 
 
 </section>
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>*@
+
 @*<script type="text/javascript">
         //$(document).ready(function () {
         //    // lưu voucher
@@ -522,57 +568,12 @@
 
 
     </script>*@
+@section jsFooter{
+    <script src="~/Scripts/Client/Controller/product.js"></script>
+}
 
 
-<style>
-    #author-together .author:hover {
-        color: red;
-    }
 
-    .author-img {
-        position: relative;
-        overflow: hidden;
-    }
 
-    #author-together .author-img img {
-        /* position:absolute;*/
-        transition: all 0.5s ease;
-    }
-
-    #author-together .author:hover img {
-        transform: scale(1.1);
-    }
-
-    .container-voucher {
-        height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
-        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
-    }
-
-    .dateCreated, .dateEnd {
-        font-size: 10px;
-    }
-
-    .contain-imgVoucher, .btnAddVoucher {
-        background-color: #FC6736;
-    }
-
-        .btnAddVoucher:hover {
-            background-color: #FC6736;
-        }
-
-    .contain-imgVoucher {
-        position: relative;
-    }
-
-    .imgVoucher {
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 100%;
-        max-height: 100%;
-    }
-</style>
 
 

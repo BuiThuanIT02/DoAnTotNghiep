@@ -36,12 +36,12 @@ namespace Web_Sach.Controllers
         //}
      public ActionResult listVoucher()
         {
-            if (Session[SessionHelper.USER_KEY] == null)
-            {// user chưa tồn tại
-                Session[SessionHelper.VOUCHER_KEY] = null;
-                return RedirectToAction("VoucherEmpty", "Vouchers");
+            //if (Session[SessionHelper.USER_KEY] == null)
+            //{// user chưa tồn tại
+            //    Session[SessionHelper.VOUCHER_KEY] = null;
+            //    return RedirectToAction("VoucherEmpty", "Vouchers");
 
-            }
+            //}
             // user đã tồn tại
             var voucher = Session[SessionHelper.VOUCHER_KEY];
             var list = new List<voucherSession>();
@@ -58,8 +58,14 @@ namespace Web_Sach.Controllers
         }
 
    
-        public ActionResult AddVoucher(int voucherId,int detailIds)
+        public JsonResult AddVoucher(int voucherId)
         {
+            if (Session[SessionHelper.USER_KEY] == null)
+            {// user chưa tồn tại
+                Session[SessionHelper.VOUCHER_KEY] = null;
+                return Json(new { status = false, role = 0 });
+
+            }
             var voucherSession = Session[SessionHelper.VOUCHER_KEY]; // lấy voucher
             var list = new List<voucherSession>();
             // lấy 1 đối tượng sách
@@ -73,8 +79,7 @@ namespace Web_Sach.Controllers
                 // kiểm tra xem voucher đã có trong giỏ  chưa
                 if (list.Exists(x => x.voucher.ID == voucherId))
                 {
-                    AlertHelp.SetAlert(this, "Voucher đã tồn tại", "error");
-                    return RedirectToAction("Product","Product", new  { detailId = detailIds});
+                    return Json(new { status = false, voucherNotEmpty=1 });
                 }
                 else
                 { // voucher đó chưa có trong giỏ  
@@ -94,8 +99,8 @@ namespace Web_Sach.Controllers
                 list.Add(item);
                 Session[SessionHelper.VOUCHER_KEY] = list;
             }
-            AlertHelp.SetAlert(this, "Lưu voucher thành công!", "success");
-            return RedirectToAction("Product", "Product", new { detailId = detailIds });
+          
+            return Json(new { status = true });
         }
 
     }

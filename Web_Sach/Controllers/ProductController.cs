@@ -22,7 +22,7 @@ namespace Web_Sach.Controllers
         //[Route("chi-tiet/{metatilte}-{detailId}")]
         public ActionResult Product(int detailId)
         {
-          
+
             // lấy nhiều ảnh từ bảng Images
             var imagesBook = from img in db.Images
                              join s in db.Saches on img.MaSP equals s.ID

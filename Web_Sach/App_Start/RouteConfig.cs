@@ -73,20 +73,34 @@ namespace Web_Sach
 
           );
 
+            //    routes.MapRoute(
+            //    name: "Thêm giỏ hàng",
+            //    url: "them-gio-hang",
+            //    defaults: new { controller = "Cart", action = "AddCart", id = UrlParameter.Optional },
+            //    namespaces: new[] { "Web_Sach.Controllers" }
+
+            //);
             routes.MapRoute(
-            name: "Thêm giỏ hàng",
+            name: "Giỏ hàng chưa tồn tại",
             url: "them-gio-hang",
-            defaults: new { controller = "Cart", action = "AddCart", id = UrlParameter.Optional },
+            defaults: new { controller = "Cart", action = "Cart", id = UrlParameter.Optional },
             namespaces: new[] { "Web_Sach.Controllers" }
 
         );
             routes.MapRoute(
-          name: "Lưu voucher",
-          url: "add-voucher",
-          defaults: new { controller = "Vouchers", action = "AddVoucher", id = UrlParameter.Optional },
-          namespaces: new[] { "Web_Sach.Controllers" }
+           name: "Voucher rỗng",
+           url: "add-voucher",
+           defaults: new { controller = "Vouchers", action = "VoucherEmpty", id = UrlParameter.Optional },
+           namespaces: new[] { "Web_Sach.Controllers" }
 
-      );
+       );
+            //      routes.MapRoute(
+            //    name: "Lưu voucher",
+            //    url: "add-voucher",
+            //    defaults: new { controller = "Vouchers", action = "AddVoucher", id = UrlParameter.Optional },
+            //    namespaces: new[] { "Web_Sach.Controllers" }
+
+            //);
             routes.MapRoute(
          name: "Giỏ hàng",
          url: "gio-hang",
