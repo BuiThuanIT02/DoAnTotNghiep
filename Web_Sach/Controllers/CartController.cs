@@ -12,6 +12,7 @@ using Web_Sach.Models.Payments;
 using System.Diagnostics;
 using System.Text;
 using BotDetect;
+using System.Web.Services.Description;
 
 namespace Web_Sach.Controllers
 {
@@ -200,34 +201,79 @@ namespace Web_Sach.Controllers
 
         }
         [HttpPost]
-        public ActionResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity, int PriceSale)
+        public JsonResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int idSach, int Quantity, int PriceSale,string mavoucher,string TypePayment,string TypePaymentVN)
         {
-            var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
+            //string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity, int PriceSale
+            var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
+            var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];  
             var order = new DonHang();
+            if (!string.IsNullOrEmpty(mavoucher))
+            {// mã voucher 
+                var dbVoucher = db.Vouchers.Where(x => x.MaVoucher == mavoucher).FirstOrDefault();
+                order.TongTien = total - (decimal)dbVoucher.SoTienGiam;
+                order.MaVoucher = dbVoucher.ID;
+                dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                db.Vouchers.Attach(dbVoucher);
+                db.Entry(dbVoucher).State = System.Data.Entity.EntityState.Modified;// cập nhật lại trong csdl
+                db.SaveChanges();
+
+            }
             order.TenNguoiNhan = TenKH;
             order.Moblie = Mobile;
             order.DiaChiNguoiNhan = Address;
             order.Email = Email;
-            order.TongTien = total;
             order.NgayDat = DateTime.Now;
+            order.DaThanhToan = 0;
+            if (string.IsNullOrEmpty(mavoucher))
+            {
+                order.TongTien =total;
+                order.MaVoucher = null;
+            }
             order.MaKH = sessionUser.UserID;
             order.Status = 1;
+
             db.DonHangs.Add(order);
+           
             db.SaveChanges();
             var idOrder = order.ID;
 
 
+
             var orderDetails = new ChiTietDonHang();
-            orderDetails.MaDonHang = idOrder;
-            orderDetails.MaSach = id;
+            orderDetails.MaDonHang= idOrder;
+            orderDetails.MaSach = idSach;
             orderDetails.Quantity = Quantity;
             orderDetails.Price = PriceSale;
-            var sach = db.Saches.Find(id);
+            var sach = db.Saches.Find(idSach);
             // cập nhật lại số lượng
             sach.Quantity = sach.Quantity - Quantity;
             db.ChiTietDonHangs.Add(orderDetails);
-            db.SaveChanges();
-            return Redirect("/hoan-thanh");
+           
+                db.SaveChanges();
+
+           
+
+            int type = int.Parse(TypePayment);
+            code = new { Success = true, Code = type, Url = "", DonGia = 0 };
+            // thanh toasn vnpay
+            if (type == 2)
+            {
+                var url = UrlPayment(int.Parse(TypePaymentVN), order.ID);
+
+                code = new { Success = true, Code = type, Url = url, DonGia = 0 };
+            }
+            else if (type == 1)
+            {  // thanh toán khi nhận hàng
+                Session["checkVoucher"] = null;// thiết lập lại voucher
+                Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
+
+            }
+
+
+            return Json(code);
+
+
+
 
         }
         [HttpGet]
@@ -437,7 +483,7 @@ namespace Web_Sach.Controllers
             if (string.IsNullOrEmpty(obOrder.mavoucher))
             {
                 order.TongTien = obOrder.total;
-                order.MaVoucher = 0;
+                order.MaVoucher = null;
             }
             order.MaKH = sessionUser.UserID;
             order.Status = 1;

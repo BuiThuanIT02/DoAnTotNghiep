@@ -2,53 +2,206 @@
 @{
     ViewBag.Title = "BuyNow";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var userPaymeny = (Web_Sach.Session.UserLoginSession)ViewBag.user;
+
+    var userPayment = (Web_Sach.Session.UserLoginSession)ViewBag.user;
+    var listVoucher = Session[Web_Sach.Session.SessionHelper.VOUCHER_KEY] as List<Web_Sach.Models.EF.voucherSession>;
+
+    double total = 0;
+    var imgUrl = "";
+    int? sale = 0;
+    var khuyenMai = Model.sach.KhuyenMai_Sach.ToList();
+    var img = Model.sach.Images.FirstOrDefault(s => s.IsDefault);
+    if (img != null)
+    {
+        imgUrl = img.Image1;
+    }
+    if (khuyenMai.Count > 0)
+    {
+        foreach (var itemKM in khuyenMai)
+        {// lặp qua danh sách khuyến mại
+            if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+            {
+                sale = itemKM.Sale;
+                break;
+            }
+        }
+
+    }
+    var price = Model.sach.Price;
+   int priceSale = (int)(price - (price * sale / 100)); // giá bán
+    total += Convert.ToInt32(Model.Quantity * priceSale);
 }
+<style>
+    .container-voucher {
+        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .vouchers {
+        width: 100%;
+        margin-left: 10%;
+        display: flex;
+        flex-wrap: wrap; /* Allow flex items to wrap to the next line if needed */
+    }
 
 
+    .cardItem {
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+
+    .btnAddVoucher {
+        /* tràn chữ sẽ xg dòng*/
+        word-wrap: break-word;
+    }
+
+        .btnAddVoucher:hover {
+            background-color: #FC6736;
+        }
+
+    .contain-imgVoucher {
+        position: relative;
+    }
+
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+<div class="section group mb-5">
+    <h4 class="text-center">Xác nhận thanh toán</h4>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                @using (Html.BeginForm("BuyNow", "Cart", FormMethod.Post))
+                {
+
+                    <div class="form-group mb-2">
+                        <label>Người nhận</label>
+                        <input type="text" name="TenKH" class="form-control" value="@userPayment.FullName" required />
+
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Điện thoại</label>
+                        <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="0354569871" name="Mobile" class="form-control" value="@userPayment.Phone" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Địa chỉ</label>
+                        <input type="text" name="Address" class="form-control" value="@userPayment.Address" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Email</label>
+                        <input type="email" name="Email" class="form-control" value="@userPayment.Email" required />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="idSach" value="@Model.sach.ID" />
+
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="Quantity" value="@Model.Quantity" />
+
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="PriceSale" value="@priceSale" />
+
+                    </div>
+
+
+                    <div class="form-group mb-2">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h6>Mã voucher(nếu có)</h6>
+                                <div>
+                                    <i class="fa-solid fa-ticket" style="color: #FC6736;"></i>
+                                    ------------------------------------------------------------------
+                                    <p class="d-none" id="errorVoucher"></p>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-info" id="addVoucher">Xem voucher</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group mb-2">
+                        <label>Phương thức thanh toán</label>
+                        <select class="form-control" name="TypePayment" , id="drTypePayment">
+                            <option value="1" selected>Thanh toán khi nhận hàng</option>
+                            <option value="2">Thanh toán Online</option>
+                        </select>
+                    </div>
+                    @*<div class="form-group">
+                <input type="hidden" name="total" value="@total" />
+
+            </div>*@
+
+
+                    <div class="form-group" id="load_form_payment" style="display:none; ">
+
+                        <h4> <label>Chọn phương thức thanh toán :</label><br /></h4>
+
+                        <h5>Cách 1: Chuyển hướng sang VNPAY chọn phương thức thanh toán</h5>
+
+                        <label><input type="radio" name="TypePaymentVN" value="0" checked /> Cong thanh toan VNPAYQR </label>
+
+                        <h5>Cach 2: Tách phương thức thanh toán tại site của Merchant</h5>
+
+                        <label><input type="radio" name="TypePaymentVN" value="1" />Thanh toán qua ứng dụng hỗ trợ VNPAYQR </label><br />
+
+                        <label><input type="radio" name="TypePaymentVN" value="2" /> ATM-Tai khoản ngân hàng nội địa </label><br />
+
+                        <label><input type="radio" name="TypePaymentVN" value="3" /> Thanh toán qua thẻ quốc tế </label><br />
+
+                    </div>
+
+
+
+                    <div class="form-group" id="load_send"></div>
+
+
+                    <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
 <div class=" d-block my-5 p-0">
-    <table class="table table-bordered w-100 table-striped ">
+    <table class="table table-bordered w-75 table-striped m-auto ">
         <tr class="text-center">
-            <th>Mã sản phẩm</th>
+
             <th>Tên sản phẩm</th>
             <th>Ảnh sản phẩm</th>
             <th>Số lượng</th>
             <th>Đơn giá</th>
             <th>Thành tiền</th>
         </tr>
-        @{
-            double total = 0;
-            var imgUrl = "";
-            int? sale = 0;
-            var khuyenMai = Model.sach.KhuyenMai_Sach.ToList();
-            var img = Model.sach.Images.FirstOrDefault(s => s.IsDefault);
-            if (img != null)
-            {
-                imgUrl = img.Image1;
-            }
-            if (khuyenMai.Count > 0)
-            {
-                foreach (var itemKM in khuyenMai)
-                {// lặp qua danh sách khuyến mại
-                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
-                    {
-                        sale = itemKM.Sale;
-                        break;
-                    }
-                }
-
-            }
-            var price = Model.sach.Price;
-            int priceSale = (int)(price - (price * sale / 100)); // giá bán
-            total += Convert.ToInt32(Model.Quantity * priceSale);
-
-        }
-
+ 
 
 
 
         <tr class="text-center " style="vertical-align: middle;">
-            <td class="p-0">@Model.sach.ID</td>
+
             <td>@Model.sach.Name</td>
             <td>
                 <img src="@imgUrl" width="100px" alt="san_pham" />
@@ -60,66 +213,281 @@
             <td>@((Model.Quantity * priceSale).ToString("N0"))</td>
 
         </tr>
-        <tr>
-            <th colspan="6" style="text-align:right " class="text-dark fs-5 ">Tổng tiền:@total.ToString("N0")</th>
-        </tr>
+        <tbody id="totalVoucher">
+            <tr>
+                <th colspan="6" style="text-align:right " class="text-dark fs-5">Tổng tiền:@total.ToString("N0")</th>
+            </tr>
+        </tbody>
+      
 
     </table>
 
 </div>
 
 
-<div class="section group mb-5">
-    <h4 class="text-center">Xác nhận thanh toán</h4>
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <div class="col-md-6">
-                @using (Html.BeginForm("BuyNow", "Cart", FormMethod.Post))
+
+@*modal*@
+<div class="modal fade m-auto" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Danh sách voucher</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if (listVoucher != null)
                 {
-                    <div class="form-group mb-2">
-                        <label>Người nhận</label>
-                        <input type="text" name="TenKH" class="form-control" value="@userPaymeny.FullName" />
+                    <div class="container-voucher">
+                        <div class="vouchers">
 
-                    </div>
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="cardItem">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
 
-                    <div class="form-group mb-2">
-                        <label>Điện thoại</label>
-                        <input type="tel" pattern="[0-9]{3} [0-9]{3} [0-9]{4}" placeholder="035 456 9871" name="Mobile" class="form-control" value="@userPaymeny.Phone" />
-                    </div>
+                                        <div class="col-sm-9">
 
-                    <div class="form-group mb-2">
-                        <label>Địa chỉ</label>
-                        <input type="text" name="Address" class="form-control" value="@userPaymeny.Address" />
-                    </div>
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.voucher.NgayTao.HasValue ? item.voucher.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.voucher.NgayHetHan.HasValue ? item.voucher.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.voucher.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+                                                        <button class="btn text-center btnAddVoucher p-0 d-block w-100" data-id="@item.voucher.MaVoucher">Áp dụng</button>
 
-                    <div class="form-group mb-2">
-                        <label>Email</label>
-                        <input type="email" name="Email" class="form-control" value="@userPaymeny.Email" />
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="total" value="@total" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="id" value="@Model.sach.ID" />
+                                    </div>
 
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="Quantity" value="@Model.Quantity" />
 
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="PriceSale" value="@priceSale" />
 
+
+                                </div>
+                            }
+
+
+
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-dark">Thanh toán</button>
                 }
+                else
+                {
+                    <p>Voucher rỗng!.</p>
+                }
+
+
+            </div> <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
             </div>
         </div>
 
     </div>
-
-
 </div>
 
+
+
+@section jsFooter{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').on('change', '#drTypePayment', function () {
+                var type = $(this).val();
+                console.log(type);
+                $('#load_form_payment').hide();
+                if (type == "2") {
+                    $('#load_form_payment').show();
+                }
+            }) // dropw hình thức thanh toán
+            let mavoucher = "";
+            // Khi click vào nút "Áp dụng"
+            $('#addVoucher').on("click", function (e) {
+                e.preventDefault();
+                // Hiển thị modal danh sách voucher
+                $('#voucherModal').modal('show');
+            });
+            $('.btnAddVoucher').each(function () {
+                $(this).off("click").on("click", function () {
+                  /*  let total = $('input[name="total"]').val();*/
+                    let total = @total;
+                    let $btn = $(this);
+                    mavoucher = $(this).data('id');
+                    $.ajax({
+                        url: "/Cart/AddVoucher",
+                        type: "POST",
+                        data: {
+                            mavoucher,
+                            total
+                        },
+
+                        dataType: "json",
+
+                        success: function (res) {
+                            if (res.Code == 10 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
+
+                                $('#errorVoucher').html('Mã voucher không tồn tại!');
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }// voucher
+                            else if (res.Code == 11 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
+
+                                $('#errorVoucher').html('Mã voucher đã hết hạn sử dụng!');
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                            else if (res.Code == 12 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
+
+                                $('#errorVoucher').html(`Giá trị đơn hàng phải lớn hơn ${res.DonGia}`);
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                            else if (res.Code == 13 && res.Success == false) {
+                                $('#errorVoucher').addClass('d-block text-danger')
+                                $('#errorVoucher').removeClass('d-none')
+
+                                $('#errorVoucher').html("Đã sử dụng hết lượt voucher này!.");
+                                $('input[name="mavoucher"]').css('border', "1px solid red");
+                                $('#voucherModal').modal('hide');
+                                $('#totalVoucher tr').each(function () {
+                                    // lấy id row
+                                    let idRow = $(this).attr('id');
+                                    if (idRow == 'row_14') {
+                                        $(this).remove();
+                                    }
+                                });
+                            }
+                            else if (res.Code == 14 && res.Success == true) {
+                                $('#errorVoucher').addClass('d-block text-success')
+                                $('#errorVoucher').removeClass('d-none text-danger')
+                                $('#errorVoucher').html("Đã sử dụng!.");
+                                $('input[name="mavoucher"]').css('border', "1px solid green");
+                                $btn.addClass('disabled');
+                                $('#voucherModal').modal('hide');
+
+                                let str = "";
+                                let resCode = res.Code;
+                                let thanhtien = total - res.DonGia;
+                                let voucher = res.DonGia != null ? numberWithCommas(res.DonGia) : "";
+                                let payment = thanhtien != null ? numberWithCommas(thanhtien) : "";
+                                function numberWithCommas(x) {
+                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }
+                                str += `<tr id="row_${resCode}">
+                                   <td colspan="6" style="text-align:right " class="text-dark fs-5">Voucher: -${voucher}</td>
+                                </tr>
+                                <tr id="row_${resCode}">
+                                    <th colspan="6" style="text-align:right " class="text-dark fs-5">Thanh toán: ${payment}</th>
+                                </tr>
+
+                        `
+                                $('#totalVoucher').append(str);
+
+                            }
+
+
+                        },
+
+
+                    }); //  end ajax
+                });// end sk Áp dụng
+            });// duyệt tưng Áp dụng
+            $('#btnCheckOut').on("click", function (e) {
+                e.preventDefault();
+                let TenKH = $('input[name="TenKH"]').val();
+                let Mobile = $('input[name="Mobile"]').val();
+                let Address = $('input[name="Address"]').val();
+                let Email = $('input[name="Email"]').val();
+                let idSach = $('input[name="idSach"]').val();
+                let Quantity = $('input[name="Quantity"]').val();
+                let PriceSale =@priceSale;
+                let mavoucherFinal = mavoucher;
+
+               let TypePayment = $('#drTypePayment').val();
+                let total = @total;
+              
+                let TypePaymentVN = $('input[name="TypePaymentVN"]').val();
+                //$('#btnCheckOut').attr("disabled", "disabled");
+                //$('#load_send').html(`<h2>Đang gửi...</h2>`);
+                $.ajax({
+                    url: "/Cart/BuyNow",
+                    type: "POST",
+                    data: {
+                        TenKH,
+                        Mobile,
+                        Address,
+                        Email,
+                        idSach,
+                        Quantity,
+                        PriceSale,
+                        mavoucher: mavoucherFinal,
+                        TypePayment,
+                        total,
+                        TypePaymentVN
+                    },
+
+                    dataType: "json",
+
+                    success: function (res) {
+                        if (res.Code == 1 && res.Success == true) {
+                            location.href = "/hoan-thanh";
+                        };// thanh toán trực tiếp
+                        if (res.Code == 2 && res.Success == true) {
+                            $('#btnCheckOut').attr("disabled", "disabled");
+                            $('#load_send').html(`<h2>Đang gửi...</h2>`);
+                            location.href = res.Url;
+                        }// thanh toán online
+                    },
+
+
+                }); //  end ajax
+            });// end submit
+
+
+
+
+            // end document
+        });
+
+
+
+    </script>
+}

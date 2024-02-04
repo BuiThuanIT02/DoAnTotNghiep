@@ -57,14 +57,100 @@
         max-height: 100%;
     }
 </style>
+<div class="section group mb-5">
+    <h4 class="text-center">Xác nhận thanh toán</h4>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
+                {
 
+                    <div class="form-group mb-2">
+                        <label>Người nhận</label>
+                        <input type="text" name="TenKH" class="form-control" value="@userPayment.FullName" required />
+
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Điện thoại</label>
+                        <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="0354569871" name="Mobile" class="form-control" value="@userPayment.Phone" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Địa chỉ</label>
+                        <input type="text" name="Address" class="form-control" value="@userPayment.Address" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label>Email</label>
+                        <input type="email" name="Email" class="form-control" value="@userPayment.Email" required />
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <h6>Mã voucher(nếu có)</h6>
+                                <div>
+                                    <i class="fa-solid fa-ticket" style="color: #FC6736;"></i>
+                                   ------------------------------------------------------------------
+                                    <p class="d-none" id="errorVoucher"></p>
+                                </div>
+                              
+                            </div>
+                            <div class="col-sm-3">
+                                <button class="btn btn-info" id="addVoucher">Xem voucher</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group mb-2">
+                        <label>Phương thức thanh toán</label>
+                        <select class="form-control" name="TypePayment" , id="drTypePayment">
+                            <option value="1" selected>Thanh toán khi nhận hàng</option>
+                            <option value="2">Thanh toán Online</option>
+                        </select>
+                    </div>
+                    @*<div class="form-group">
+                        <input type="hidden" name="total" value="@total" />
+
+                    </div>*@
+
+
+                    <div class="form-group" id="load_form_payment" style="display:none; ">
+
+                        <h4> <label>Chọn phương thức thanh toán :</label><br /></h4>
+
+                        <h5>Cách 1: Chuyển hướng sang VNPAY chọn phương thức thanh toán</h5>
+
+                        <label><input type="radio" name="TypePaymentVN" value="0" checked /> Cong thanh toan VNPAYQR </label>
+
+                        <h5>Cach 2: Tách phương thức thanh toán tại site của Merchant</h5>
+
+                        <label><input type="radio" name="TypePaymentVN" value="1" />Thanh toán qua ứng dụng hỗ trợ VNPAYQR </label><br />
+
+                        <label><input type="radio" name="TypePaymentVN" value="2" /> ATM-Tai khoản ngân hàng nội địa </label><br />
+
+                        <label><input type="radio" name="TypePaymentVN" value="3" /> Thanh toán qua thẻ quốc tế </label><br />
+                       
+                    </div>
+
+                    <div class="form-group" id="load_send"></div>
+
+                    <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
 <div class=" d-block my-5 p-0">
     @if (Model.Count > 0)
     {
-        <table class="table table-bordered w-100 table-striped ">
+        <table class="table table-bordered w-75 table-striped m-auto">
             <tr class="text-center">
-
-                <th>Mã sản phẩm</th>
                 <th>Tên sản phẩm</th>
                 <th>Ảnh sản phẩm</th>
                 <th>Số lượng</th>
@@ -90,7 +176,7 @@
 
 
 
-                if (khuyenMai != null)
+                if (khuyenMai.Count >0)
                 {// có sale
 
                     //foreach (var itemKM in khuyenMai)
@@ -105,7 +191,7 @@
                     //var priceSale = item.sach.Price - (item.sach.Price * sale / 100);
                     total += Convert.ToInt32(item.Quantity * item.sach.Price);
                     <tr class="text-center " style="vertical-align: middle;">
-                        <td class="p-0">@item.sach.ID</td>
+                       
                         <td>@item.sach.Name</td>
                         <td>
                             <img src="@imgUrl" width="100px" alt="san_pham" />
@@ -175,98 +261,7 @@
 
 
         @Html.AntiForgeryToken()*@
-<div class="section group mb-5">
-    <h4 class="text-center">Xác nhận thanh toán</h4>
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <div class="col-md-6">
-                @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
-                {
 
-                    <div class="form-group mb-2">
-                        <label>Người nhận</label>
-                        <input type="text" name="TenKH" class="form-control" value="@userPayment.FullName" required />
-
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label>Điện thoại</label>
-                        <input type="tel" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="0354569871" name="Mobile" class="form-control" value="@userPayment.Phone" required />
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label>Địa chỉ</label>
-                        <input type="text" name="Address" class="form-control" value="@userPayment.Address" required />
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <label>Email</label>
-                        <input type="email" name="Email" class="form-control" value="@userPayment.Email" required />
-                    </div>
-
-                    <div class="form-group mb-2">
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <label>Mã voucher(nếu có)</label>
-                                @*<input type="text" name="mavoucher" class="form-control" />*@
-                                <p class="d-none" id="errorVoucher"></p>
-                            </div>
-                            <div class="col-sm-4">
-                                <button class="btn btn-info" id="addVoucher">Áp dụng</button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="form-group mb-2">
-                        <label>Phương thức thanh toán</label>
-                        <select class="form-control" name="TypePayment" , id="drTypePayment">
-                            <option value="1" selected>Thanh toán khi nhận hàng</option>
-                            <option value="2">Thanh toán Online</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="total" value="@total" />
-
-                    </div>
-
-
-                    <div class="form-group" id="load_form_payment" style="display:none; ">
-
-                        <h4> <label>Chon phuong thus thanh toan :</label><br /></h4>
-
-                        <h5>Cach 1: Chuyen huong sang VNPAY chon phuong thuc thanh toan</h5>
-
-                        <label><input type="radio" name="TypePaymentVN" value="0" checked /> Cong thanh toan VNPAYQR </label>
-
-                        <h5>Cach 2: Tach phuong thuc thanh toan tai site cua Merchant</h5>
-
-                        <label><input type="radio" name="TypePaymentVN" value="1" /> Thanh toan qua ung dung ho tro VNPAYQR </label><br />
-
-                        <label><input type="radio" name="TypePaymentVN" value="2" /> ATM-Tai khoån ngån hang noi dia </label><br />
-
-                        <label><input type="radio" name="TypePaymentVN" value="3" /> Thanh toan qua the quoc te </label><br />
-                        @*<div class="form-group">
-
-                                <button type="submit" class="btn btn-block btn-success">Dat hang</button>
-
-                            </div>*@
-                    </div>
-
-
-
-                    <div class="form-group" id="load_send"></div>
-
-
-                    <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
-                }
-
-            </div>
-        </div>
-
-    </div>
-
-
-</div>
 
 <!-- Modal -->
 <div class="modal fade m-auto" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -340,9 +335,6 @@
     </div>
 </div>
 
-@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
 @section jsFooter{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -363,7 +355,8 @@
             });
             $('.btnAddVoucher').each(function () {
                 $(this).off("click").on("click", function () {
-                    let total = $('input[name="total"]').val();
+                    let total = @total;
+                    let $btn = $(this);
                     mavoucher = $(this).data('id');
                     $.ajax({
                         url: "/Cart/AddVoucher",
@@ -441,6 +434,7 @@
                                 $('#errorVoucher').removeClass('d-none text-danger')
                                 $('#errorVoucher').html("Đã sử dụng!.");
                                 $('input[name="mavoucher"]').css('border', "1px solid green");
+                                $btn.addClass('disabled');
                                 $('#voucherModal').modal('hide');
 
                                 let str = "";
@@ -480,7 +474,7 @@
                 var Email = $('input[name="Email"]').val();
                 var mavoucherFinal = mavoucher;
                 var TypePayment = $('#drTypePayment').val();
-                var total = $('input[name="total"]').val();
+                var total = @total;
                 var TypePaymentVN = $('input[name="TypePaymentVN"]').val();
                 //$('#btnCheckOut').attr("disabled", "disabled");
                 //$('#load_send').html(`<h2>Đang gửi...</h2>`);
