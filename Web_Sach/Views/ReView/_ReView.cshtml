@@ -1,0 +1,58 @@
+﻿@model Web_Sach.Models.EF.reViewModel
+<div class="add_review">
+    @*<form id="review_form" action="post">*@
+
+
+    @using (Ajax.BeginForm("PostReView", "ReView", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        UpdateTargetId = "load_review",
+        OnSuccess = "OnSuccessRE",
+        OnFailure = "OnFailureRE",
+        OnBegin = "OnBeginRE",
+    }, new { @Id = "review_form" }))
+    {
+        <script>
+            function OnBeginRE() {
+                $('#review_submit').attr("disabled", "disabled");
+                $('#load_send').html("<h2>Đang gửi...</h2>");
+            }
+            function OnSuccessRE(res) {
+                $('#review_form')[0].reset();
+            }
+        </script>
+   
+            @Html.AntiForgeryToken()
+
+
+
+
+
+
+<div>
+    <h1>Add Review</h1>
+    @Html.TextBoxFor(x => x.FullName, new { @class = "form_input input_name", @placeholder = "Name", @id = "review_name" })
+    @Html.TextBoxFor(x => x.Email, new { @class = "form_input input_email", @placeholder = "Email", @id = "review_email" })
+    @Html.HiddenFor(x => x.taiKhoan)
+    @Html.HiddenFor(x => x.MaSach, new {@value= @ViewBag.ProductId })
+    <input type="text" id="txtRate" name="Rate" value="4" style="visibility:hidden"/>
+    @*<input id="review_name" class="form_input input_name" type="text" name="name" placeholder="Name*" required="required" data-error="Name is required.">
+        <input id="review_email" class="form_input input_email" type="email" name="email" placeholder="Email*" required="required" data-error="Valid email is required.">*@
+</div>
+<div>
+    <h1>Your Rating:</h1>
+    <ul class="user_star_rating w-100">
+        <li><i class="fa-solid fa-star"></i></li>
+        <li><i class="fa-solid fa-star"></i></li>
+        <li><i class="fa-solid fa-star"></i></li>
+        <li><i class="fa-solid fa-star"></i></li>
+        <li><i class="fa-regular fa-star"></i></li>
+    </ul>
+    @Html.TextAreaFor(x => x.Content, new { @class = "input_review", @row = "4", @laceholder = "Your Review" })
+    @*<textarea id="review_message" class="input_review" name="message" placeholder="Your Review" rows="4" required data-error="Please, leave us a review."></textarea>*@
+</div>
+    <div class="text-left text-sm-right">
+        <button id="review_submit" type="submit" class="red_button review_submit_btn trans_300" value="Submit">submit</button>
+    </div>
+    }
+</div>

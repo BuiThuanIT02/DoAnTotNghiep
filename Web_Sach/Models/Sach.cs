@@ -17,6 +17,7 @@
             KhuyenMai_Sach = new HashSet<KhuyenMai_Sach>();
             //TacGias = new HashSet<TacGia>();
             ThamGias = new HashSet<ThamGia>();
+            ReViews = new HashSet<ReView>();
         }
         [Display(Name="Mã sách")]
        
@@ -88,5 +89,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<TacGia> TacGias { get; set; }
         public virtual ICollection<ThamGia> ThamGias { get; set; }
+
+        public virtual ICollection<ReView> ReViews { get; set; }
     }
 }

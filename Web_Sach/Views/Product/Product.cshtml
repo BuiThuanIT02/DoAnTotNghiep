@@ -359,21 +359,38 @@
 
 
         <!--Hàng 2-->
-
         <div class="row mt-5">
-            <div class="col-sm-8 border p-0">
-                <ul class="nav">
-                    <li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Mô tả</a></li>
-                    @*<li class="nav-item text-bg-danger"><a href="#" class="nav-link text-white">Bình luận</a></li>*@
 
-                </ul>
-                <p class="mt-3">
-                    @Model.MoTa
-                </p>
+
+            <div class="col-lg-4 reviews_col">
+                <div class="tab_title reviews_title">
+                    <h4>Reviews (2)</h4>
+                </div>
+
+                <!-- User Review -->
+
+             @Html.Action("_Load_Review","ReView")
+
+                <!-- User Review -->
+          
+                <!-- User Review -->
 
             </div>
 
-            <div class="col-sm-4 border " id="author-together">
+
+            <!-- Add Review -->
+
+            <div class="col-lg-5 add_review_col">
+
+             @Html.Action("_ReView", "ReView",new {productId = Model.ID})
+
+            </div>
+
+
+
+
+            @*sách cx tác giả -hàng 2*@
+            <div class="col-sm-3 border " id="author-together">
                 <h5 class="text-dark text-center">SÁCH CÙNG TÁC GIẢ</h5>
                 @if (countSachCungTacGia > 0)
                 {
@@ -570,6 +587,7 @@
     </script>*@
 @section jsFooter{
     <script src="~/Scripts/Client/Controller/product.js"></script>
+    <script src="~/Scripts/Client/script/single_custom.js"></script>
 }
 
 

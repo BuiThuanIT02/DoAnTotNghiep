@@ -30,6 +30,7 @@ namespace Web_Sach.Models
         public virtual DbSet<Tin_Tuc> Tin_Tuc { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<ThamGia> ThamGias { get; set; }
+        public virtual DbSet<ReView> ReViews { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         { 
@@ -87,6 +88,11 @@ namespace Web_Sach.Models
                 .HasForeignKey(e => e.MaSach)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Sach>()
+              .HasMany(e => e.ReViews)
+              .WithOptional(e => e.Sach)
+              .HasForeignKey(e => e.MaSach);
+
             //modelBuilder.Entity<Sach>()
             //    .HasMany(e => e.TacGias)
             //    .WithMany(e => e.Saches)
@@ -119,6 +125,11 @@ namespace Web_Sach.Models
                 .HasMany(e => e.DonHangs)
                 .WithOptional(e => e.TaiKhoan)
                 .HasForeignKey(e => e.MaKH);
+
+            modelBuilder.Entity<TaiKhoan>()
+              .HasMany(e => e.ReViews)
+              .WithOptional(e => e.TaiKhoan)
+              .HasForeignKey(e => e.MaKH);
 
             modelBuilder.Entity<Tin_Tuc>()
                 .Property(e => e.MetaTitle)
