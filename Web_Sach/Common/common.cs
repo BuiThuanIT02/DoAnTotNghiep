@@ -7,7 +7,7 @@ namespace Web_Sach.Common
 {
     public class common
     {
-        public static string HtmlRate(int rate)
+        public static string HtmlRate(int? rate)
         {
             var str = "";
             if (rate == 1)

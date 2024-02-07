@@ -14,6 +14,7 @@
         {
             DonHangs = new HashSet<DonHang>();
             ReViews = new HashSet<ReView>();
+            Comments = new HashSet<Comment>();
         }
 
         public int ID { get; set; }
@@ -60,5 +61,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonHang> DonHangs { get; set; }
         public virtual ICollection<ReView> ReViews { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+
     }
 }

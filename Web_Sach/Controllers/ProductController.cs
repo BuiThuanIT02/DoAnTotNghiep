@@ -6,7 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
 using Web_Sach.Models;
+using Web_Sach.Models.Dao;
 using Web_Sach.Models.EF;
+using Web_Sach.Session;
 
 namespace Web_Sach.Controllers
 {
@@ -22,7 +24,11 @@ namespace Web_Sach.Controllers
         //[Route("chi-tiet/{metatilte}-{detailId}")]
         public ActionResult Product(int detailId)
         {
-
+            // bình luận sản phẩm
+            var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
+            ViewBag.UserId = sessionUser.UserID;
+            ViewBag.ListComment = new CommentDao().ListCommentViewModel(0,detailId);
+            // bình luận sản phẩm
             // lấy nhiều ảnh từ bảng Images
             var imagesBook = from img in db.Images
                              join s in db.Saches on img.MaSP equals s.ID

@@ -8,7 +8,7 @@ namespace Web_Sach.Models.EF
 {
     public class reViewModel
     {
-        public int MaRV { get; set; }
+        //public int MaRV { get; set; }
 
         public int? MaSach { get; set; }
 
@@ -16,13 +16,14 @@ namespace Web_Sach.Models.EF
         public string Content { get; set; }
 
         public int? Rate { get; set; }
+        public int? parentId { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        //public DateTime? CreatedDate { get; set; }
 
-        public string taiKhoan { get; set; }
-      
-        public string Phone { get; set; }
-      
+        //public string taiKhoan { get; set; }
+
+        //public string Phone { get; set; }
+
         public string Email { get; set; }
         public string FullName { get; set; }
     }

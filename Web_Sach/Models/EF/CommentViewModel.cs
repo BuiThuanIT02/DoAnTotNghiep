@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Web_Sach.Models
+namespace Web_Sach.Models.EF
 {
-    [Table("ReView")]
-    public partial class ReView
+    public class CommentViewModel
     {
         public int ID { get; set; }
 
-        [StringLength(250)]
+      
         public string Content { get; set; }
 
         public int? Rate { get; set; }
@@ -22,10 +20,7 @@ namespace Web_Sach.Models
         public int? MaSach { get; set; }
 
         public int? MaKH { get; set; }
+        public string FullName { get; set; }
         public int? parentId { get; set; }
-
-        public virtual Sach Sach { get; set; }
-
-        public virtual TaiKhoan TaiKhoan { get; set; }
     }
 }

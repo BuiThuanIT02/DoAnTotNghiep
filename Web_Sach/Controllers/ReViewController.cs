@@ -5,13 +5,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Web_Sach.Models;
+using Web_Sach.Models.Dao;
 using Web_Sach.Models.EF;
 using Web_Sach.Session;
 
 
 namespace Web_Sach.Controllers
 {
-    [Authorize]
+    
+
     public class ReViewController : Controller
     {
 
@@ -20,46 +22,125 @@ namespace Web_Sach.Controllers
         {
             return View();
         }
-        [AllowAnonymous]
-        public ActionResult _ReView(int productId)
+     
+        public PartialViewResult _ReView(int productId)
         {
-            ViewBag.ProductId = productId;
             using (WebSachDb db = new WebSachDb())
             {
                 var sessionUser = Session[SessionHelper.USER_KEY];
+                var item = new reViewModel();
+                var user = (UserLoginSession)Session[SessionHelper.USER_KEY];    
+                ViewBag.ProductId = productId;
+                ViewBag.UserId = user.UserID;
                 if (sessionUser != null)
                 {
-                    var item = from rv in db.ReViews 
-                               join s in db.Saches on rv.MaSach equals s.ID
-                               join tk in db.TaiKhoans on rv.MaKH equals tk.ID
-                               select new reViewModel
-                               {
-                                   Email = tk.Email,
-                                   FullName = tk.FullName,
-                                   taiKhoan=tk.TaiKhoan1
-                               };
-                    return PartialView(item.FirstOrDefault());
+                    //item.taiKhoan= user.UserName;
+                    item.Email=user.Email;
+                    item.FullName = user.FullName;
+                    item.MaKH = user.UserID;
+                    item.MaSach= productId;
+
+                    return PartialView(item);
                 }
             }
 
             return PartialView();
         }
-        public ActionResult _Load_Review(int productId)
+ 
+        public PartialViewResult _Load_Review(int productId)
         {
-            using(WebSachDb db = new WebSachDb())
+            using (WebSachDb db = new WebSachDb())
             {
-                var item = db.ReViews.Where(x=>x.MaSach == productId).OrderByDescending(x=>x.ID).ToList();
-                return PartialView(item);
+                var session = Session[SessionHelper.USER_KEY];
+                var user = (UserLoginSession)Session[SessionHelper.USER_KEY];
+                if (session != null)
+                {
+                    var item = db.ReViews.Where(x => x.MaSach == productId && x.MaKH == user.UserID).OrderByDescending(x => x.ID).ToList();
+                    return PartialView(item);
+                }
+                return null;
             }
         }
-    
-        public ActionResult PostReView(ReView req)
+
+        //[HttpPost]
+        //public JsonResult PostReView(reViewModel req)
+        //{
+
+        //        var session = Session[SessionHelper.USER_KEY];
+
+        //        if (session != null)
+        //        {
+        //            using (WebSachDb db = new WebSachDb())
+        //            {
+        //                var reviewSql = new ReView()
+        //                {
+        //                    MaSach = req.MaSach,
+        //                    MaKH = req.MaKH,
+        //                    Content = req.Content,
+        //                    CreatedDate = DateTime.Now,
+        //                    Rate = req.Rate,
+
+
+        //                };
+        //                db.ReViews.Add(reviewSql);
+        //                db.SaveChanges();
+        //                return Json(new { Success = true });
+        //            }
+        //        }
+        //        return Json(new { Success = false,session=0 });
+
+
+        //}
+        [ChildActionOnly]   
+        public ActionResult _ChildComment(int parentId, int productId)
         {
-            if(ModelState.IsValid)
+            var data = new CommentDao().ListCommentViewModel(parentId, productId);
+            var user = (UserLoginSession)Session[SessionHelper.USER_KEY];
+            var count = data.Count();
+            for (int k = 0; k < count; k++)
             {
-                
+                data[k].MaKH = user.UserID;
             }
-            return Json(true);
+
+            return PartialView("~/Views/Shared/_ChildComment.cshtml",data);
         }
+
+        [HttpPost]
+        public JsonResult PostReView(reViewModel req)
+        {
+
+            var session = Session[SessionHelper.USER_KEY];
+
+            if (session != null)
+            {
+                using (WebSachDb db = new WebSachDb())
+                {
+                   var dao = new CommentDao();
+                    Comment comment= new Comment();
+                    comment.parentId = req.parentId;
+                    comment.MaKH= req.MaKH;
+                    comment.MaSach = req.MaSach;
+                    comment.Content = req.Content;
+                    comment.Rate = req.Rate;
+                    comment.CreatedDate= DateTime.Now;
+                    bool addComment = dao.Insert(comment);
+                    if (addComment)
+                    {
+                        return Json(new { success = true });
+                    }
+                }
+            }
+            return Json(new { success = false, session = 0 });
+
+
+        }
+      
+        [HttpGet]
+        public ActionResult GetComment(int productId)
+        {
+            var data = new CommentDao().ListCommentViewModel(0, productId);
+            return PartialView("~/Views/Shared/_ChildComment.cshtml", data);
+        }
+
     }
 }

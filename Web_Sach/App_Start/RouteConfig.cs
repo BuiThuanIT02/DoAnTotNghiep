@@ -108,6 +108,13 @@ namespace Web_Sach
          namespaces: new[] { "Web_Sach.Controllers" }
 
      );
+    //        routes.MapRoute(
+    //    name: "Thêm bình luận",
+    //    url: "add-comment",
+    //    defaults: new { controller = "ReView", action = "GetComment", id = UrlParameter.Optional },
+    //    namespaces: new[] { "Web_Sach.Controllers" }
+
+    //);
             routes.MapRoute(
         name: "Thanh toan",
         url: "thanh-toan",

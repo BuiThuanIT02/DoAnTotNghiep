@@ -1,12 +1,13 @@
 ﻿@model List<Web_Sach.Models.ReView>
 
+<div class="tab_title reviews_title">
+</div>
 @if (Model != null)
 {
     foreach (var item in Model)
     {
         <div class="user_review_container d-flex flex-column flex-sm-row">
             <div class="user">
-                <div class="user_pic">RRR</div>
                 <div class="user_rating">
                     <ul class="star_rating">
                         @Html.Raw(Web_Sach.Common.common.HtmlRate(item.Rate))
@@ -14,30 +15,15 @@
                 </div>
             </div>
             <div class="review">
-                <div class="review_date">27 Aug 2016</div>
-                <div class="user_name">Brandon William</div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-        </div>
-
-
-
-        <div class="user_review_container d-flex flex-column flex-sm-row">
-            <div class="user">
-                <div class="user_pic"></div>
-                <div class="user_rating">
-                    <ul class="star_rating">
-                        @Html.Raw(Web_Sach.Common.common.HtmlRate(item.Rate))
-                    </ul>
-                </div>
-            </div>
-            <div class="review">
-                <div class="review_date">27 Aug 2016</div>
-                <div class="user_name">Brandon William</div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="review_date">@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy"):"")</div>
+                <div class="user_name"></div>
+                <p>@item.Content</p>
             </div>
         </div>
     }
 
 }
-}
+else
+            {
+                <p>Cần đăng nhập trước khi bình luận</p>
+            }

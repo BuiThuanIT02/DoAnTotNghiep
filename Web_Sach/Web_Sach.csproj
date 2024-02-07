@@ -171,6 +171,7 @@
     <Compile Include="Areas\Admin\Data\KhuyenMaiModel.cs" />
     <Compile Include="Areas\Admin\Data\TacGiaAdmin.cs" />
     <Compile Include="Areas\Admin\Data\UserLogin.cs" />
+    <Compile Include="Common\common.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
@@ -187,12 +188,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ChiTietDonHang.cs" />
+    <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\DanhMucSP.cs" />
+    <Compile Include="Models\Dao\CommentDao.cs" />
     <Compile Include="Models\DonHang.cs" />
     <Compile Include="Models\EF\AlertHelp.cs" />
     <Compile Include="Models\EF\Book.cs" />
     <Compile Include="Models\EF\CartItem.cs" />
+    <Compile Include="Models\EF\CommentViewModel.cs" />
     <Compile Include="Models\EF\ImageMore.cs" />
     <Compile Include="Models\EF\kmModels.cs" />
     <Compile Include="Models\EF\kmSachModels.cs" />
@@ -1209,7 +1213,6 @@
     <Content Include="Assets\plugins\ckfinder\skins\v1\richcombo.css" />
     <Content Include="Assets\plugins\ckfinder\skins\v1\skin.js" />
     <Content Include="Assets\plugins\ckfinder\skins\v1\uipanel.css" />
-    <Compile Include="Common\common.cs" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -1504,6 +1507,7 @@
     <Content Include="Areas\Admin\Views\KhuyenMai\Create.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
+    <Content Include="Scripts\Client\Controller\comment.js" />
     <Content Include="Scripts\Client\Controller\Contact.js" />
     <Content Include="Scripts\Client\Controller\gioHang.js" />
     <Content Include="Scripts\Client\Controller\product.js" />
@@ -1569,6 +1573,7 @@
     <Content Include="Views\Vouchers\listVoucher.cshtml" />
     <Content Include="Views\ReView\_ReView.cshtml" />
     <Content Include="Views\ReView\_Load_Review.cshtml" />
+    <Content Include="Views\Shared\_ChildComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

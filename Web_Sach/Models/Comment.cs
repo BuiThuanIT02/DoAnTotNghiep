@@ -7,8 +7,8 @@ using System.Web;
 
 namespace Web_Sach.Models
 {
-    [Table("ReView")]
-    public partial class ReView
+    [Table("Comment")]
+    public partial class Comment
     {
         public int ID { get; set; }
 

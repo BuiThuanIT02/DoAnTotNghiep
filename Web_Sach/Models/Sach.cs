@@ -18,6 +18,7 @@
             //TacGias = new HashSet<TacGia>();
             ThamGias = new HashSet<ThamGia>();
             ReViews = new HashSet<ReView>();
+            Comments = new HashSet<Comment>();
         }
         [Display(Name="Mã sách")]
        
@@ -91,5 +92,6 @@
         public virtual ICollection<ThamGia> ThamGias { get; set; }
 
         public virtual ICollection<ReView> ReViews { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
