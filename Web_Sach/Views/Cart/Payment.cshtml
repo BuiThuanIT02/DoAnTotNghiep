@@ -354,7 +354,7 @@
                 // Hiển thị modal danh sách voucher
                 $('#voucherModal').modal('show');
             });
-                       $('.btnAddVoucher').each(function () {
+                $('.btnAddVoucher').each(function () {
                 $(this).off("click").on("click", function () {
                   /*  let total = $('input[name="total"]').val();*/
                     let total = @total;
@@ -372,6 +372,7 @@
 
                         success: function (res) {
                             if (res.Code == 10 && res.Success == false) {
+                                mavoucher = "";
                                 $('#errorVoucher').addClass('d-block text-danger')
                                 $('#errorVoucher').removeClass('d-none')
 
@@ -386,6 +387,7 @@
                                 });
                             }// voucher
                             else if (res.Code == 11 && res.Success == false) {
+                                mavoucher = "";
                                 $('#errorVoucher').addClass('d-block text-danger')
                                 $('#errorVoucher').removeClass('d-none')
 
@@ -400,6 +402,7 @@
                                 });
                             }
                             else if (res.Code == 12 && res.Success == false) {
+                                mavoucher = "";
                                 $('#errorVoucher').addClass('d-block text-danger')
                                 $('#errorVoucher').removeClass('d-none')
 
@@ -413,6 +416,7 @@
                                 });
                             }
                             else if (res.Code == 13 && res.Success == false) {
+                                mavoucher = "";
                                 $('#errorVoucher').addClass('d-block text-danger')
                                 $('#errorVoucher').removeClass('d-none')
 
@@ -427,6 +431,7 @@
                                 });
                             }
                             else if (res.Code == 15 && res.Success == false) {
+                               
                                 $('#errorVoucher').addClass('d-block text-success')
                                 $('#errorVoucher').removeClass('d-none text-danger')
                                 $('#errorVoucher').html("Đã sử dụng!.");

@@ -15,11 +15,11 @@
 
                 <div class="review p-0 w-100">
                     @*reply*@
-                    @*<div class="user_rating">
+                    <div class="user_rating">
                         <ul class="star_rating p-0">
                             @Html.Raw(Web_Sach.Common.common.HtmlRate(item.Rate))
                         </ul>
-                    </div>*@
+                    </div>
                     <div class="review_date">@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : "")</div>
                     <div class="user_name">@item.FullName</div>
 

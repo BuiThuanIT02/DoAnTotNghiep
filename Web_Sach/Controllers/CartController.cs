@@ -23,12 +23,12 @@ namespace Web_Sach.Controllers
 
         public ActionResult Index()
         {
-            //if (Session[SessionHelper.USER_KEY] == null)
-            //{// user chưa tồn tại
-            //    Session[SessionHelper.CART_KEY] = null;
-            //    return RedirectToAction("Cart", "Cart");
+            if (Session[SessionHelper.USER_KEY] == null)
+            {// user chưa tồn tại
+                Session[SessionHelper.CART_KEY] = null;
+                return RedirectToAction("Cart", "Cart");
 
-            //}
+            }
             // user đã tồn tại
             var cart = Session[SessionHelper.CART_KEY];
             var list = new List<CartItem>();

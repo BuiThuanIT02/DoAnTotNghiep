@@ -174,8 +174,6 @@
            /* var commentmsg = btn.data('commentmsg');*/
             let Content = btn.data('commentmsg');
             var commentmsgvalue = document.getElementById(Content);
-            debugger;
-            alert(MaSach);
             if (commentmsgvalue.value == "") {
 
               alert("Chưa nhập nội dung bình luận");
@@ -186,7 +184,7 @@
                 data: {
                     MaSach,
                     MaKH,
-                    Rate:5,
+                    Rate:0,
                     parentId: parenid,       
                     Content :commentmsgvalue.value,   
                 },
