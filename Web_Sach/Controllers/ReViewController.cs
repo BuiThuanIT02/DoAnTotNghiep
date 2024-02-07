@@ -34,7 +34,6 @@ namespace Web_Sach.Controllers
                 ViewBag.UserId = user.UserID;
                 if (sessionUser != null)
                 {
-                    //item.taiKhoan= user.UserName;
                     item.Email=user.Email;
                     item.FullName = user.FullName;
                     item.MaKH = user.UserID;
@@ -62,35 +61,6 @@ namespace Web_Sach.Controllers
             }
         }
 
-        //[HttpPost]
-        //public JsonResult PostReView(reViewModel req)
-        //{
-
-        //        var session = Session[SessionHelper.USER_KEY];
-
-        //        if (session != null)
-        //        {
-        //            using (WebSachDb db = new WebSachDb())
-        //            {
-        //                var reviewSql = new ReView()
-        //                {
-        //                    MaSach = req.MaSach,
-        //                    MaKH = req.MaKH,
-        //                    Content = req.Content,
-        //                    CreatedDate = DateTime.Now,
-        //                    Rate = req.Rate,
-
-
-        //                };
-        //                db.ReViews.Add(reviewSql);
-        //                db.SaveChanges();
-        //                return Json(new { Success = true });
-        //            }
-        //        }
-        //        return Json(new { Success = false,session=0 });
-
-
-        //}
         [ChildActionOnly]   
         public ActionResult _ChildComment(int parentId, int productId)
         {

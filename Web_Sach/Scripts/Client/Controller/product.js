@@ -150,10 +150,13 @@
                 },
                 dataType: "json",
                 success: function (res) {
-                    if (res.success) {    
+                    if (res.success) {
                         $('#container_comment').load('/ReView/GetComment?productId=' + MaSach);
                         $('#review_form')[0].reset();
                         alert("Đã thêm bình luận thành công !");
+                    }
+                    else {
+                        alert("Thêm bình luận thất bại !");
                     }
 
                 },

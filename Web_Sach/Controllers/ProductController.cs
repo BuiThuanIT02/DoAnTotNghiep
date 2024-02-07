@@ -26,9 +26,13 @@ namespace Web_Sach.Controllers
         {
             // bình luận sản phẩm
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
-            ViewBag.UserId = sessionUser.UserID;
-            ViewBag.ListComment = new CommentDao().ListCommentViewModel(0,detailId);
+            if(sessionUser != null )
+            {
+                ViewBag.UserId = sessionUser.UserID;
+                ViewBag.ListComment = new CommentDao().ListCommentViewModel(0,detailId);
             // bình luận sản phẩm
+            }
+          
             // lấy nhiều ảnh từ bảng Images
             var imagesBook = from img in db.Images
                              join s in db.Saches on img.MaSP equals s.ID
