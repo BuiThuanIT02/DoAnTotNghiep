@@ -11,7 +11,7 @@ namespace Web_Sach.Areas.Admin.Controllers
     public class VoucherController : BaseController
     {
         // GET: Admin/ProductCategory
-        public ActionResult Index(string searchString, int page = 1, int pageSize = 1)
+        public ActionResult Index(string searchString, int page = 1, int pageSize = 20)
         {
             var voucher = new VoucherModels().listPage(searchString, page, pageSize);
             ViewBag.SearchString = searchString;

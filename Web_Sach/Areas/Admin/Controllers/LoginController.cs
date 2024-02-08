@@ -46,6 +46,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     var userSession = new UserLoginSession();
                     userSession.UserID = taiKhoan.ID;
                     userSession.UserName = taiKhoan.TaiKhoan1;
+                    //userSession.Role = taiKhoan.Role;
                     //userSession.GroupID = taiKhoan.GroupID;
                     //var listCredentails = new LoginModels().GetListCredential(login.UserName);
                     Session.Add(SessionHelper.USER_KEY, userSession);

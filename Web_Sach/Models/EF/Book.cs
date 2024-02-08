@@ -10,7 +10,9 @@ namespace Web_Sach.Models.EF
     {
 
         private WebSachDb db = null;
-
+        public int MaSach { get; set; }
+        public string TenSP { get; set; }
+        public string Image { get; set; }
         public Book()
         {
             db = new WebSachDb();

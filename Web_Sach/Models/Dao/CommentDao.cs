@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -13,6 +15,12 @@ namespace Web_Sach.Models.Dao
         public CommentDao()
         {
             db = new WebSachDb();
+        }
+        // Phân trang bảng 
+        public IEnumerable<Comment> listPage(int page, int pageSize)
+        {
+            return db.Comments.Include(c => c.TaiKhoan).Include(c => c.Sach).OrderByDescending(x => x.CreatedDate).ToPagedList(page, pageSize);
+
         }
         public bool Insert(Comment entity)
         {

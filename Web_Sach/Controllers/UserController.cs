@@ -60,7 +60,7 @@ namespace Web_Sach.Controllers
                     userSession.Address = taiKhoan.Address;
                     userSession.Phone = taiKhoan.Phone;
                     userSession.Email = taiKhoan.Email;
-                    //userSession.GroupID = taiKhoan.GroupID;
+                
 
                     Session.Add(SessionHelper.USER_KEY, userSession);
 
@@ -79,6 +79,7 @@ namespace Web_Sach.Controllers
         public ActionResult Logout()
         {
             Session[SessionHelper.USER_KEY] = null;
+            Session[SessionHelper.CART_KEY] = null;
             return Redirect("/");
         }
 
@@ -125,13 +126,15 @@ namespace Web_Sach.Controllers
                 }
                 var user = new TaiKhoan();
                 user.TaiKhoan1 = model.UserName;
-                user.Password = (model.Password);
+                user.Password =model.Password;
                 user.Email = model.Email;
                 user.FullName = model.Name;
                 user.Address = model.Address;
                 user.Phone = model.Phone;
                 user.GioiTinh = model.GioiTinh;
+                user.Role = 0;
                 user.Status = true;
+                user.NgaySinh = model.NgaySinh;
                 
                 db.TaiKhoans.Add(user);
                 db.SaveChanges();

@@ -3,6 +3,7 @@
         productDetail.releaseEvents();
     },
     releaseEvents: function () {
+
         $('#addCart').off("click").on("click", function () {
             var id = $(this).data('id');
             var amountValue = ($("#amount").val());
@@ -136,6 +137,12 @@
             //let FullName = $('#review_name').val();
             //let Email = $('#review_email').val();
             let Content = $('#review_message').val();
+            debugger;
+            if (Content == "") {
+                debugger;
+                alert("Nội dung bình luận trống!");
+                return;
+            }
             $.ajax({
                 url: '/ReView/PostReView',
                 type: "POST",
@@ -152,7 +159,8 @@
                 success: function (res) {
                     if (res.success) {
                         $('#container_comment').load('/ReView/GetComment?productId=' + MaSach);
-                        $('#review_form')[0].reset();
+                        /*$('#review_form')[0].reset();*/
+                        Content = "";
                         alert("Đã thêm bình luận thành công !");
                     }
                     else {
@@ -202,6 +210,7 @@
                 }
             });
         });
+
 
     }
 }

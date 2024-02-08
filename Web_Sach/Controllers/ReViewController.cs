@@ -33,9 +33,7 @@ namespace Web_Sach.Controllers
                 ViewBag.ProductId = productId;
                 ViewBag.UserId = user.UserID;
                 if (sessionUser != null)
-                {
-                    item.Email=user.Email;
-                    item.FullName = user.FullName;
+                { 
                     item.MaKH = user.UserID;
                     item.MaSach= productId;
 
@@ -93,6 +91,7 @@ namespace Web_Sach.Controllers
                     comment.Content = req.Content;
                     comment.Rate = req.Rate;
                     comment.CreatedDate= DateTime.Now;
+                    comment.Status = 0;
                     bool addComment = dao.Insert(comment);
                     if (addComment)
                     {

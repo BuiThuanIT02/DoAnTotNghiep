@@ -157,6 +157,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AuthorController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\CommentController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\KhuyenMaiController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
@@ -1294,6 +1295,7 @@
     <Content Include="Scripts\Admin\assets\demo\datatables-demo.js" />
     <Content Include="Scripts\Admin\assets\img\error-404-monochrome.svg" />
     <Content Include="Scripts\Admin\Controller\AlertMessage.js" />
+    <Content Include="Scripts\Admin\Controller\commentRetry.js" />
     <Content Include="Scripts\Admin\Controller\productCategoryController.js" />
     <Content Include="Scripts\Admin\Controller\productController.js" />
     <Content Include="Scripts\Admin\Controller\sildeController.js" />
@@ -1506,6 +1508,8 @@
     <Content Include="Areas\Admin\Views\ThongKe\ThongKeTheoThang.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKe\ThongKeTheoNam.cshtml" />
     <Content Include="Areas\Admin\Views\KhuyenMai\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Comment\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Comment\Retry.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\comment.js" />

@@ -1,0 +1,68 @@
+﻿
+@model PagedList.IPagedList<Web_Sach.Models.Comment>
+@using PagedList.Mvc
+
+@using System.Web.Mvc.Ajax
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card mb-4 mt-5">
+    <h2 style="text-align:center">PHẢN HỒI BÌNH LUẬN</h2>
+    <div class="card-body">
+        <div class="container-fluid">
+
+            <table class="table table-bordered" style="text-align:center">
+                <thead>
+                    <tr>
+
+                        <th>Tên tài khoản</th>
+                        <th>Tên sách</th>
+                        <th>Đánh giá</th>
+                        <th>Ngày đánh giá</th>
+                        <th>Nội dung</th>
+                        <th>Phản hỏi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.Status == 0)
+                        {
+                            <tr id="row_@item.ID">
+
+                                <td>@item.TaiKhoan.TaiKhoan1</td>
+                                <td>@item.Sach.Name</td>
+                                <td>@item.Rate sao</td>
+                                <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy"):"")</td>
+
+                                <td>@item.Content</td>
+                                @if (item.Status == 0)
+                                {
+                                    <td>
+                                        <a href="/Admin/Comment/Retry?masach=@item.MaSach&&maComment=@item.ID">Phản hồi</a>
+                                    </td>
+                                }
+
+
+                            </tr>
+                        }
+
+                    }
+
+
+
+                </tbody>
+
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+
+
+    </div>
+
+</div>

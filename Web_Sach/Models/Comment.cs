@@ -23,6 +23,7 @@ namespace Web_Sach.Models
 
         public int? MaKH { get; set; }
         public int? parentId { get; set; }
+        public int? Status { get; set; }
 
         public virtual Sach Sach { get; set; }
 

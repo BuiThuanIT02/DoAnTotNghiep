@@ -114,7 +114,7 @@
                 <div class="form-group  m-3">
                     @Html.LabelFor(model => model.Phone, htmlAttributes: new { @class = "control-label col-md-2", @style = "margin:3px" })
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @style = "width:100%", @type = "tel", @pattern = "[0-9]{3} [0-9]{3} [0-9]{4}", @placeholder = "035 236 4444" })
+                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", @style = "width:100%", @type = "tel", @pattern = "[0-9]{3}[0-9]{3}[0-9]{4}", @placeholder = "0352364444" })
                         @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                     </div>
                 </div>

@@ -23,7 +23,7 @@
                 <li><i class="fa-regular fa-star"></i></li>
             </ul>
             @*@Html.TextAreaFor(x => x.Content, new { @class = "input_review", @row = "4", @laceholder = "Your Review" })*@
-            <textarea id="review_message" class="input_review" name="message" placeholder="Viết bình luận của bạn" rows="4" required data-error="Vui lòng nhập bình luận"></textarea>
+            <textarea id="review_message" class="input_review" name="message" placeholder="Viết bình luận của bạn" rows="4" required></textarea>
         </div>
         <div class="text-left text-sm-right">
             <button id="review_submit" type="button" class="red_button review_submit_btn trans_300 bg-info" >Gửi</button>

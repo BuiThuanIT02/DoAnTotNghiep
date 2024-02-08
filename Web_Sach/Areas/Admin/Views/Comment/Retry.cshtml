@@ -1,0 +1,114 @@
+﻿@model Web_Sach.Models.Comment
+@{
+    ViewBag.Title = "Retry";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var sachComment = (Web_Sach.Models.EF.Book)ViewBag.sachComment;
+}
+@section jsFooter{
+    <script src="~/Scripts/Admin/Controller/commentRetry.js"></script>
+    }
+<div class="card mb-4">
+
+    <div class="card-body">
+
+        <div class="row mt-5 ">
+            <div class="col-md-12 text-center mb-4">
+                <h2>BÌNH LUẬN SẢN PHẨM</h2>
+            </div>
+
+            <div class="col-md-12">
+
+                <table class="table table-bordered table-striped" style="text-align:center">
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Hình ảnh</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (sachComment != null)
+                        {
+                            <tr style="text-align:center; vertical-align:middle">
+                                <td>@sachComment.TenSP</td>
+                                <td style="width:10%">
+                                    <img src="@sachComment.Image" class="img-thumbnail" />
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+        <div class="row ">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Tên tài khoản</label>
+                    <p class="form-control">@Model.TaiKhoan.TaiKhoan1</p>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nội dung</label>
+                    <p class="form-control">@Model.Content</p>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row ">
+            <div class="col-md-6">
+              
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <p class="form-control"> @(Model.Status ==0 ?"Chờ phản hồi" :"Đã phản hồi")</p>
+
+                        </div>
+                  
+            </div>
+
+            <div class="col-md-6">
+              
+                        <div class="form-group">
+                            <label>Ngày bình luân</label>
+                            <p class="form-control"> @(Model.CreatedDate.HasValue ? Model.CreatedDate.Value.ToString("dd/MM/yyyy") :"")</p>
+
+                        </div>
+                   
+            </div>
+
+        </div>
+
+      <div class="row mt-5">
+          <p>Nội dung phản hồi</p>
+          <textarea rows="10" cols="10" name="txtRetryAdmin" required></textarea>
+          <button type="button" class="btn btn-danger" id="reTryAdmin" data-masach="@sachComment.MaSach" data-parentid="@Model.ID">Gửi</button>
+      </div>
+
+    
+
+
+
+
+    </div>
+
+
+    <div>
+        @Html.ActionLink("Quay lại", "Index")
+    </div>
+
+</div>
+
