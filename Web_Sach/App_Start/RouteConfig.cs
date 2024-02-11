@@ -66,12 +66,20 @@ namespace Web_Sach
 
 
             routes.MapRoute(
-              name: "Cập nhật thông tin người dùng",
-              url: "cap-nhat-thong-tin/{userId}",
-              defaults: new { controller = "User", action = "UpdateInfo", id = UrlParameter.Optional },
+              name: "Thông tin người dùng",
+              url: "thong-tin-nguoi-dung",
+              defaults: new { controller = "User", action = "UserSession", id = UrlParameter.Optional },
               namespaces: new[] { "Web_Sach.Controllers" }
 
           );
+
+            routes.MapRoute(
+             name: "Đơn hàng thành công",
+             url: "don-hang-thanh-cong",
+             defaults: new { controller = "Order", action = "OrderSuccess", id = UrlParameter.Optional },
+             namespaces: new[] { "Web_Sach.Controllers" }
+
+         );
 
             //    routes.MapRoute(
             //    name: "Thêm giỏ hàng",
@@ -130,13 +138,13 @@ namespace Web_Sach
 
    );
 
-            routes.MapRoute(
-       name: "Thanh toán thành công",
-       url: "hoan-thanh",
-       defaults: new { controller = "Cart", action = "Order", id = UrlParameter.Optional },
-       namespaces: new[] { "Web_Sach.Controllers" }
+   //         routes.MapRoute(
+   //    name: "Thanh toán thành công",
+   //    url: "hoan-thanh",
+   //    defaults: new { controller = "Cart", action = "Order", id = UrlParameter.Optional },
+   //    namespaces: new[] { "Web_Sach.Controllers" }
 
-   );
+   //);
 
             routes.MapRoute(
      name: "Đăng ký",

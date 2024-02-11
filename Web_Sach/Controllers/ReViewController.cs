@@ -44,20 +44,7 @@ namespace Web_Sach.Controllers
             return PartialView();
         }
  
-        public PartialViewResult _Load_Review(int productId)
-        {
-            using (WebSachDb db = new WebSachDb())
-            {
-                var session = Session[SessionHelper.USER_KEY];
-                var user = (UserLoginSession)Session[SessionHelper.USER_KEY];
-                if (session != null)
-                {
-                    var item = db.ReViews.Where(x => x.MaSach == productId && x.MaKH == user.UserID).OrderByDescending(x => x.ID).ToList();
-                    return PartialView(item);
-                }
-                return null;
-            }
-        }
+      
 
         [ChildActionOnly]   
         public ActionResult _ChildComment(int parentId, int productId)

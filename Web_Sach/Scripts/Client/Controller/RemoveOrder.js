@@ -8,16 +8,14 @@
         $('.moveOrder').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('order-id');
-   
             if (confirm("Bạn có muốn hủy đơn hàng này không!!")) {
                 $.ajax({
-                    url: "Order/RemoveOrder",
+                    url: "cap-nhat-thong-tin/huy-don-hang",
                     data: { id: id },
                     type: "POST",
                     dataType: "json",
                     success: function (res) {
                         if (res.status) {
-
                             $('#orderRow_' + id).remove();
                             alert("Hủy đơn hàng thành công");
                         }

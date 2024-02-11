@@ -80,6 +80,7 @@ namespace Web_Sach.Controllers
         {
             Session[SessionHelper.USER_KEY] = null;
             Session[SessionHelper.CART_KEY] = null;
+            Session[SessionHelper.VOUCHER_KEY] = null;
             return Redirect("/");
         }
 
@@ -168,8 +169,13 @@ namespace Web_Sach.Controllers
 
 
         }
-
+     
+        public ActionResult UserSession()
+        {
+            return View();
+        }
         // cập nhật thông tin
+        [ChildActionOnly]
         public ActionResult UpdateInfo(int userId)
         {
             var user = db.TaiKhoans.Find(userId);

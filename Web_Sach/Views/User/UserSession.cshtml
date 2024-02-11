@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Thông tin người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var sessionUser = Session[Web_Sach.Session.SessionHelper.USER_KEY] as Web_Sach.Session.UserLoginSession;
+}
+<style>
+    /* Định dạng cho các tab */
+    .nav-pills {
+        flex-direction: column;
+    }
+
+    /* Định dạng cho các tab content */
+    .tab-content {
+        width: 100%; /* Đảm bảo nội dung của tab rộng 100% */
+    }
+</style>
+
+
+<div class="container mt-3">
+    <div class="d-flex">
+        <!-- Nav tabs -->
+        <ul class="nav flex-column nav-pills w-25 text-center" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#infoUser">Cập nhật thông tin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#orderUser">Quản lý đơn hàng</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#voucherUser">Voucher</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        @if (sessionUser != null)
+        {
+            <div class="tab-content">
+                @*infouser*@
+                <div id="infoUser" class="container tab-pane active">
+                    @{Html.RenderAction("UpdateInfo", "User", new { userId = sessionUser.UserID });}
+                </div>
+                @*orderUser*@
+                <div id="orderUser" class="container tab-pane fade">
+                    <!-- Nội dung của tab "Quản lý đơn hàng" -->
+                    @{Html.RenderAction("Order", "Cart");}
+                </div>
+                @*voucherUser*@
+                <div id="voucherUser" class="container tab-pane fade">
+                    <!-- Nội dung của tab "Voucher" -->
+                    @{Html.RenderAction("listVoucher", "Vouchers");}
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section jsFooter{
+    <script src="~/Scripts/Client/Controller/RemoveOrder.js"></script>
+
+}
+
+
+
+
+
+
+
+
+

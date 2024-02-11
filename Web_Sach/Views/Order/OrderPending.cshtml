@@ -17,7 +17,7 @@
                             <th>Ngày đặt</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
-
+                            <th>Hủy đơn hàng</th>
                             <th>Thông tin</th>
 
 
@@ -29,7 +29,13 @@
                                 <td>@item.NgayDat</td>
                                 <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") :"")</td>
 
-                                <td class="text-success">Đã nhận được hàng</td>
+                                <td style="color: #ff8022">Chờ duyệt đơn hàng</td>
+                                <td>
+                                    <a href="#" data-order-id="@item.ID" class="text-danger text-decoration-none moveOrder">
+
+                                        Hủy
+                                    </a>
+                                </td>
                                 <td>
                                     <a href="~/Cart/OrderDetail/@item.ID">Xem chi tiết</a>
 
@@ -44,6 +50,12 @@
                     </table>
                 </div>
 
+
+
+
+
+
+
             </div>
         }
         else
@@ -57,4 +69,5 @@
 
 
 </div>
+
 

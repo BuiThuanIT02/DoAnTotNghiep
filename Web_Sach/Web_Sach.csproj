@@ -1537,6 +1537,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="TemplateEmail\send1.html" />
+    <Content Include="TemplateEmail\send2.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1554,7 +1556,6 @@
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Shared\HeaderCart.cshtml" />
     <Content Include="Views\Cart\Payment.cshtml" />
-    <Content Include="Views\Cart\Order.cshtml" />
     <Content Include="Views\Contact\Index.cshtml" />
     <Content Include="Views\User\Register.cshtml" />
     <Content Include="Views\Shared\TopMenu.cshtml" />
@@ -1563,8 +1564,6 @@
     <Content Include="Views\Cart\Cart.cshtml" />
     <Content Include="Views\Cart\OrderDetail.cshtml" />
     <Content Include="Views\Cart\BuyNow.cshtml" />
-    <Content Include="Views\Order\OrderSuccess.cshtml" />
-    <Content Include="Views\User\UpdateInfo.cshtml" />
     <Content Include="Views\Introduce\Index.cshtml" />
     <Content Include="Views\Introduce\News.cshtml" />
     <Content Include="Views\Introduce\NewDetail.cshtml" />
@@ -1579,6 +1578,14 @@
     <Content Include="Views\ReView\_ReView.cshtml" />
     <Content Include="Views\ReView\_Load_Review.cshtml" />
     <Content Include="Views\Shared\_ChildComment.cshtml" />
+    <Content Include="Views\Cart\Order.cshtml" />
+    <Content Include="Views\User\UpdateInfo.cshtml" />
+    <Content Include="Views\User\UserSession.cshtml" />
+    <Content Include="Views\Order\OrderSuccess.cshtml" />
+    <Content Include="Views\Order\OrderPending.cshtml" />
+    <Content Include="Views\Order\OrderPack.cshtml" />
+    <Content Include="Views\Order\OrderTransport.cshtml" />
+    <Content Include="Views\Order\OrderFailure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

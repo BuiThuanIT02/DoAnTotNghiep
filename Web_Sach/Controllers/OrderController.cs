@@ -21,20 +21,20 @@ namespace Web_Sach.Controllers
 
         public JsonResult RemoveOrder(int id)
         {
-          
+
             var order = db.DonHangs.Find(id);
-            if(order != null)
+            if (order != null)
             {
                 var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id).ToList();
-                foreach(var item in orderDetail)
+                foreach (var item in orderDetail)
                 {// cập nhật số lượng
                     var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
                     sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
                     db.ChiTietDonHangs.Remove(item);
-                 
+
                 }
                 db.DonHangs.Remove(order);
-               
+
                 db.SaveChanges();
                 return Json(new
                 {
@@ -51,7 +51,7 @@ namespace Web_Sach.Controllers
 
 
 
-          
+
         }
 
 
@@ -61,9 +61,9 @@ namespace Web_Sach.Controllers
         public JsonResult GetOrder(int id)
         {
             var order = db.DonHangs.Find(id);
-            if(order!= null)
+            if (order != null)
             {
-                order.Status = 3;
+                order.Status = 4;
                 db.SaveChanges();
                 return Json(new
                 {
@@ -76,21 +76,70 @@ namespace Web_Sach.Controllers
             });
         }
 
-
+        [ChildActionOnly]
         // đơn hàng thành công
         public ActionResult OrderSuccess()
         {
-            var sessionUser = Session[SessionHelper.USER_KEY] as UserLoginSession;
-            var order = db.DonHangs.Where(x => x.Status == 3 && x.MaKH == sessionUser.UserID).ToList();
-            return View(order);
+            var orderSuccess = (List<DonHang>)TempData["OrderSuccess"];
+          
+            if (orderSuccess.Count() > 0)
+            {
+                return PartialView(orderSuccess);
+            }
+            return PartialView();
+        }
+        [ChildActionOnly]
+        // đơn hàng thất bại
+        public ActionResult OrderFailure()
+        {
+            var orderSuccess = (List<DonHang>)TempData["OrderFailure"];
+
+            if (orderSuccess.Count() > 0)
+            {
+                return PartialView(orderSuccess);
+            }
+            return PartialView();
+        }
+        [ChildActionOnly]
+        // đơn hàng chờ xử lý
+        public ActionResult OrderPending()
+        {
+            var orderSuccess = (List<DonHang>)TempData["OrderPending"];
+
+            if (orderSuccess.Count() > 0)
+            {
+                return PartialView(orderSuccess);
+            }
+            return PartialView();
         }
 
 
 
+        [ChildActionOnly]
+        // đơn hàng chờ đóng gói
+        public ActionResult OrderPack()
+        {
+            var orderSuccess = (List<DonHang>)TempData["OrderPack"];
 
+            if (orderSuccess.Count() > 0)
+            {
+                return PartialView(orderSuccess);
+            }
+            return PartialView();
+        }
 
+        [ChildActionOnly]
+        // đơn hàng chờ vận chuyển
+        public ActionResult OrderTransport()
+        {
+            var orderSuccess = (List<DonHang>)TempData["OrderTransport"];
 
-
+            if (orderSuccess.Count() > 0)
+            {
+                return PartialView(orderSuccess);
+            }
+            return PartialView();
+        }
 
 
 

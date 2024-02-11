@@ -17,9 +17,9 @@
                             <th>Ngày đặt</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
-
                             <th>Thông tin</th>
-
+                          
+                            <th>#</th>
 
                         </tr>
                         @foreach (var item in Model)
@@ -28,8 +28,10 @@
                                 <td>@item.ID</td>
                                 <td>@item.NgayDat</td>
                                 <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") :"")</td>
-
-                                <td class="text-success">Đã nhận được hàng</td>
+                                <td style="color: #c21882">Chờ vận chuyển</td>
+                                <td>
+                                    <a href="#" class=" text-decoration-none getOrer" data-order-id="@item.ID">Đã nhận được hàng</a>
+                                </td>
                                 <td>
                                     <a href="~/Cart/OrderDetail/@item.ID">Xem chi tiết</a>
 
@@ -57,4 +59,5 @@
 
 
 </div>
+
 
