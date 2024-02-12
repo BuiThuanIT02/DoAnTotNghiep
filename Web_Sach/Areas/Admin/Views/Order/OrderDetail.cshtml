@@ -3,6 +3,7 @@
     ViewBag.Title = "OrderDetail";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var order = (Web_Sach.Models.DonHang)ViewBag.order;
+    var voucherOrder = (Web_Sach.Models.EF.VoucherOrder)ViewBag.voucherOrder;
     double tong = 0;
     var count = 1;
 }
@@ -113,29 +114,50 @@
                     </thead>
 
                     <tbody>
-                   @foreach(var item in Model)
-                   {
+                        @foreach (var item in Model)
+                        {
 
 
-                       var total = item.PriceBuy * item.QuantityBuy;
-                       tong += total;
+                            var total = item.PriceBuy * item.QuantityBuy;
+                            tong += total;
+                            <tr>
+                                <td>@count</td>
+                                <td>@item.sachName</td>
+                                <td>@item.PriceBuy.ToString("N0")</td>
+                                <td>@item.QuantityBuy</td>
+                                <td>@(total.ToString("N0"))</td>
+
+
+                            </tr>
+                            //count++;
+
+                        }
                         <tr>
-                            <td>@count</td>
-                            <td>@item.sachName</td>
-                            <td>@item.PriceBuy.ToString("N0")</td>
-                            <td>@item.QuantityBuy</td>
-                            <td>@(total.ToString("N0"))</td>
-
-
-                        </tr>
-                       //count++;
-
-                   }
-                        <tr>
-                            <th colspan="5" style="text-align:right" >
-                                @tong.ToString("N0")
+                            <th colspan="5" style="text-align:right">
+                               Tổng: @tong.ToString("N0")
                             </th>
                         </tr>
+                        @if (voucherOrder != null)
+                        {
+                            if (voucherOrder.maVoucher != 0)
+                            {
+                                <tr>
+                                    <th colspan="5" style="text-align:right; " class="fs-5">
+                                        Voucher : -@(voucherOrder.SoTienGiams.HasValue ? voucherOrder.SoTienGiams.Value.ToString("N0"):"") 
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="5" style="text-align:right; " class="fs-5">
+                                        @{
+                                            double? thanhTien = tong - voucherOrder.SoTienGiams;
+                                        }
+                                        Thanh toán : @thanhTien.Value.ToString("N0")
+                                    </th>
+                                </tr>
+                            }
+                        }
+
+
 
 
                     </tbody>

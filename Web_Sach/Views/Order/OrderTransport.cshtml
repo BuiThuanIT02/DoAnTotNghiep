@@ -3,7 +3,7 @@
 
 
 <div class="wrap">
-
+    <h6>Đơn hàng đang vận chuyển</h6>
 
     <div class="container">
         @if (Model != null)
@@ -15,10 +15,11 @@
                         <tr>
                             <th>Mã đơn hàng</th>
                             <th>Ngày đặt</th>
+                            <th>Ngày giao dự kiến</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th>Thông tin</th>
-                          
+
                             <th>#</th>
 
                         </tr>
@@ -26,12 +27,31 @@
                         {
                             <tr id="orderRow_@item.ID">
                                 <td>@item.ID</td>
-                                <td>@item.NgayDat</td>
+                                <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("dd-MM-yyyy") : "")</td>
+                                <td>@(item.NgayGiao.HasValue ? item.NgayGiao.Value.ToString("dd-MM-yyyy") : "")</td>
                                 <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") :"")</td>
-                                <td style="color: #c21882">Chờ vận chuyển</td>
-                                <td>
-                                    <a href="#" class=" text-decoration-none getOrer" data-order-id="@item.ID">Đã nhận được hàng</a>
-                                </td>
+                                <td style="color: #c21882">Đang vận chuyển</td>
+                                @if (item.NgayGiao != null)
+                                {
+                                    if (DateTime.Now > item.NgayGiao)
+                                    {
+                                        <td>
+                                            <a href="#" class=" text-decoration-none text-bg-warning getOrer" data-orderid="@item.ID">Đã nhận được hàng</a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <p class="text-decoration-none">Đã nhận được hàng</p>
+                                        </td>
+
+                                    }
+
+
+                                }
+
+
+
                                 <td>
                                     <a href="~/Cart/OrderDetail/@item.ID">Xem chi tiết</a>
 
@@ -50,7 +70,7 @@
         }
         else
         {
-            <p class="text-bg-danger">Đơn hàng trống</p>
+            <p class="text-dark">Đơn hàng trống</p>
         }
 
     </div>
@@ -59,5 +79,3 @@
 
 
 </div>
-
-

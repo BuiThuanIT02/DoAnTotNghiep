@@ -1,23 +1,16 @@
-﻿@model PagedList.IPagedList<Web_Sach.Models.NhaXuatBan>
+﻿@model PagedList.IPagedList<Web_Sach.Models.Tin_Tuc>
 @using PagedList.Mvc
 
 @using System.Web.Mvc.Ajax
-
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Tin tức";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
-@section NXB{
-
-    <h2 style="text-align:center">DANH SÁCH QUẢN LÝ NHÀ XUẤT BẢN</h2>
-
-}
-
+<h2>Quản lý tin tức</h2>
 <div class="card mb-4">
     <div class="card-header   ">
 
-        @using (Html.BeginForm("Index", "NhaXuatBan", FormMethod.Get))
+        @using (Html.BeginForm("Index", "News", FormMethod.Get))
         {
             <div class="row justify-content-sm-end">
 
@@ -35,13 +28,16 @@
     </div>
     <div class="card-body">
         <div class="container-fluid">
-            <a href="~/Admin/NhaXuatBan/Create">Thêm mới</a>
-            <table class="table table-bordered" style="text-align: center; vertical-align: middle">
+            <a href="~/Admin/News/Create">Thêm mới</a>
+            <table class="table table-bordered" style="text-align:center; vertical-align:middle">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>ID</th>
-                        <th>Tên nhà xuất bản</th>                     
+
+                        <th>Tên tin tức</th>
+                        <th>Metatile</th>
+                        <th>Hình ảnh</th>
+                        <th>Ngày tạo</th>
                     </tr>
                 </thead>
 
@@ -50,7 +46,7 @@
                     {
                         <tr id="row_@item.ID">
                             <td>
-                                <a href="~/Admin/NhaXuatBan/Update/@item.ID" style="text-decoration:none;color:green">
+                                <a href="~/Admin/News/Update/@item.ID" style="text-decoration:none;color:green">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     Sửa
                                 </a>
@@ -74,9 +70,13 @@
 
                                 </span>
                             </td>
-                            <td>@item.ID</td>
-                            <td>@item.TenNXB</td>
-                           
+
+                            <td>@item.Name</td>
+                            <td>@item.MetaTitle</td>
+                            <td class="w-25">
+                                <img src="@item.Image" class="img-fluid w-25" />
+                            </td>
+                            <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd-MM-yyyy") : "")</td>
 
                         </tr>
                     }

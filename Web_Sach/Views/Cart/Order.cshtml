@@ -1,49 +1,45 @@
 ﻿
-@{
 
-    var order = (List<Web_Sach.Models.DonHang>)ViewBag.OrderAll;
-   
-}
 <div class="wrap">
-    @if (order != null)
+    @if (TempData["OrderPending"] != null)
     {
         <!-- Nav pills -->
-    <ul class="nav nav-pills d-flex flex-row mt-5 mb-5" role="tablist">
-        <li class="nav-item m-1">
-            <a class="nav-link active text-white" data-bs-toggle="pill" href="#DHDuyet" style="background-color: #ff8022">Chờ duyệt đơn hàng</a>
-        </li>
-        <li class="nav-item m-1">
-            <a class="nav-link bg-warning" data-bs-toggle="pill" href="#DHDongGoi" style="color: white">Đóng gói đơn hàng</a>
-        </li>
-        <li class="nav-item m-1">
-            <a class="nav-link text-white" data-bs-toggle="pill" href="#DHVanChuyen" style="background-color: #c21882">Vận chuyển đơn hàng</a>
-        </li>
-        <li class="nav-item m-1">
-            <a class="nav-link text-bg-success" data-bs-toggle="pill" href="#DHThanhCong">Đơn hàng giao thành công</a>
-        </li>
-        <li class="nav-item mt-1">
-            <a class="nav-link text-bg-danger" data-bs-toggle="pill" href="#DHThatBai">Đơn hàng giao thất bại</a>
-        </li>
-    </ul>
+        <ul class="nav nav-pills d-flex flex-row mt-5 mb-5" role="tablist">
+            <li class="nav-item m-1">
+                <a class="nav-link active text-white" data-bs-toggle="pill" href="#DHDuyet" style="background-color: #ff8022">Chờ duyệt đơn hàng</a>
+            </li>
+            <li class="nav-item m-1">
+                <a class="nav-link bg-warning" data-bs-toggle="pill" href="#DHDongGoi" style="color: white">Đóng gói đơn hàng</a>
+            </li>
+            <li class="nav-item m-1">
+                <a class="nav-link text-white" data-bs-toggle="pill" href="#DHVanChuyen" style="background-color: #c21882">Vận chuyển đơn hàng</a>
+            </li>
+            <li class="nav-item m-1">
+                <a class="nav-link text-bg-success" data-bs-toggle="pill" href="#DHThanhCong">Đơn hàng giao thành công</a>
+            </li>
+            <li class="nav-item mt-1">
+                <a class="nav-link text-bg-danger" data-bs-toggle="pill" href="#DHThatBai">Đơn hàng giao thất bại</a>
+            </li>
+        </ul>
 
         <!-- Tab panes -->
-<div class="tab-content">
-    <div id="DHDuyet" class="container tab-pane active">
-        @{Html.RenderAction("OrderPending", "Order");}
-    </div>
-    <div id="DHDongGoi" class="container tab-pane fade">
-        @{Html.RenderAction("OrderPack", "Order");}
-    </div>
-    <div id="DHVanChuyen" class="container tab-pane fade">
-        @{Html.RenderAction("OrderTransport", "Order");}
-    </div>
-    <div id="DHThanhCong" class="container tab-pane fade">
-        @{Html.RenderAction("OrderSuccess", "Order");}
-    </div>
-    <div id="DHThatBai" class="container tab-pane fade">
-        @{Html.RenderAction("OrderFailure", "Order");}
-    </div>
-</div>
+        <div class="tab-content">
+            <div id="DHDuyet" class="container tab-pane active">
+                @{Html.RenderAction("OrderPending", "Order");}
+            </div>
+            <div id="DHDongGoi" class="container tab-pane fade">
+                @{Html.RenderAction("OrderPack", "Order");}
+            </div>
+            <div id="DHVanChuyen" class="container tab-pane fade">
+                @{Html.RenderAction("OrderTransport", "Order");}
+            </div>
+            <div id="DHThanhCong" class="container tab-pane fade">
+                @{Html.RenderAction("OrderSuccess", "Order");}
+            </div>
+            <div id="DHThatBai" class="container tab-pane fade">
+                @{Html.RenderAction("OrderFailure", "Order");}
+            </div>
+        </div>
     }
     else
     {
@@ -51,4 +47,5 @@
     }
 
 </div>
+
 

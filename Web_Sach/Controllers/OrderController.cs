@@ -64,6 +64,7 @@ namespace Web_Sach.Controllers
             if (order != null)
             {
                 order.Status = 4;
+                order.DaThanhToan = 1;
                 db.SaveChanges();
                 return Json(new
                 {

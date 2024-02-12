@@ -161,6 +161,7 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\KhuyenMaiController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NewsController.cs" />
     <Compile Include="Areas\Admin\Controllers\NhaXuatBanController.cs" />
     <Compile Include="Areas\Admin\Controllers\OrderController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProductCategoryController.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Models\EF\ImageMore.cs" />
     <Compile Include="Models\EF\kmModels.cs" />
     <Compile Include="Models\EF\kmSachModels.cs" />
+    <Compile Include="Models\EF\newModel.cs" />
     <Compile Include="Models\EF\NXB.cs" />
     <Compile Include="Models\EF\Order.cs" />
     <Compile Include="Models\EF\OrderDetail.cs" />
@@ -1296,6 +1298,7 @@
     <Content Include="Scripts\Admin\assets\img\error-404-monochrome.svg" />
     <Content Include="Scripts\Admin\Controller\AlertMessage.js" />
     <Content Include="Scripts\Admin\Controller\commentRetry.js" />
+    <Content Include="Scripts\Admin\Controller\orderNew.js" />
     <Content Include="Scripts\Admin\Controller\productCategoryController.js" />
     <Content Include="Scripts\Admin\Controller\productController.js" />
     <Content Include="Scripts\Admin\Controller\sildeController.js" />
@@ -1510,10 +1513,18 @@
     <Content Include="Areas\Admin\Views\KhuyenMai\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Comment\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Comment\Retry.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\OrderPackAd.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\OrderTransportAd.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\OrderSuccessAd.cshtml" />
+    <Content Include="Areas\Admin\Views\Order\OrderFailureAd.cshtml" />
+    <Content Include="Areas\Admin\Views\News\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\News\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\News\Update.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\comment.js" />
     <Content Include="Scripts\Client\Controller\Contact.js" />
+    <Content Include="Scripts\Client\Controller\getOrder.js" />
     <Content Include="Scripts\Client\Controller\gioHang.js" />
     <Content Include="Scripts\Client\Controller\product.js" />
     <Content Include="Scripts\Client\Controller\RemoveOrder.js" />

@@ -1,147 +1,125 @@
-﻿@model PagedList.IPagedList<Web_Sach.Models.DonHang>
+﻿
+@model PagedList.IPagedList<Web_Sach.Models.DonHang>
 @using PagedList.Mvc
 
 @using System.Web.Mvc.Ajax
 @{
     ViewBag.Title = "Quản lý đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
 }
-<h2>Quản lý đơn hàng</h2>
 
-<div class="card mb-4">
-    @*<div class="card-header   ">
-        
-        @using (Html.BeginForm("Index", "User", FormMethod.Get))
-        {
-            <div class="row justify-content-sm-end">
-
-                <div class="col-sm-2 ">
-                    <input type="text" value="@ViewBag.SearchString" name="searchString" />
-
-                </div>
-                <div class="col-sm-2 ">
-                    <button type="submit">Tìm kiếm</button>
-
-                </div>
-
-            </div>
-        }
+<h2>Đơn hàng đang chờ xử lý</h2>
+<div class="wrap">
+    <!-- Nav pills -->
+    <ul class="nav ms-2 mb-2">
+        <li class="nav-item border">
+            <a class="nav-link text-info" href="~/Admin/Order/OrderPackAd">Đóng gói</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link" href="~/Admin/Order/OrderTransportAd">Vận chuyển</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link text-success" href="~/Admin/Order/OrderSuccessAd">Đơn hàng giao thành công</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link text-danger" href="~/Admin/Order/OrderFailureAd">Đơn hàng giao thất bại</a>
+        </li>
+    </ul>
 
 
+    @if (Model.Count() > 0)
+    {
+        <div class="card-body">
+            <div class="container-fluid">
 
+                <table class="table table-bordered" style="text-align:center">
+                    <thead>
+                        <tr>
 
-
-    </div>*@
-
-
-
-
-    <div class="card-body">
-        <div class="container-fluid">
-           
-            <table class="table table-bordered" style="text-align:center">
-                <thead>
-                    <tr>
-
-                        <th>Mã đơn hàng</th>                       
-                        <th>Tên người nhận</th>
-                        <th>Điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Ngày đặt</th>      
-                        @*<th>Ngày giao</th>*@
-                        @*<th>Đã thanh toán</th>*@
-                        <th>Tổng tiền</th>
-                        <th>Tình trạng</th>
-                        <th>#</th>
+                            <th>Mã đơn hàng</th>
+                            <th>Tên người nhận</th>
+                            <th>Điện thoại</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                            <th>Ngày đặt</th>
+                            @*<th>Ngày giao</th>*@
+                            <th>Đã thanh toán</th>
+                            <th>Tổng tiền</th>
+                            <th>Tình trạng</th>
+                            <th>#</th>
 
 
 
-                    </tr>
-                </thead>
+                        </tr>
+                    </thead>
 
-                <tbody>
-
-
-                
-                    @foreach (var item in Model)
-                    {
-                    <tr id="row_@item.ID">
+                    <tbody>
 
 
 
-
-
-
-                        <td>@item.ID</td>
-                        <td>@item.TenNguoiNhan</td>
-                        <td>@item.Moblie</td>
-                        <td>@item.Email</td>
-                        <td>@item.DiaChiNguoiNhan</td>
-                        <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("yyyy-MM-dd") : "")</td>
-                        @if (item.NgayGiao != null)
+                        @foreach (var item in Model)
                         {
-                            <td>@(item.NgayGiao.HasValue ? item.NgayGiao.Value.ToString("yyyy-MM-dd") : "")</td>
+                            <tr id="row_@item.ID">
+                                <td>@item.ID</td>
+                                <td>@item.TenNguoiNhan</td>
+                                <td>@item.Moblie</td>
+                                <td>@item.Email</td>
+                                <td>@item.DiaChiNguoiNhan</td>
+                                <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("yyyy-MM-dd") : "")</td>
+
+
+                                @if (item.DaThanhToan == 0)
+                                {
+                                    <td>Chưa thanh toán</td>
+
+                                }
+                                else
+                                {
+                                    <td>Đã thanh toán</td>
+                                }
+
+                                <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") : "")</td>
+
+                                <td>
+                                    <a href="#" class="text-danger orderPending" data-id="@item.ID">
+                                        Chờ duyệt đơn hàng
+                                    </a>
+                                </td>
+
+
+
+                                <td>
+                                    <a class="text-dark" href="/Admin/Order/OrderDetail/@item.ID">Xem chi tiết</a>
+                                </td>
+
+
+                            </tr>
                         }
 
 
 
-                        @if (item.DaThanhToan != null)
-                        {
-                            <td>@item.DaThanhToan</td>
-                        }
+                    </tbody>
 
-                        <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") : "")</td>
-                        @if (item.Status == 1)
-                        {
-                            <td>
-                                <a href="~/Admin/Order/ChangeStatus/@item.ID" class="text-danger">
-                                    Chờ xử lý
-                                </a>
-                            </td>
-                        }
-                        else if (item.Status == 2)
-                        {
-                            <td>
-                                <p class="text-warning">Đang vận chuyển</p>
-                            </td>
-
-                        }
-
-
-
-
-                        <td>
-                            <a class="text-success" href="/Admin/Order/OrderDetail/@item.ID">Xem chi tiết</a>
-                        </td>
-
-
-                    </tr>
-                    }
-
-
-
-                </tbody>
-
-            </table>
-
-
-
-        
-             
-                       
-                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-                     
-                
-           
-              
+                </table>
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
                 @* get trang mới *@
 
 
+            </div>
+
+
         </div>
+    }
+    else
+    {
+        <p>Đơn hàng trống</p>
+    }
 
 
-    </div>
 
 </div>
 
+@section jsFooter{
+    <script src="~/Scripts/Admin/Controller/orderNew.js"></script>
+    }

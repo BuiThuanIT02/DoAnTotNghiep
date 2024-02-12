@@ -49,7 +49,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 }
 
             }
-            return View("Index", "Silde");
+            return View("Create");
 
         }
 

@@ -145,7 +145,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 return View(tk);
             }
             setViewBagRole(tk.Role.ToString());
-            return View("Index");
+            return View("Update");
         }
 
 

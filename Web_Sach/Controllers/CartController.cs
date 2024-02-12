@@ -545,7 +545,7 @@ namespace Web_Sach.Controllers
                             where dh.MaKH == sessionUser.UserID  
                             select dh;
 
-                ViewBag.OrderAll = order.ToList();
+                //ViewBag.OrderAll = order.ToList();
                 if (order != null)
                 {
                     TempData["OrderPending"] = order.Where(x => x.Status == 1).ToList();

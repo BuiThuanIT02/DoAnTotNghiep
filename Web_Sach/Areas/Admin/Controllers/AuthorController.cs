@@ -175,7 +175,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                 SetAlert("Update thất bại", "error");
                 return View(inputTacGia);
             }
-            return View("Index");
+            return View("Update");
         }
 
 
