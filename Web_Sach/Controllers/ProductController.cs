@@ -73,7 +73,10 @@ namespace Web_Sach.Controllers
             var query = (from dt in db.Saches
                          where dt.ID == detailId
                          select dt);
-
+            if(query == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             var productDetail = query.FirstOrDefault();
 
             if (productDetail != null)
@@ -90,23 +93,11 @@ namespace Web_Sach.Controllers
                 ViewBag.SachDM = sachDM.ToList();
                 ViewBag.NameDM = danhmuc.FirstOrDefault();
 
-
-
-
             }
-
-
-
-
-
 
             return View(productDetail);
 
         }
-
-
-
-
 
 
 
@@ -201,16 +192,6 @@ namespace Web_Sach.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
         //tìm kiếm Home
         public ActionResult Search(string keyword, int page = 1, int pageSize = 6)
         {
@@ -218,28 +199,19 @@ namespace Web_Sach.Controllers
             {
                 return Redirect("/");
             }
-            var productList = db.Saches.Where(x => x.Name.Contains(keyword));
+            var productList = db.Saches.Where(x => x.Name.ToLower().Replace(" ", "").Contains(keyword.ToLower().Replace(" ", "")));
             ViewBag.Keyword = keyword;
+            ViewBag.Count = productList.Count();
             var totalItem = productList.Count();
             var totalPage = (int)Math.Ceiling((double)totalItem / pageSize);
             var maxPage = 20;
-
-
-
-
-
-
             // danh sách phân trang
             productList = productList.OrderBy(x => x.Name).Skip((page - 1) * pageSize).Take(pageSize);
             // Skip((page - 1) * pageSize): bỏ qua các phẩn tử 
             // ví dụ page =2 thì sẽ bỏ qua 3 phẩn tử trang 1
             var model = productList.ToList();
-
-
             //truyền vào view
             ViewBag.totalRecord = totalItem;
-
-
             ViewBag.maxPage = maxPage;
             ViewBag.page = page;
             ViewBag.totalPage = totalPage;

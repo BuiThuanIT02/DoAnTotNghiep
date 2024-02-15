@@ -207,8 +207,7 @@ namespace Web_Sach
                 namespaces: new[] { "Web_Sach.Controllers" }
 
             );
-          
-
+           
         }
     }
 }

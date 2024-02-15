@@ -21,37 +21,26 @@ namespace Web_Sach.Controllers
         {
             var author = db.TacGias.Find(authorID);// thông tin tác giả
             // sản phẩm cùng tác giả
-          
-
+          if(author == null)
+            {
+                return RedirectToAction("Index","Error");
+            }
             var sach = from tg in db.ThamGias
                        join au in db.TacGias on tg.MaTacGia equals au.ID
                        join s in db.Saches on tg.MaSach equals s.ID
                        where au.ID == authorID
                        select s;
-           
-
             // phân trang
             var totalItem = sach.Count();
             var totalPage = (int)Math.Ceiling((double)totalItem / pageSize);
             var maxPage = 20;
-
-
-
-
-
-
             // danh sách phân trang
             sach = sach.OrderBy(x => x.Name).Skip((page - 1) * pageSize).Take(pageSize);
             // Skip((page - 1) * pageSize): bỏ qua các phẩn tử 
             // ví dụ page =2 thì sẽ bỏ qua 3 phẩn tử trang 1
             ViewBag.ListSach = sach.ToList();
-
-
-
             //truyền vào view
             ViewBag.totalRecord = totalItem;
-
-
             ViewBag.maxPage = maxPage;
             ViewBag.page = page;
             ViewBag.totalPage = totalPage;
@@ -59,7 +48,6 @@ namespace Web_Sach.Controllers
             ViewBag.Last = totalPage;
             ViewBag.Next = page + 1;
             ViewBag.Prev = page - 1;
-
             return View(author);
         }
 

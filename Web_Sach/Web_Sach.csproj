@@ -177,6 +177,7 @@
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IntroduceController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -1603,6 +1604,7 @@
     <Content Include="Views\Order\OrderFailure.cshtml" />
     <Content Include="Views\ProductCategory\_MenuLef.cshtml" />
     <Content Include="Views\ProductCategory\_FillerProductCategory.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

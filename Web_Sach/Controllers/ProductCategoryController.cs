@@ -86,15 +86,15 @@ namespace Web_Sach.Controllers
                         break;
                     case "z-a":
                      
-                        query = query.OrderBy(x => x.Name);
+                        query = query.OrderByDescending(x => x.Name);
                         break;
                     case "moinhat":
                       
-                        query = query.OrderBy(x => x.Name);
+                        query = query.OrderByDescending(x => x.NgayCapNhat);
                         break;
                     case "cunhat":
                       
-                        query = query.OrderBy(x => x.Name);
+                        query = query.OrderBy(x => x.NgayCapNhat);
                         break;
 
                 }
