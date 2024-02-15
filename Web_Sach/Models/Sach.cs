@@ -15,9 +15,9 @@
             ChiTietDonHangs = new HashSet<ChiTietDonHang>();
             Images = new HashSet<Image>();
             KhuyenMai_Sach = new HashSet<KhuyenMai_Sach>();
-            //TacGias = new HashSet<TacGia>();
+          
             ThamGias = new HashSet<ThamGia>();
-            ReViews = new HashSet<ReView>();
+   
             Comments = new HashSet<Comment>();
         }
         [Display(Name="Mã sách")]
@@ -26,9 +26,6 @@
         [Display(Name = "Danh mục")]
        
         public int? DanhMucID { get; set; }
-        //[Display(Name = "Nhà cung cấp")]
-      
-        //public int? NhaCungCapID { get; set; }
         [Display(Name = "Mã xuất bản")]
       
         public int? NhaXuatBanID { get; set; }
@@ -82,16 +79,12 @@
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<KhuyenMai_Sach> KhuyenMai_Sach { get; set; }
-
-        //public virtual NhaCungCap NhaCungCap { get; set; }
-
         public virtual NhaXuatBan NhaXuatBan { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        //public virtual ICollection<TacGia> TacGias { get; set; }
+       
         public virtual ICollection<ThamGia> ThamGias { get; set; }
 
-        public virtual ICollection<ReView> ReViews { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
     }
 }

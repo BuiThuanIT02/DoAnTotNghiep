@@ -87,8 +87,15 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            new newModel().Delete(id);
-
+            var check = new newModel().Delete(id);
+            if (check)
+            {
+                SetAlert("Xóa bản ghi thành công", "success");
+            }
+            else
+            {
+                SetAlert("Xóa bản ghi thất bại", "error");
+            }
             return RedirectToAction("Index", "News");
 
         }

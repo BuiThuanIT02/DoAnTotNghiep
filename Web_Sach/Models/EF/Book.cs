@@ -121,13 +121,15 @@ namespace Web_Sach.Models.EF
         {
             try
             {
-                var img = db.Images.Where(x => x.MaSP == id).ToList();
-                if(img.Count > 0)
+                var img = db.Images.Where(x => x.MaSP == id);
+                var km = db.KhuyenMai_Sach.Where(x=>x.MaSach == id);
+                if(km.Any())
                 {
-                    foreach(var item in img)
-                    {
-                        db.Images.Remove(item);
-                    }
+                    db.KhuyenMai_Sach.RemoveRange(km);
+                }
+                if(img.Any())
+                {
+                    db.Images.RemoveRange(img);
                     var bookDelete = db.Saches.Find(id);
                     db.Saches.Remove(bookDelete);
                 }

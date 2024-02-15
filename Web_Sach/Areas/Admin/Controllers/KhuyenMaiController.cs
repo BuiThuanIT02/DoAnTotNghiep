@@ -204,7 +204,15 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpDelete]
         public ActionResult Delete(int maSach, int maKM)
         {
-            new kmModels().Delete(maSach,maKM);
+            var check = new kmModels().Delete(maSach,maKM);
+            if (check)
+            {
+                SetAlert("Xóa bản ghi thành công", "success");
+            }
+            else
+            {
+                SetAlert("Xóa bản ghi thất bại", "error");
+            }
             return RedirectToAction("Index", "KhuyenMai");
         }
 

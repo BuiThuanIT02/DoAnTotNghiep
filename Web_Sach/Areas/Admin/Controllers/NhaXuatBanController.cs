@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.EnterpriseServices.CompensatingResourceManager;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,7 +12,7 @@ namespace Web_Sach.Areas.Admin.Controllers
     public class NhaXuatBanController : BaseController
     {
         private WebSachDb db = new WebSachDb();
-       
+
         public ActionResult Index(string searchString, int page = 1, int pageSize = 20)
         {
             var listPage = new NXB().listPage(searchString, page, pageSize);
@@ -77,7 +78,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var nxbUpdate = new NXB();
-              
+
 
                 if (nxbUpdate.Compare(nxb))
                 {
@@ -97,18 +98,28 @@ namespace Web_Sach.Areas.Admin.Controllers
             else
             {
                 SetAlert("Update thất bại", "error");
-                
+
             }
-           return View(nxb);
+            return View(nxb);
         }
 
 
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            var nxb = db.NhaXuatBans.Find(id);
-            db.NhaXuatBans.Remove(nxb);
-            db.SaveChanges();
+            try
+            {
+                var nxb = db.NhaXuatBans.Find(id);
+                db.NhaXuatBans.Remove(nxb);
+                db.SaveChanges();
+                SetAlert("Xóa bản ghi thành công", "success");
+            }
+            catch (Exception)
+            {
+                SetAlert("Xóa bản ghi thất bại", "error");
+            }
+
+
             return RedirectToAction("Index", "NhaXuatBan");
         }
 

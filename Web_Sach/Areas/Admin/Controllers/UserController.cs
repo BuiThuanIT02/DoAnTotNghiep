@@ -156,9 +156,7 @@ namespace Web_Sach.Areas.Admin.Controllers
        
         public ActionResult Delete(int id)
         {
-             new TaiKhoanModels().Delete(id);
-          
-              
+            new TaiKhoanModels().Delete(id);
             return RedirectToAction("Index", "User");
            
         }

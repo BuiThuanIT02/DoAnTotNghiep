@@ -337,7 +337,15 @@ namespace Web_Sach.Areas.Admin.Controllers
         // xóa bản ghi
         public ActionResult Delete(int id)
         {
-            new Book().Delete(id);
+            var check =new Book().Delete(id);
+            if (check)
+            {
+                SetAlert("Xóa bản ghi thành công", "success");
+            }
+            else
+            {
+                SetAlert("Xóa bản ghi thất bại", "error");
+            }
             return RedirectToAction("Index", "Product");
         }
 

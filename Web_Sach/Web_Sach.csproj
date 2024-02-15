@@ -226,7 +226,6 @@
     <Compile Include="Models\KhuyenMai_Sach.cs" />
     <Compile Include="Models\NhaXuatBan.cs" />
     <Compile Include="Models\Payments\VnPayLibrary.cs" />
-    <Compile Include="Models\ReView.cs" />
     <Compile Include="Models\Sach.cs" />
     <Compile Include="Models\Silde.cs" />
     <Compile Include="Models\sysdiagram.cs" />

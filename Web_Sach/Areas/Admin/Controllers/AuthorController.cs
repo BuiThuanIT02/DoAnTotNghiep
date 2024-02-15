@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.EnterpriseServices.CompensatingResourceManager;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -183,7 +184,8 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpDelete]
         public ActionResult Delete(int maSach, int maTacGia)
         {
-            var author = new TacGiaModels().Delete(maSach, maTacGia);
+            new TacGiaModels().Delete(maSach, maTacGia);
+            
             return RedirectToAction("Index", "Author");
         }
 

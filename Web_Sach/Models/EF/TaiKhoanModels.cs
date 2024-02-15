@@ -19,21 +19,21 @@ namespace Web_Sach.Models.EF
         // Tìm tk  trùng tên userName
         public TaiKhoan GetUserName(string userName)
         {
-            return db.TaiKhoans.FirstOrDefault(x => x.TaiKhoan1==userName);
+            return db.TaiKhoans.FirstOrDefault(x => x.TaiKhoan1 == userName);
 
         }
         // End Tìm tk  trùng tên userName
 
 
         // Phân trang bảng Tài Khoản
-        public IEnumerable<TaiKhoan> listPage(string searchString,int page, int pageSize)
+        public IEnumerable<TaiKhoan> listPage(string searchString, int page, int pageSize)
         {
             IQueryable<TaiKhoan> query = db.TaiKhoans;
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(x => x.TaiKhoan1.Contains(searchString));
             }
-            return query.OrderBy(x=>x.NgaySinh).ToPagedList(page, pageSize);
+            return query.OrderBy(x => x.NgaySinh).ToPagedList(page, pageSize);
 
         }
         // End  Phân trang bảng Tài Khoản
@@ -55,7 +55,7 @@ namespace Web_Sach.Models.EF
         //tìm theo tên tài khoản
         public TaiKhoan UniqueUserName(string userName)
         {
-            return db.TaiKhoans.FirstOrDefault(x=>x.TaiKhoan1.ToLower().Replace(" ","") == userName.ToLower().Replace(" ", ""));
+            return db.TaiKhoans.FirstOrDefault(x => x.TaiKhoan1.ToLower().Replace(" ", "") == userName.ToLower().Replace(" ", ""));
 
         }
         // end tìm theo tên tài khoản
@@ -71,7 +71,7 @@ namespace Web_Sach.Models.EF
         public bool Compare(TaiKhoan tk)
         {
             var user = db.TaiKhoans.FirstOrDefault(x => x.ID != tk.ID && x.TaiKhoan1.ToLower().Replace(" ", "") == tk.TaiKhoan1.ToLower().Replace(" ", ""));
-            if(user != null)
+            if (user != null)
             {
                 return true;
             }
@@ -104,12 +104,12 @@ namespace Web_Sach.Models.EF
                 return true;
             }
 
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
 
-           
+
         }
         //end update khi sửa
 
@@ -120,13 +120,26 @@ namespace Web_Sach.Models.EF
             try
             {
                 var userDelete = db.TaiKhoans.Find(id);
-                db.TaiKhoans.Remove(userDelete);
-                db.SaveChanges();
-                return true;
+                if (userDelete != null)
+                {
+                    var commets = userDelete.Comments.Where(x=>x.MaKH ==id);
+                    var order = userDelete.DonHangs.Where(x => x.MaKH == id);
+                    foreach (var item in order)
+                    {
+                        var orderDetail=item.ChiTietDonHangs.Where(x => x.MaDonHang == item.ID);
+                        db.ChiTietDonHangs.RemoveRange(orderDetail);
+                    }
+                    db.DonHangs.RemoveRange(order);
+                    db.Comments.RemoveRange(commets);
+                    db.TaiKhoans.Remove(userDelete);
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
 
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -139,12 +152,12 @@ namespace Web_Sach.Models.EF
         //thay đổi trạng thái user
         public bool ChangeStatus(int id)
         {
-            
-                var userChange = db.TaiKhoans.Find(id);
-                userChange.Status = !userChange.Status;
-                db.SaveChanges();
-                return userChange.Status;
-             
+
+            var userChange = db.TaiKhoans.Find(id);
+            userChange.Status = !userChange.Status;
+            db.SaveChanges();
+            return userChange.Status;
+
         }
 
         // End thay đổi trạng thái user

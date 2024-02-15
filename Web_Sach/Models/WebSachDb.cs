@@ -30,7 +30,7 @@ namespace Web_Sach.Models
         public virtual DbSet<Tin_Tuc> Tin_Tuc { get; set; }
         public virtual DbSet<Voucher> Vouchers { get; set; }
         public virtual DbSet<ThamGia> ThamGias { get; set; }
-        public virtual DbSet<ReView> ReViews { get; set; }
+        //public virtual DbSet<ReView> ReViews { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -89,10 +89,10 @@ namespace Web_Sach.Models
                 .HasForeignKey(e => e.MaSach)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Sach>()
-              .HasMany(e => e.ReViews)
-              .WithOptional(e => e.Sach)
-              .HasForeignKey(e => e.MaSach);
+            //modelBuilder.Entity<Sach>()
+            //  .HasMany(e => e.ReViews)
+            //  .WithOptional(e => e.Sach)
+            //  .HasForeignKey(e => e.MaSach);
 
             modelBuilder.Entity<Sach>()
              .HasMany(e => e.Comments)
@@ -132,15 +132,12 @@ namespace Web_Sach.Models
                 .WithOptional(e => e.TaiKhoan)
                 .HasForeignKey(e => e.MaKH);
 
-            modelBuilder.Entity<TaiKhoan>()
-              .HasMany(e => e.ReViews)
-              .WithOptional(e => e.TaiKhoan)
-              .HasForeignKey(e => e.MaKH);
+
             modelBuilder.Entity<TaiKhoan>()
             .HasMany(e => e.Comments)
             .WithOptional(e => e.TaiKhoan)
             .HasForeignKey(e => e.MaKH);
-
+           
             modelBuilder.Entity<Tin_Tuc>()
                 .Property(e => e.MetaTitle)
                 .IsUnicode(false);
