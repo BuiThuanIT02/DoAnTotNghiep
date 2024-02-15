@@ -1524,16 +1524,20 @@
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\comment.js" />
     <Content Include="Scripts\Client\Controller\Contact.js" />
+    <Content Include="Scripts\Client\Controller\filterProductCategory.js" />
     <Content Include="Scripts\Client\Controller\getOrder.js" />
     <Content Include="Scripts\Client\Controller\gioHang.js" />
     <Content Include="Scripts\Client\Controller\product.js" />
     <Content Include="Scripts\Client\Controller\RemoveOrder.js" />
     <Content Include="Scripts\Client\Controller\Select_SortBy.js" />
     <Content Include="Scripts\Client\CSS\cartItem.css" />
+    <Content Include="Scripts\Client\CSS\categories_responsive.css" />
+    <Content Include="Scripts\Client\CSS\categories_styles.css" />
     <Content Include="Scripts\Client\CSS\single_responsive.css" />
     <Content Include="Scripts\Client\CSS\single_styles.css" />
     <Content Include="Scripts\Client\logo1.jpg" />
     <Content Include="Scripts\Client\product.css" />
+    <Content Include="Scripts\Client\script\FilterProductCategory.js" />
     <Content Include="Scripts\Client\script\single_custom.js" />
     <Content Include="Scripts\Client\UI.css" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1597,6 +1601,8 @@
     <Content Include="Views\Order\OrderPack.cshtml" />
     <Content Include="Views\Order\OrderTransport.cshtml" />
     <Content Include="Views\Order\OrderFailure.cshtml" />
+    <Content Include="Views\ProductCategory\_MenuLef.cshtml" />
+    <Content Include="Views\ProductCategory\_FillerProductCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -63,7 +63,13 @@ namespace Web_Sach
               namespaces: new[] { "Web_Sach.Controllers" }
 
           );
+            routes.MapRoute(
+             name: "Filter",
+             url: "san-pham/filter/{metatilte}-{filterOb}-{cateId}",
+             defaults: new { controller = "ProductCategory", action = "_FillerProductCategory", id = UrlParameter.Optional },
+             namespaces: new[] { "Web_Sach.Controllers" }
 
+         );
 
             routes.MapRoute(
               name: "Thông tin người dùng",
