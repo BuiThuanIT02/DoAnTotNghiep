@@ -121,7 +121,7 @@ namespace Web_Sach.Models
 
             modelBuilder.Entity<TaiKhoan>()
                 .Property(e => e.TaiKhoan1)
-                .IsUnicode(false);
+                .IsUnicode(true);
 
             modelBuilder.Entity<TaiKhoan>()
                 .Property(e => e.Phone)

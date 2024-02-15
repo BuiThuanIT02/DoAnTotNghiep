@@ -171,14 +171,14 @@ namespace Web_Sach.Models.EF
         // lấy list sách mởi
         public List<Sach> listNew(int top)
         {
-            return db.Saches.OrderByDescending(x => x.NgayCapNhat <= DateTime.Now).Take(top).ToList();
+            return db.Saches.OrderByDescending(x => x.NgayCapNhat).Take(top).ToList();
         }
 
         // lấy sách tophot
 
         public List<Sach> listTopHot(int top)
         {
-            return db.Saches.Where(x => x.NgayCapNhat <= DateTime.Now && x.NgayCapNhat !=null).Take(top).ToList();
+            return db.Saches.OrderBy(x =>x.Quantity).Take(top).ToList();
         }
 
 

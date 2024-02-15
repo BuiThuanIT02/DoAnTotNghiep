@@ -1525,6 +1525,7 @@
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\comment.js" />
     <Content Include="Scripts\Client\Controller\Contact.js" />
+    <Content Include="Scripts\Client\Controller\filterProduct.js" />
     <Content Include="Scripts\Client\Controller\filterProductCategory.js" />
     <Content Include="Scripts\Client\Controller\getOrder.js" />
     <Content Include="Scripts\Client\Controller\gioHang.js" />
@@ -1605,6 +1606,7 @@
     <Content Include="Views\ProductCategory\_MenuLef.cshtml" />
     <Content Include="Views\ProductCategory\_FillerProductCategory.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\ViewAll\_FillerProductViewAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

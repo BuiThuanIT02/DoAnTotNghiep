@@ -1,11 +1,55 @@
 ﻿
 @{
-    ViewBag.Title = "VnpayReturn";
+    ViewBag.Title = "Thanh toán Vnpay";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .vnpayStaus {
+        position: relative;
+        height:50vh;
+    }
 
-@if (ViewBag.ThanhToanThanhCong != null)
-{
-    <p>@ViewBag.ThanhToanThanhCong </p>
-}
-@ViewBag.InnerText
+    .vnpayStatus_Success {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .vnpayStatus--Icon_success, .vnpayStatus--Icon_erro {
+        font-size: 20vh;
+        border-radius: 50%;
+       
+    }
+    .vnpayStatus--Icon_success {
+        color: forestgreen;
+        border: 5px solid forestgreen;
+    }
+    .vnpayStatus--Icon_erro {
+        color: red;
+        border: 5px solid red;
+    }
+</style>
+<div class="container" id="containerVnpayStatus">
+    <div class="vnpayStaus">
+        <div class="vnpayStatus_Success">
+            @if (ViewBag.ThanhToanThanhCong != null)
+            {
+                <p class="text-center"><i class="fa-solid fa-check vnpayStatus--Icon_success"></i></p>
+                <p>@ViewBag.InnerText</p>
+
+                <p>@ViewBag.ThanhToanThanhCong </p>
+            }
+            else
+            {
+                <p class="text-center"><i class="fa-solid fa-x vnpayStatus--Icon_erro"></i></p>
+                <p>@ViewBag.InnerText</p>
+
+                
+            }
+        </div>
+       
+
+    </div>
+
+</div>
+

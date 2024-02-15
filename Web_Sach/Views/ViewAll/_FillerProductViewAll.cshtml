@@ -1,13 +1,8 @@
-﻿
-@model List<Web_Sach.Models.Sach>
-@{ 
-    var curentCategory = (Web_Sach.Models.DanhMucSP)ViewBag.curentCategory;
-    
-}
-@if (Model.Count() > 0)
+﻿@model List<Web_Sach.Models.Sach>
+
+@if (Model.Count > 0)
 {
     <div class="row ms-5" id="product-category">
-
         @foreach (var item in Model)
         {
 
@@ -21,7 +16,7 @@
                 imgUrl = img.Image1;
             }
 
-            if (khuyenMai.Count() > 0)
+            if (khuyenMai.Count > 0)
             {// có khuyến mại
              // kiểm tra xem thời gian khuyến mại
                 foreach (var itemKM in khuyenMai)
@@ -33,16 +28,16 @@
                     }
                 }
                 var priceSale = item.Price - (item.Price * sale / 100);
+
                 <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
 
                     <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail  " alt="san_pham"> </a>
                     @if (sale != 0)
-                    {// sale còn hạn
+                    {// còn hạn sale
                         <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@sale%</span>
                         <p class="fs-5 product-name ">@item.Name</p>
 
-
-                        <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                        <span class="text-dark ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
                         <span class="text-bg-danger">
                             <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
                         </span>
@@ -62,6 +57,7 @@
             else
             {// không có khuyến mại
 
+
                 <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
 
                     <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail  " alt="san_pham"> </a>
@@ -72,12 +68,14 @@
                     <p class="text-dark me-4 text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</p>
 
 
-
                 </div>
             }
 
 
         }
+
+
+        <!--Phân trang -->
 
         @if (ViewBag.totalRecord > ViewBag.PageSize)
         { // số bản ghi  > kích thước mỗi trang
@@ -88,7 +86,7 @@
             var endIndex = (int)Math.Min(totalPage, currentPage + pageMax / 2);
 
 
-            //var link = "/san-pham/filter/" + ViewBag.curentCategory.MetaTitle + "-" + ViewBag.filterOb +  "-" + ViewBag.curentCategory.ID;
+            //var link = "/san-pham/filter/" + ViewBag.curentCategory.MetaTitle + "-" + ViewBag.filterOb + "-" + ViewBag.curentCategory.ID;
             <nav>
                 <ul class="pagination justify-content-end mt-2 ">
                     <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
@@ -110,7 +108,7 @@
                         }
                         else
                         {
-                            <li class="page-item "><button type="button"  data-page=@i class="filterCategoryPage page-link pos ">@i</button></li>
+                            <li class="page-item "><button type="button" data-page=@i class="filterCategoryPage page-link pos ">@i</button></li>
 
                         }
 
@@ -131,37 +129,36 @@
             </nav>
 
         }
-        
+
+
     </div>
     <script>
 
-        $('.filterCategoryPage').off("click").on("click", function () {
-            let page = $(this).data('page');
-            let cateId = @ViewBag.curentCategory.ID;
-            let sortBy = '@Html.Raw(ViewBag.sortBy)';
+      $('.filterCategoryPage').off("click").on("click", function () {
+          let page = $(this).data('page');
+          let sortBy = '@Html.Raw(ViewBag.sortBy)';
+  
+          let filterOb;
+          if ('@Html.Raw(ViewBag.filterOb)' != '') {
+           filterOb = JSON.parse('@Html.Raw(ViewBag.filterOb)');
+          }
 
-            let filterOb;
-            if ('@Html.Raw(ViewBag.filterOb)' != '') {
-             filterOb = JSON.parse('@Html.Raw(ViewBag.filterOb)');
-            }
-           
-            $.ajax({
-                type: "GET",
-                url: '/ProductCategory/_FillerProductCategory',
-                data:
-                {
-                    cateId: cateId,
-                    page: page,
-                    filterOb: JSON.stringify(filterOb),
-                    sortBy: sortBy,
-                }
-                ,
+          $.ajax({
+              type: "GET",
+              url: '/ViewAll/_FillerProductViewAll',
+              data:
+              {
+                  page: page,
+                  filterOb: JSON.stringify(filterOb),
+                  sortBy: sortBy,
+              }
+              ,
 
-                success: function (res) {
-                    $('#products-container').html(res);
-                }
-            })
-        })
+              success: function (res) {
+                  $('#products-container-New').html(res);
+              }
+          })
+      })
     </script>
 }
 else

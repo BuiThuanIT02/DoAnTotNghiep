@@ -76,7 +76,26 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Trạng thái</label>
-                    <p class="form-control"> @(order.Status ==1 ?"Chờ xử lý" :"Đang vận chuyển")</p>
+                    @if (order.Status == 1)
+                    {
+                        <p class="form-control">Chờ xử lý</p>
+                    }
+                    else if (order.Status == 2)
+                    {
+                        <p class="form-control">Đóng gói</p>
+                    }
+                    else if (order.Status == 3)
+                    {
+                        <p class="form-control">Vận chuyển</p>
+                    }
+                    else if (order.Status == 4)
+                    {
+                        <p class="form-control">Thành công</p>
+                    }
+                    else
+                    {
+                        <p class="form-control">Thất bại</p>
+                    }
 
                 </div>
             </div>
