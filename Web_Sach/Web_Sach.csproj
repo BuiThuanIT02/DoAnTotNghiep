@@ -1530,6 +1530,7 @@
     <Content Include="Scripts\Client\Controller\Contact.js" />
     <Content Include="Scripts\Client\Controller\filterProduct.js" />
     <Content Include="Scripts\Client\Controller\filterProductCategory.js" />
+    <Content Include="Scripts\Client\Controller\filterProductTopHot.js" />
     <Content Include="Scripts\Client\Controller\getOrder.js" />
     <Content Include="Scripts\Client\Controller\gioHang.js" />
     <Content Include="Scripts\Client\Controller\product.js" />
@@ -1611,6 +1612,7 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\ViewAll\_FillerProductViewAll.cshtml" />
     <Content Include="Views\PayOrder\Index.cshtml" />
+    <Content Include="Views\ViewAll\_FillerProductTopHot.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
