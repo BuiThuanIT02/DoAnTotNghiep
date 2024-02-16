@@ -46,7 +46,8 @@
 
     <div class="card-body">
         <div class="container-fluid">
-            <a href="~/Admin/KhuyenMai/Create">Thêm mới</a>
+            <a href="~/Admin/KhuyenMai/Create" class="btn btn-info">Thêm mới</a>
+            <a href="~/Admin/KhuyenMai/SaleMany" class="btn btn-info ms-3">Khuyến mại n-n</a>
             <table class="table table-bordered" style="text-align:center">
                 <thead>
                     <tr>
@@ -63,21 +64,21 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr id="row_@item.MaSach@item.MaKM">
+                        <tr class="row_@item.MaKM">
                             <td>
                                 <a href="/Admin/KhuyenMai/Update?maSach=@item.MaSach&&maKM=@item.MaKM" style="text-decoration:none ;color:forestgreen">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     Sửa
                                 </a>
-                               
+
                                 <span style="text-decoration:none ;color:red">
 
                                     <i class="fa-solid fa-trash"></i>
 
-                                    @Ajax.ActionLink("Xóa", "Delete", new { @maSach = @item.MaSach, @maKM = @item.MaKM }, new AjaxOptions
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @maKM = @item.MaKM }, new AjaxOptions
                                {
                                    Confirm = "Bạn có muốn xóa bản ghi này!!",
-                                   OnComplete = "$('#row_" + @item.MaSach + @item.MaKM + "').remove()",
+                                   OnComplete = "$('.row_" + @item.MaKM + "').remove()",
 
                                    HttpMethod = "Delete"
 

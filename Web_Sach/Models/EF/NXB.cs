@@ -14,7 +14,26 @@ namespace Web_Sach.Models.EF
             db = new WebSachDb();
 
         }
-
+        public bool Delete(int id)
+        {
+            try
+            {
+                var sp = db.Saches.Where(x => x.NhaXuatBanID == id);
+                if (sp.Any())
+                {
+                    db.Saches.RemoveRange(sp);
+                }
+                var nxb = db.NhaXuatBans.Find(id);
+                db.NhaXuatBans.Remove(nxb);
+                db.SaveChanges();
+                return true;
+              
+            }
+            catch (Exception)
+            {
+               return false;
+            }
+        }
 
         //drowload
         public List<NhaXuatBan> ListAll()

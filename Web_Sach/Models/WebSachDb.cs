@@ -148,6 +148,8 @@ namespace Web_Sach.Models
                 .HasForeignKey(e => e.MaVoucher);
         }
 
+        public System.Data.Entity.DbSet<Web_Sach.Models.EF.ThamGiaViewModels> ThamGiaViewModels { get; set; }
+
         //public System.Data.Entity.DbSet<Web_Sach.Models.DTO.KhuyenMaiModel> KhuyenMaiModels { get; set; }
     }
 }

@@ -93,6 +93,11 @@ namespace Web_Sach.Models.EF
         {
             try
             {
+                var sp = db.Saches.Where(x => x.DanhMucID == id);
+                if(sp.Any())
+                {
+                    db.Saches.RemoveRange(sp);
+                }
                 var category = db.DanhMucSPs.Find(id);
                 db.DanhMucSPs.Remove(category);
                 db.SaveChanges();

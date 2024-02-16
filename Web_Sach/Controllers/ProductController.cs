@@ -46,13 +46,17 @@ namespace Web_Sach.Controllers
                           join tg in db.ThamGias on s.ID equals tg.MaSach
                           join outhur in db.TacGias on tg.MaTacGia equals outhur.ID
                           where s.ID == detailId
-                          select new ThamGiaViewModels()
+                          select new 
                           {
-                              Name = outhur.TenTacGia,
-                              ID = outhur.ID
-                          }).ToList();
+                              Names = outhur.TenTacGia,
+                              IDs = outhur.ID
+                          }).AsEnumerable().Select(x=> new ThamGiaViewModels
+                          {
+                              Name= x.Names,
+                              ID = x.IDs
+                          });
 
-            ViewBag.NameOuthur = tacgia;
+            ViewBag.NameOuthur = tacgia.ToList();
             // sách cùng tác giả
             var sachCungTacGia = ViewBag.NameOuthur as List<ThamGiaViewModels>;
             if (sachCungTacGia != null && sachCungTacGia.Count > 0)

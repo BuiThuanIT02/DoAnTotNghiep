@@ -19,7 +19,7 @@ namespace Web_Sach.Models.EF
         }
         public List<Sach> ListAll()
         {
-            return db.Saches.Where(x => x.Status == true && x.Quantity >0).ToList();
+            return db.Saches.Where(x => x.Status == true && x.Quantity > 0).ToList();
         }
 
 
@@ -32,8 +32,8 @@ namespace Web_Sach.Models.EF
         // kiểm tra tên sách trc khi tạo
         public bool Compare(Sach sach)
         {
-            var book = db.Saches.FirstOrDefault( x=>x.Name.ToLower().Replace(" ", "") == sach.Name.ToLower().Replace(" ", ""));
-           if(book != null)
+            var book = db.Saches.FirstOrDefault(x => x.Name.ToLower().Replace(" ", "") == sach.Name.ToLower().Replace(" ", ""));
+            if (book != null)
             {
                 return true;
             }
@@ -50,7 +50,7 @@ namespace Web_Sach.Models.EF
         // thêm mới sách
         public int Insert(Sach sach)
         {
-            
+
             db.Saches.Add(sach);
             db.SaveChanges();
             return sach.ID;
@@ -68,7 +68,7 @@ namespace Web_Sach.Models.EF
         public bool CompareUpdate(Sach sach)
         {
             var book = db.Saches.FirstOrDefault(x => x.ID != sach.ID && x.Name.ToLower().Replace(" ", "") == sach.Name.ToLower().Replace(" ", ""));
-            if(book != null)
+            if (book != null)
             {// đã tồn tại
                 return true;
             }
@@ -80,14 +80,14 @@ namespace Web_Sach.Models.EF
         }
 
 
-       // update sách
-       public bool Update(Sach sach)
+        // update sách
+        public bool Update(Sach sach)
         {
             try
             {
                 var book = db.Saches.Find(sach.ID);
                 book.Name = sach.Name;
-            
+
                 //book.NhaCungCapID = sach.NhaCungCapID;
                 book.NhaXuatBanID = sach.NhaXuatBanID;
                 book.Price = sach.Price;
@@ -100,7 +100,7 @@ namespace Web_Sach.Models.EF
                 book.NgayCapNhat = sach.NgayCapNhat;
                 book.MetaTitle = sach.MetaTitle;
                 book.Status = sach.Status;
-               
+
                 db.SaveChanges();
                 return true;
 
@@ -122,18 +122,35 @@ namespace Web_Sach.Models.EF
             try
             {
                 var img = db.Images.Where(x => x.MaSP == id);
-                var km = db.KhuyenMai_Sach.Where(x=>x.MaSach == id);
-                if(km.Any())
+                var km = db.KhuyenMai_Sach.Where(x => x.MaSach == id);
+                var thamGia = db.ThamGias.Where(x => x.MaSach == id);
+                var comment = db.Comments.Where(x => x.MaSach == id);
+                var orderDeatail = db.ChiTietDonHangs.Where(x => x.MaSach == id);
+                if (orderDeatail.Any())
+                {
+                    db.ChiTietDonHangs.RemoveRange(orderDeatail);
+                }
+               
+               
+                if (comment.Any())
+                {
+                    db.Comments.RemoveRange(comment);
+                }
+                if (thamGia.Any())
+                {
+                    db.ThamGias.RemoveRange(thamGia);
+                }
+                if (km.Any())
                 {
                     db.KhuyenMai_Sach.RemoveRange(km);
                 }
-                if(img.Any())
+                if (img.Any())
                 {
                     db.Images.RemoveRange(img);
                     var bookDelete = db.Saches.Find(id);
                     db.Saches.Remove(bookDelete);
                 }
-                
+
                 db.SaveChanges();
                 return true;
 
@@ -151,12 +168,12 @@ namespace Web_Sach.Models.EF
 
         public bool ChangeStatus(int id)
         {
-            
-                var bookStatus = db.Saches.Find(id);
-                bookStatus.Status = !bookStatus.Status;
+
+            var bookStatus = db.Saches.Find(id);
+            bookStatus.Status = !bookStatus.Status;
             db.SaveChanges();
-                return bookStatus.Status;
-            
+            return bookStatus.Status;
+
         }
 
 
@@ -180,7 +197,7 @@ namespace Web_Sach.Models.EF
 
         public List<Sach> listTopHot(int top)
         {
-            return db.Saches.OrderBy(x =>x.Quantity).Take(top).ToList();
+            return db.Saches.OrderBy(x => x.Quantity).Take(top).ToList();
         }
 
 

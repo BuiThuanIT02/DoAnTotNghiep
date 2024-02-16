@@ -8,10 +8,10 @@
     var listVoucher = (List<Web_Sach.Models.Voucher>)ViewBag.listVoucher;
     var tg = (List<Web_Sach.Models.EF.ThamGiaViewModels>)ViewBag.NameOuthur;
     var listImageBook = (List<Web_Sach.Models.Image>)ViewBag.listImageBook;
-    var count = tg.Count;
+    var count = tg.Count();
     var sachDM = (List<Web_Sach.Models.Sach>)ViewBag.SachDM;
     var sachCungTacGia = (List<Web_Sach.Models.Sach>)ViewBag.SachCungTacGia;
-    var countSachCungTacGia = sachCungTacGia.Count;
+    var countSachCungTacGia = sachCungTacGia.Count();
     var imgUrl = "";
     int? sale = 0;
     var khuyenMai = Model.KhuyenMai_Sach.ToList(); // lấy danh sách khuyến mại
@@ -79,7 +79,7 @@
     <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
     <div class="container-fluid ms-5">
         <div class="row">
-            @if (khuyenMai.Count > 0)
+            @if (khuyenMai.Count() > 0)
             {// tồn tại sale
              // kiểm tra thời gian sale
                 foreach (var item in khuyenMai)
@@ -493,7 +493,7 @@
                             imgUrlTacGia = imgTacGia.Image1;
                         }
                         // kiểm tra xem có sale
-                        if (khuyenMaiTacGia.Count > 0)
+                        if (khuyenMaiTacGia.Count() > 0)
                         {// có sale
                          //kiểm tra sale còn hạn hay hết hạn
 
@@ -600,7 +600,7 @@
                         imgUrlTheLoai = imgTheLoai.Image1;
                     }
                     // kiểm tra sale tồn tại không
-                    if (khuyenMaiTheLoai.Count > 0)
+                    if (khuyenMaiTheLoai.Count() > 0)
                     {// sale tồn tại
                      //kiểm tra sale còn hạn hay hết hạn
                         foreach (var itemKM in khuyenMaiTheLoai)

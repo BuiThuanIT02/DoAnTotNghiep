@@ -15,13 +15,53 @@ namespace Web_Sach.Areas.Admin.Controllers
     {
         // GET: Admin/ProductCategory
         private WebSachDb db = new WebSachDb();
-        public ActionResult Index(string searchString, int page = 1, int pageSize = 10)
+        public ActionResult Index(string searchString, int page = 1, int pageSize = 100)
         {
             var km = new kmModels().listPage(searchString, page, pageSize);
             ViewBag.SearchString = searchString;
             return View(km);
         }
+        public ActionResult SaleMany()
+        {
+            setViewBagMaSach();
+            setViewBagMaKM();
+            return View();
+        }
+        [HttpPost]
+        public ActionResult SaleMany(KhuyenMai_Sach tg)
+        {
+            if (ModelState.IsValid)
+            {
+                if (tg.Sale < 0)
+                {
+                    ModelState.AddModelError("Sale", "Sale phải lớn hơn 0");
+                    setViewBagMaSach();
+                    setViewBagMaKM();
+                    return View(tg);
+                }
+                var sale = new kmModels().SaleMany(tg);
+                if (sale)
+                {
+                    SetAlert("Thêm khuyến mại n-n thành công", "success");
 
+                }
+                else
+                {
+                    SetAlert("Thêm khuyến mại n-n thất bại", "error");
+                    setViewBagMaSach();
+                    setViewBagMaKM();
+                    return View(tg);
+                }
+            }
+            else
+            {
+                setViewBagMaSach();
+                setViewBagMaKM();
+                return View(tg);
+            }
+            return RedirectToAction("Index", "KhuyenMai");
+           
+        }
         [HttpGet]
 
         public ActionResult Create()
@@ -42,7 +82,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     setViewBagMaSach();                 
                     return View(km);
                 }
-                if (km.NgayBatDau > km.NgayKeThuc)
+                if (km.NgayBatDau >= km.NgayKeThuc)
                 {
                     ModelState.AddModelError("NgayKeThuc", "Ngày kết thúc phải lớn hơn ngày bắt đầu!");
                     setViewBagMaSach();
@@ -107,7 +147,7 @@ namespace Web_Sach.Areas.Admin.Controllers
                     setViewBagMaSach(km.MaSach);
                     return View(km);
                 }
-                if (km.NgayBatDau > km.NgayKeThuc)
+                if (km.NgayBatDau >= km.NgayKeThuc)
                 {
                     ModelState.AddModelError("NgayKeThuc", "Ngày kết thúc phải lớn hơn ngày bắt đầu!");
                     setViewBagMaSach(km.MaSach);
@@ -202,17 +242,9 @@ namespace Web_Sach.Areas.Admin.Controllers
 
 
         [HttpDelete]
-        public ActionResult Delete(int maSach, int maKM)
+        public ActionResult Delete( int maKM)
         {
-            var check = new kmModels().Delete(maSach,maKM);
-            if (check)
-            {
-                SetAlert("Xóa bản ghi thành công", "success");
-            }
-            else
-            {
-                SetAlert("Xóa bản ghi thất bại", "error");
-            }
+            new kmModels().Delete(maKM);
             return RedirectToAction("Index", "KhuyenMai");
         }
 
@@ -221,6 +253,11 @@ namespace Web_Sach.Areas.Admin.Controllers
         {
             var drowdoad = new Book();
             ViewBag.MaSach = new SelectList(drowdoad.ListAll(), "ID", "Name", selectedId);// hiện thị droplisst theo Name
+        }
+        public void setViewBagMaKM(int? selectedId = null)
+        {
+            var drowdoad = new kmModels();
+            ViewBag.MaKhuyenMai = new SelectList(drowdoad.ListAll(), "ID", "TenKhuyenMai", selectedId);// hiện thị droplisst theo Name
         }
 
 

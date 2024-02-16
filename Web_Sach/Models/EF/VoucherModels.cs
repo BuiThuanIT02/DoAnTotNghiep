@@ -83,9 +83,29 @@ namespace Web_Sach.Models.EF
             try
             {
                 var voucher = db.Vouchers.Find(id);
-                db.Vouchers.Remove(voucher);
-                db.SaveChanges();
-                return true;
+                if (voucher != null)
+                {
+                    var order = db.DonHangs.Where(x => x.MaVoucher == id);
+                    if (order.Any())
+                    {
+                        foreach (var item in order)
+                        {
+                            var detail = db.ChiTietDonHangs.Where(i => i.MaDonHang == item.ID);
+                            if (detail.Any())
+                            {
+                                db.ChiTietDonHangs.RemoveRange(detail);
+                            }
+                        }
+                        db.DonHangs.RemoveRange(order);
+                    }
+
+
+                    db.Vouchers.Remove(voucher);
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
+
             }
             catch (Exception)
             {

@@ -105,6 +105,32 @@ namespace Web_Sach.Areas.Admin.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult RemoveOrder(int id)
+        {
+            var order = db.DonHangs.Find(id);
+            if (order != null)
+            {
+                order.Status = 5;
+                order.NgayGiao = DateTime.Now;
+                db.SaveChanges();
+                return Json(new
+                {
+                    status = true
+                });
+
+            }
+            return Json(new
+            {
+                status = false
+            });
+
+
+
+
+        }
+
+
 
 
     }

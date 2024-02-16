@@ -278,6 +278,7 @@ namespace Web_Sach.Controllers
 
         }
         [HttpGet]
+        //kích thanh toán chạy 
         public ActionResult Payment()
         {
             var cart = Session[SessionHelper.CART_KEY];
@@ -490,8 +491,6 @@ namespace Web_Sach.Controllers
             db.ChiTietDonHangs.AddRange(orderDetail);
 
             db.SaveChanges();
-
-
             //send mail
             //var strSanPham = "";
             //var thanhtien = decimal.Zero;

@@ -181,6 +181,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IntroduceController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PayOrderController.cs" />
     <Compile Include="Controllers\ProductCategoryController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReViewController.cs" />
@@ -1301,6 +1302,7 @@
     <Content Include="Scripts\Admin\Controller\orderNew.js" />
     <Content Include="Scripts\Admin\Controller\productCategoryController.js" />
     <Content Include="Scripts\Admin\Controller\productController.js" />
+    <Content Include="Scripts\Admin\Controller\removeOrder.js" />
     <Content Include="Scripts\Admin\Controller\sildeController.js" />
     <Content Include="Scripts\Admin\Controller\StatusOrder.js" />
     <Content Include="Scripts\Admin\Controller\UniqueUser.js" />
@@ -1520,6 +1522,8 @@
     <Content Include="Areas\Admin\Views\News\Index.cshtml" />
     <Content Include="Areas\Admin\Views\News\Create.cshtml" />
     <Content Include="Areas\Admin\Views\News\Update.cshtml" />
+    <Content Include="Areas\Admin\Views\Author\WriteBook.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuyenMai\SaleMany.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\Client\bootrap_login.css" />
     <Content Include="Scripts\Client\Controller\comment.js" />
@@ -1606,6 +1610,7 @@
     <Content Include="Views\ProductCategory\_FillerProductCategory.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\ViewAll\_FillerProductViewAll.cshtml" />
+    <Content Include="Views\PayOrder\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

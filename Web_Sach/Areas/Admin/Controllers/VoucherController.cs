@@ -138,15 +138,7 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-           var check= new VoucherModels().Delete(id);
-            if (check)
-            {
-                SetAlert("Xóa bản ghi thành công", "success");
-            }
-            else
-            {
-                SetAlert("Xóa bản ghi thất bại", "error");
-            }
+          new VoucherModels().Delete(id);
             return RedirectToAction("Index", "Voucher");
         }
 

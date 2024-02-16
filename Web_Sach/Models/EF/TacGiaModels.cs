@@ -15,6 +15,21 @@ namespace Web_Sach.Models.EF
         {
             db = new WebSachDb();
         }
+
+        public bool WriteBook(ThamGia tg)
+        {
+            try
+            {
+                db.ThamGias.Add(tg);
+                db.SaveChanges(); 
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public List<TacGia> ListAll()
         {
             return db.TacGias.ToList();
@@ -31,11 +46,11 @@ namespace Web_Sach.Models.EF
                         {
                             MaTacGia = tg.ID,
                             MaSach = s.ID,
-                            TenTacGia= tg.TenTacGia,
-                            Address= tg.Address,
-                            Phone= tg.Phone,
-                            TieuSu=tg.TieuSu,
-                            TenSach=s.Name,
+                            TenTacGia = tg.TenTacGia,
+                            Address = tg.Address,
+                            Phone = tg.Phone,
+                            TieuSu = tg.TieuSu,
+                            TenSach = s.Name,
                         };
 
             if (!string.IsNullOrEmpty(searchString))
@@ -55,7 +70,7 @@ namespace Web_Sach.Models.EF
         {
             string trimmedTk = tk.ToLower().Replace(" ", ""); // Loại bỏ tất cả các khoảng trắng
             return db.TacGias.Where(x => x.TenTacGia.ToLower().Replace(" ", "") == trimmedTk).FirstOrDefault();
-           
+
         }
 
         // thêm mới tác giả
@@ -69,8 +84,8 @@ namespace Web_Sach.Models.EF
         //update
         public bool Compare(TacGia tk)
         {
-         
-            var user = db.TacGias.FirstOrDefault(x => x.ID != tk.ID && x.TenTacGia.ToLower().Replace(" ","") == tk.TenTacGia.ToLower().Replace(" ",""));
+
+            var user = db.TacGias.FirstOrDefault(x => x.ID != tk.ID && x.TenTacGia.ToLower().Replace(" ", "") == tk.TenTacGia.ToLower().Replace(" ", ""));
             if (user != null)
             {// đã tồn tại
                 return true;
@@ -88,7 +103,7 @@ namespace Web_Sach.Models.EF
                 var author = db.TacGias.Find(tk.ID);
                 author.TenTacGia = tk.TenTacGia;
                 author.TieuSu = tk.TieuSu;
-               
+
                 db.SaveChanges();
 
 
@@ -106,7 +121,7 @@ namespace Web_Sach.Models.EF
             var model = from tg in db.TacGias
                         join tt in db.ThamGias on tg.ID equals tt.MaTacGia
                         join s in db.Saches on tt.MaSach equals s.ID
-                        where tg.ID == maTacGia && s.ID ==maSach
+                        where tg.ID == maTacGia && s.ID == maSach
                         select new TacGiaAdmin
                         {
                             MaTacGia = tg.ID,
@@ -119,16 +134,15 @@ namespace Web_Sach.Models.EF
 
             return model.FirstOrDefault();
         }
-
-
-        public bool Delete(int masach, int matg)
+        public bool Delete( int matg)
         {
             try
             {
-                var kmS = db.ThamGias.Where(x => x.MaSach == masach && x.MaTacGia == matg).FirstOrDefault();
-                if (kmS != null)
+              
+                var kmS = db.ThamGias.Where(x=> x.MaTacGia == matg);
+                if (kmS.Any())
                 {
-                    db.ThamGias.Remove(kmS);
+                    db.ThamGias.RemoveRange(kmS);
                 }
                 var km = db.TacGias.Find(matg);
                 if (km != null)

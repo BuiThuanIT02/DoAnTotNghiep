@@ -105,15 +105,8 @@ namespace Web_Sach.Areas.Admin.Controllers
 
         public ActionResult Delete(int id)
         {
-           var check = new ProductCategory().Delete(id);
-            if (check)
-            {
-                SetAlert("Xóa bản ghi thành công", "success");
-            }
-            else
-            {
-                SetAlert("Xóa bản ghi thất bại", "error");
-            }
+            new ProductCategory().Delete(id);
+           
             return RedirectToAction("Index","ProductCategory");
         }
 

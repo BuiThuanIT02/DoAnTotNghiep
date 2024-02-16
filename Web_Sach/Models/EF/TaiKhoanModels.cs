@@ -122,15 +122,21 @@ namespace Web_Sach.Models.EF
                 var userDelete = db.TaiKhoans.Find(id);
                 if (userDelete != null)
                 {
-                    var commets = userDelete.Comments.Where(x=>x.MaKH ==id);
+                    var commets = userDelete.Comments.Where(x => x.MaKH == id);
                     var order = userDelete.DonHangs.Where(x => x.MaKH == id);
                     foreach (var item in order)
                     {
-                        var orderDetail=item.ChiTietDonHangs.Where(x => x.MaDonHang == item.ID);
+                        var orderDetail = item.ChiTietDonHangs.Where(x => x.MaDonHang == item.ID);
                         db.ChiTietDonHangs.RemoveRange(orderDetail);
                     }
-                    db.DonHangs.RemoveRange(order);
-                    db.Comments.RemoveRange(commets);
+                    if (commets.Any())
+                    {
+                        db.Comments.RemoveRange(commets);
+                    }
+                    if (order.Any())
+                    {
+                        db.DonHangs.RemoveRange(order);
+                    }
                     db.TaiKhoans.Remove(userDelete);
                     db.SaveChanges();
                     return true;

@@ -15,14 +15,37 @@ namespace Web_Sach.Areas.Admin.Controllers
     {
         // GET: Admin/Author
         WebSachDb db = new WebSachDb();
-        public ActionResult Index(string searchString, int page = 1, int pageSize = 20)
+        public ActionResult Index(string searchString, int page = 1, int pageSize = 100)
         {
             var listPage = new TacGiaModels().listPage(searchString, page, pageSize);
             ViewBag.SearchString = searchString;
             return View(listPage);
         }
 
-
+        public ActionResult WriteBook()
+        {
+            setViewBagMaSach();
+            setViewBagMaTacGia();
+            return View();
+        }
+        [HttpPost]
+        public ActionResult WriteBook(ThamGia tg)
+        {
+            var writeBook = new TacGiaModels().WriteBook(tg);
+            if (writeBook)
+            {
+                SetAlert("Thêm tác giả viết sách thành công", "success");
+               
+            }
+            else
+            {
+                SetAlert("Thêm tác giả viết sách thất bại", "error");
+                setViewBagMaSach();
+                setViewBagMaTacGia();
+                return View(tg);
+            } 
+            return RedirectToAction("Index", "Author");
+        }
 
         public ActionResult Create()
         {
@@ -182,9 +205,9 @@ namespace Web_Sach.Areas.Admin.Controllers
 
 
         [HttpDelete]
-        public ActionResult Delete(int maSach, int maTacGia)
+        public ActionResult Delete( int maTacGia)
         {
-            new TacGiaModels().Delete(maSach, maTacGia);
+            new TacGiaModels().Delete(maTacGia);
             
             return RedirectToAction("Index", "Author");
         }
@@ -196,7 +219,11 @@ namespace Web_Sach.Areas.Admin.Controllers
             var drowdoad = new Book();
             ViewBag.MaSach = new SelectList(drowdoad.ListAll(), "ID", "Name", selectedId);// hiện thị droplisst theo Name
         }
-
+        public void setViewBagMaTacGia(int? selectedId = null)
+        {
+            var drowdoad = new TacGiaModels();
+            ViewBag.MaTacGia = new SelectList(drowdoad.ListAll(), "ID", "TenTacGia", selectedId);// hiện thị droplisst theo Name
+        }
 
 
 

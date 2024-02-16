@@ -144,13 +144,13 @@ namespace Web_Sach
 
    );
 
-   //         routes.MapRoute(
-   //    name: "Thanh toán thành công",
-   //    url: "hoan-thanh",
-   //    defaults: new { controller = "Cart", action = "Order", id = UrlParameter.Optional },
-   //    namespaces: new[] { "Web_Sach.Controllers" }
+            routes.MapRoute(
+       name: "Đặt hàng",
+       url: "hoan-thanh",
+       defaults: new { controller = "PayOrder", action = "Index", id = UrlParameter.Optional },
+       namespaces: new[] { "Web_Sach.Controllers" }
 
-   //);
+   );
 
             routes.MapRoute(
      name: "Đăng ký",

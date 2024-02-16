@@ -107,19 +107,7 @@ namespace Web_Sach.Areas.Admin.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            try
-            {
-                var nxb = db.NhaXuatBans.Find(id);
-                db.NhaXuatBans.Remove(nxb);
-                db.SaveChanges();
-                SetAlert("Xóa bản ghi thành công", "success");
-            }
-            catch (Exception)
-            {
-                SetAlert("Xóa bản ghi thất bại", "error");
-            }
-
-
+           new NXB().Delete(id);
             return RedirectToAction("Index", "NhaXuatBan");
         }
 

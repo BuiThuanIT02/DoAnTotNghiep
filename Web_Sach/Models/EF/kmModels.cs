@@ -18,7 +18,24 @@ namespace Web_Sach.Models.EF
             db = new WebSachDb();
 
         }
+        public List<KhuyenMai> ListAll()
+        {
+            return db.KhuyenMais.ToList();
+        }
+        public bool SaleMany(KhuyenMai_Sach tg)
+        {
+            try
+            {
+                db.KhuyenMai_Sach.Add(tg);
+                db.SaveChanges();
+                return true;
 
+            }
+            catch
+            {
+                return false;
+            }
+        }
         public IEnumerable<KhuyenMaiModel> listPage(string searchString, int page, int pageSize)
         {
             //IQueryable<KhuyenMai> model = db.KhuyenMais;
@@ -110,14 +127,14 @@ namespace Web_Sach.Models.EF
             }
         }
 
-        public bool Delete(int masach, int makm)
+        public bool Delete( int makm)
         {
             try
             {
-                var kmS = db.KhuyenMai_Sach.Where(x=>x.MaSach==masach&& x.MaKhuyenMai==makm).FirstOrDefault();
-                if(kmS != null)
+                var kmS = db.KhuyenMai_Sach.Where(x=> x.MaKhuyenMai==makm);
+                if(kmS.Any())
                 {
-                    db.KhuyenMai_Sach.Remove(kmS);
+                    db.KhuyenMai_Sach.RemoveRange(kmS);
                 }
                 var km = db.KhuyenMais.Find(makm);
                 if(km != null)

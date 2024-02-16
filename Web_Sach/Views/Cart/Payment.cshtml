@@ -62,8 +62,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-6">
-                @using (Html.BeginForm("Payment", "Cart", FormMethod.Post))
-                {
+               
 
                     <div class="form-group mb-2">
                         <label>Người nhận</label>
@@ -137,7 +136,7 @@
                     <div class="form-group" id="load_send"></div>
 
                     <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
-                }
+             
 
             </div>
         </div>
@@ -247,20 +246,6 @@
 
 
 </div>
-
-
-@*@using (Ajax.BeginForm("Payment", "Cart", new AjaxOptions
-    {
-        HttpMethod = "POST",
-
-        OnSuccess = "OnSuccessCO",
-        OnFailure = "OnFailure",
-        OnBegin = "OnBeginCO",
-    }, new { @Id = "myForm" }))
-    {
-
-
-        @Html.AntiForgeryToken()*@
 
 
 <!-- Modal -->
@@ -519,7 +504,7 @@
                 //$('#btnCheckOut').attr("disabled", "disabled");
                 //$('#load_send').html(`<h2>Đang gửi...</h2>`);
                 $.ajax({
-                    url: "/Cart/Payment",
+                    url: "Cart/Payment",
                     type: "POST",
                     data: {
                         TenKH,
