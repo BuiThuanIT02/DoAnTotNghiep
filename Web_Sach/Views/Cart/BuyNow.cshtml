@@ -85,8 +85,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-6">
-                @using (Html.BeginForm("BuyNow", "Cart", FormMethod.Post))
-                {
+               
 
                     <div class="form-group mb-2">
                         <label>Người nhận</label>
@@ -177,7 +176,7 @@
 
 
                     <button type="submit" class="btn btn-success mt-2" id="btnCheckOut">Thanh toán</button>
-                }
+           
 
             </div>
         </div>
@@ -487,7 +486,7 @@
                 //$('#btnCheckOut').attr("disabled", "disabled");
                 //$('#load_send').html(`<h2>Đang gửi...</h2>`);
                 $.ajax({
-                    url: "/Cart/BuyNow",
+                    url: "/Cart/BuyNowPost",
                     type: "POST",
                     data: {
                         TenKH,
@@ -518,6 +517,8 @@
 
 
                 }); //  end ajax
+                $('#btnCheckOut').attr("disabled", "disabled");
+                $('#load_send').html(`<h2>Đang gửi...</h2>`);
             });// end submit
 
 

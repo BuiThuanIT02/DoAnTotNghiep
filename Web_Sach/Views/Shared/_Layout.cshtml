@@ -23,7 +23,7 @@
     @*css filter*@
 
     @*css filter*@
-   
+
     <style>
         body {
             background-color: rgb(250, 241, 228);
@@ -39,13 +39,22 @@
         /*#product*/ .product-item {
             padding: 0;
             border: 1px solid black;
+            border-radius:2%;
             margin: 10px;
+            width:250px;
+            height: 390px;
             /*overflow: hidden;
                     position: relative;*/
         }
 
+            .product-item a img {
+               display:block;
+               width:100%;
+               height:304px;
+            }
 
-            /*      #product .product-item img {
+
+        /*      #product .product-item img {
                         transition: all 1s ease;
                     }
 
@@ -53,14 +62,15 @@
                             transform: scale(1.1);
                         }
                  */
-            #product .product-item:hover,
-            #product-category .product-item:hover,
-            .cateBook-together .product-item:hover {
-                border: 1px solid #ff8a25;
-                box-shadow: 0 2px 20px 0 #ccc;
-            }
+        #product .product-item:hover,
+        #product-category .product-item:hover,
+        .cateBook-together .product-item:hover {
+            border: 1px solid #ff8a25;
+            box-shadow: 0 2px 20px 0 #ccc;
+        }
 
         .product-item .product-name {
+            text-align:center;
             white-space: nowrap; /* Ngăn ngừng dòng */
             overflow: hidden; /* Ẩn phần vượt quá kích thước của phần tử cha */
             text-overflow: ellipsis; /* Thêm dấu "..." khi dòng vượt quá */
@@ -401,10 +411,10 @@
 
         </div>}
 
-<div class="content">
-    @RenderBody()
-</div>
-   
+    <div class="content">
+        @RenderBody()
+    </div>
+
 
 
 

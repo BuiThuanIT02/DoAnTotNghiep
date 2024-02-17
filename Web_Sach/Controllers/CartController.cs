@@ -202,7 +202,7 @@ namespace Web_Sach.Controllers
 
         }
         [HttpPost]
-        public JsonResult BuyNow(string TenKH, string Mobile, string Address, string Email, int total, int idSach, int Quantity, int PriceSale, string mavoucher, string TypePayment, string TypePaymentVN)
+        public JsonResult BuyNowPost(string TenKH, string Mobile, string Address, string Email, int total, int idSach, int Quantity, int PriceSale, string mavoucher, string TypePayment, string TypePaymentVN)
         {
             //string TenKH, string Mobile, string Address, string Email, int total, int id, int Quantity, int PriceSale
             var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
@@ -436,21 +436,31 @@ namespace Web_Sach.Controllers
 
 
         [HttpPost]
-        public JsonResult Payment(Order obOrder)
+        public JsonResult PaymentPost(Order obOrder)
         {
             var code = new { Success = false, Code = 1, Url = "", DonGia = 0 };
             var order = new DonHang();
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
+
+            var tienGiam = decimal.Zero;
             if (!string.IsNullOrEmpty(obOrder.mavoucher))
             {// mã voucher 
                 var dbVoucher = db.Vouchers.Where(x => x.MaVoucher == obOrder.mavoucher).FirstOrDefault();
-                order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
-                order.MaVoucher = dbVoucher.ID;
-                dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
-                db.Vouchers.Attach(dbVoucher);// theo dõi 
-                db.Entry(dbVoucher).State = System.Data.Entity.EntityState.Modified;// cập nhật lại trong csdl
-                db.SaveChanges();
-
+                if (dbVoucher != null)
+                {
+                    order.TongTien = obOrder.total - (decimal)dbVoucher.SoTienGiam;
+                    tienGiam = (decimal)dbVoucher.SoTienGiam;
+                    order.MaVoucher = dbVoucher.ID;
+                    dbVoucher.SoLanDaSuDung = dbVoucher.SoLanDaSuDung + 1;
+                    db.Vouchers.Attach(dbVoucher);// theo dõi 
+                    db.Entry(dbVoucher).State = System.Data.Entity.EntityState.Modified;// cập nhật lại trong csdl
+                    db.SaveChanges();
+                }
+            }
+            else
+            {
+                order.TongTien = obOrder.total;
+                order.MaVoucher = null;
             }
             order.TenNguoiNhan = obOrder.TenKH;
             order.Moblie = obOrder.Mobile;
@@ -458,11 +468,6 @@ namespace Web_Sach.Controllers
             order.Email = obOrder.Email;
             order.NgayDat = DateTime.Now;
             order.DaThanhToan = 0;
-            if (string.IsNullOrEmpty(obOrder.mavoucher))
-            {
-                order.TongTien = obOrder.total;
-                order.MaVoucher = null;
-            }
             order.MaKH = sessionUser.UserID;
             order.Status = 1;
 
@@ -491,32 +496,68 @@ namespace Web_Sach.Controllers
             db.ChiTietDonHangs.AddRange(orderDetail);
 
             db.SaveChanges();
-            //send mail
-            //var strSanPham = "";
-            //var thanhtien = decimal.Zero;
-            //var TongTien = decimal.Zero;
-            //foreach(var sp in cart)
-            //{
-            //    strSanPham += "<tr>";
-            //    strSanPham += "<td>"+sp.sach.Name+"</td>";
-            //    strSanPham += "<td>" + sp.Quantity + "</td>";
-            //    strSanPham += "<td>" + (sp.sach.Price.HasValue?sp.sach.Price.Value.ToString("N0"):"")+ "</td>";
-            //    strSanPham += "</tr>";
-            //}
-            //TongTien = thanhtien;
-            //string contentCustomer = System.IO.File.ReadAllText(Server.MapPath("~/TemplateEmail/send2.html"));
-            //contentCustomer = contentCustomer.Replace("{{MaDH}}", idOrder.ToString());
-            //contentCustomer = contentCustomer.Replace("{{SanPham}}", strSanPham);
-            //contentCustomer = contentCustomer.Replace("{{TenKhachHang}}", obOrder.TenKH);
-            //contentCustomer = contentCustomer.Replace("{{Phone}}", obOrder.Mobile);
-            //contentCustomer = contentCustomer.Replace("{{Email}}", obOrder.Email);
-            //contentCustomer = contentCustomer.Replace("{{Address}}", obOrder.Address);
-            //contentCustomer = contentCustomer.Replace("{{ThanhTien}}", thanhtien.ToString());
-            //contentCustomer = contentCustomer.Replace("{{TongTien}}", TongTien.ToString());
-            //Web_Sach.Common.common.SendMail("ShopOnLine", "Đơn hàng #" + idOrder,contentCustomer.ToString(),obOrder.Email);
-            //send mail
             int type = int.Parse(obOrder.TypePayment);
             code = new { Success = true, Code = type, Url = "", DonGia = 0 };
+            //send mail
+            var strSanPham = "";
+            var thanhtien = decimal.Zero;
+            var TongTien = decimal.Zero;
+            foreach (var sp in cart)
+            {
+                strSanPham += "<tr>";
+                strSanPham += "<td>" + sp.sach.Name + "</td>";
+                strSanPham += "<td>" + sp.Quantity + "</td>";
+                strSanPham += "<td>" + (sp.sach.Price.HasValue ? sp.sach.Price.Value.ToString("N0") : "") + "</td>";
+                strSanPham += "</tr>";
+            }
+          
+            thanhtien = obOrder.total;
+            TongTien = thanhtien - tienGiam;
+
+            string contentCustomer = System.IO.File.ReadAllText(Server.MapPath("~/TemplateEmail/send2.html"));
+            contentCustomer = contentCustomer.Replace("{{MaDH}}", idOrder.ToString());
+            contentCustomer = contentCustomer.Replace("{{SanPham}}", strSanPham);
+            contentCustomer = contentCustomer.Replace("{{NgayDatHang}}", DateTime.Now.ToString("dd-MM-yyyy"));
+            contentCustomer = contentCustomer.Replace("{{TenKhachHang}}", obOrder.TenKH);
+            contentCustomer = contentCustomer.Replace("{{Phone}}", obOrder.Mobile);
+            contentCustomer = contentCustomer.Replace("{{Email}}", obOrder.Email);
+            if (type == 2)
+            {
+                contentCustomer = contentCustomer.Replace("{{Payments}}", "Chuyển khoản ngân hàng");
+            }
+            else if( type == 1)
+            {
+                contentCustomer = contentCustomer.Replace("{{Payments}}", "Thanh toán khi nhận hàng");
+            }
+            contentCustomer = contentCustomer.Replace("{{TienGiam}}", tienGiam.ToString("N0"));
+            contentCustomer = contentCustomer.Replace("{{Address}}", obOrder.Address);
+            contentCustomer = contentCustomer.Replace("{{ThanhTien}}", thanhtien.ToString("N0"));
+            contentCustomer = contentCustomer.Replace("{{TongTien}}", TongTien.ToString("N0"));
+            Web_Sach.Common.common.SendMail("ShopOnLine", "Đơn hàng #" + idOrder, contentCustomer.ToString(), obOrder.Email);
+            // email addmin
+            string contentAdmin = System.IO.File.ReadAllText(Server.MapPath("~/TemplateEmail/send1.html"));
+            contentAdmin = contentAdmin.Replace("{{MaDH}}", idOrder.ToString());
+            contentAdmin = contentAdmin.Replace("{{SanPham}}", strSanPham);
+            contentAdmin = contentAdmin.Replace("{{NgayDatHang}}", DateTime.Now.ToString("dd-MM-yyyy"));
+            contentAdmin = contentAdmin.Replace("{{TenKhachHang}}", obOrder.TenKH);
+            contentAdmin = contentAdmin.Replace("{{Phone}}", obOrder.Mobile);
+            contentAdmin = contentAdmin.Replace("{{Email}}", obOrder.Email);
+            contentAdmin = contentAdmin.Replace("{{TienGiam}}", tienGiam.ToString("N0"));
+            if (type == 2)
+            {
+                contentAdmin = contentAdmin.Replace("{{Payments}}", "Chuyển khoản ngân hàng");
+            }
+            else if (type == 1)
+            {
+                contentAdmin = contentAdmin.Replace("{{Payments}}", "Thanh toán khi nhận hàng");
+            }
+            contentAdmin = contentAdmin.Replace("{{Address}}", obOrder.Address);
+            contentAdmin = contentAdmin.Replace("{{ThanhTien}}", thanhtien.ToString("N0"));
+            contentAdmin = contentAdmin.Replace("{{TongTien}}", TongTien.ToString("N0"));
+            Web_Sach.Common.common.SendMail("ShopOnLine", "Đơn hàng mới #" + idOrder, contentAdmin.ToString(), ConfigurationManager.AppSettings["EmailAdmin"]);
+
+            //send mail
+          
             // thanh toasn vnpay
             if (type == 2)
             {
@@ -541,7 +582,7 @@ namespace Web_Sach.Controllers
             if (sessionUser != null)
             {
                 var order = from dh in db.DonHangs
-                            where dh.MaKH == sessionUser.UserID  
+                            where dh.MaKH == sessionUser.UserID
                             select dh;
 
                 //ViewBag.OrderAll = order.ToList();
@@ -694,7 +735,7 @@ namespace Web_Sach.Controllers
                         var itemOrder = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
                         if (itemOrder != null)
                         {
-                           /* Session["checkVoucher"] = null;*/// thiết lập lại voucher
+                            /* Session["checkVoucher"] = null;*/// thiết lập lại voucher
                             Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
                             itemOrder.DaThanhToan = 1;// đã thanh toán
 
@@ -709,7 +750,7 @@ namespace Web_Sach.Controllers
                     }
                     else
                     {
-                       /* Session["checkVoucher"] = null;*/// thiết lập lại voucher
+                        /* Session["checkVoucher"] = null;*/// thiết lập lại voucher
                         Session[SessionHelper.CART_KEY] = null;// đặt hàng giỏ hàng sẽ trống
                         var order = db.DonHangs.FirstOrDefault(x => x.ID == orderId);
                         if (order != null)

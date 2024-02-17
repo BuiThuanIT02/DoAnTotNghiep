@@ -25,14 +25,17 @@ namespace Web_Sach.Controllers
             var order = db.DonHangs.Find(id);
             if (order != null)
             {
-                var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id).ToList();
-                foreach (var item in orderDetail)
-                {// cập nhật số lượng
-                    var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
-                    sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
-                    db.ChiTietDonHangs.Remove(item);
-
+                var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id);
+                if (orderDetail.Any())
+                {
+                    foreach (var item in orderDetail)
+                    {// cập nhật số lượng
+                        var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
+                        sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
+                    } 
+                    db.ChiTietDonHangs.RemoveRange(orderDetail);
                 }
+
                 db.DonHangs.Remove(order);
 
                 db.SaveChanges();
@@ -82,7 +85,7 @@ namespace Web_Sach.Controllers
         public ActionResult OrderSuccess()
         {
             var orderSuccess = (List<DonHang>)TempData["OrderSuccess"];
-          
+
             if (orderSuccess.Count() > 0)
             {
                 return PartialView(orderSuccess);

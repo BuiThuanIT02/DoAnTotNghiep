@@ -3,14 +3,12 @@
         order.releaseEvents();
     },
     releaseEvents: function () {
-
-       
-        $('.moveOrder').on('click', function (e) {
+        $('.moveOrder').off('click').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('order-id');
             if (confirm("Bạn có muốn hủy đơn hàng này không!!")) {
                 $.ajax({
-                    url: "cap-nhat-thong-tin/huy-don-hang",
+                    url: "Order/RemoveOrder",
                     data: { id: id },
                     type: "POST",
                     dataType: "json",

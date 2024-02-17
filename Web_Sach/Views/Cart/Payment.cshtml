@@ -121,7 +121,7 @@
 
                         <h5>Cách 1: Chuyển hướng sang VNPAY chọn phương thức thanh toán</h5>
 
-                        <label><input type="radio" name="TypePaymentVN" value="0" checked /> Cong thanh toan VNPAYQR </label>
+                        <label><input type="radio" name="TypePaymentVN" value="0" checked /> Cổng thanh toán VNPAYQR </label>
 
                         <h5>Cach 2: Tách phương thức thanh toán tại site của Merchant</h5>
 
@@ -207,7 +207,7 @@
                 {// không có sale
                     total += Convert.ToInt32(item.Quantity * item.sach.Price);
                     <tr class="text-center " style="vertical-align: middle;">
-                        <td class="p-0">@item.sach.ID</td>
+                       
                         <td>@item.sach.Name</td>
                         <td>
                             <img src="@imgUrl" width="100px" alt="san_pham" />
@@ -504,7 +504,7 @@
                 //$('#btnCheckOut').attr("disabled", "disabled");
                 //$('#load_send').html(`<h2>Đang gửi...</h2>`);
                 $.ajax({
-                    url: "Cart/Payment",
+                    url: "Cart/PaymentPost",
                     type: "POST",
                     data: {
                         TenKH,
@@ -528,10 +528,16 @@
                             $('#load_send').html(`<h2>Đang gửi...</h2>`);
                             location.href = res.Url;
                         }// thanh toán online
+                        if (res.Success == false) {
+                            alert("Thanh toán thất bại");
+                        }
                     },
 
 
                 }); //  end ajax
+
+                $('#btnCheckOut').attr("disabled", "disabled");
+                $('#load_send').html(`<h2>Đang gửi...</h2>`);
             });// end submit
 
 
