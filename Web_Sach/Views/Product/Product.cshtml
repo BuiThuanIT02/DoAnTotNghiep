@@ -43,9 +43,9 @@
         transform: scale(1.1);
     }
 
-    .container-voucher {
+    .container-voucher .voucher {
         height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
-        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+        overflow: scroll; /* Đảm bảo chỉ hiển thị nội dung trong container */
     }
 
     .dateCreated, .dateEnd {
@@ -119,33 +119,38 @@
                     @if (sale != 0)
                     {<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
 
-                    }
+                }
 
 
 
                 </div>
 
 
-                <div class="col-md-4 ps-5  border">
+                <div class="col-md-5 ps-5">
                     <p class="border-bottom fs-2">@Model.Name</p>
+                    @{ Html.RenderAction("RateViewProductDetail", "Home", new { id = Model.ID });}
                     @if (sale != 0)
                     {// sale còn hạn sd
-                        <span class="text-danger fs-3">
+                        <div class="mb-2">
+                            <span class="text-danger fs-3">
 
-                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
+                                Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")₫
 
-                        </span>
-                        <span class="ms-2 fs-3" style="color:gray">
-                            <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")</del>
-                        </span>
+                            </span>
+                            <span class="ms-2 fs-3" style="color:gray">
+                                <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")₫</del>
+                            </span>
+                            <span>(Tiết kiệm: @((Model.Price - price).Value.ToString("N0"))₫)</span>
+                        </div>
+                       
                     }
                     else
                     {// sale hết hạn sử dụng
-                        <span class="text-danger fs-3">
+                <span class="text-danger fs-3">
 
-                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")
+                    Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")₫
 
-                        </span>
+                </span>
 
                     }
 
@@ -188,7 +193,7 @@
 
                 </div>
                 // voucher
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="container-voucher">
                         <div class="voucher">
                             @foreach (var item in listVoucher)
@@ -228,7 +233,7 @@
 
 
                                 </div>
-                                                            }
+                            }
 
 
                         </div>
@@ -236,12 +241,12 @@
 
                 </div>
 
-                                                            }
-                                                            else
-                                                            {// không có sale
+            }
+            else
+            {// không có sale
 
-                                                                if (listImageBook != null)
-                                                                {
+                if (listImageBook != null)
+                {
                     <div class="col-sm-2" style="width:10%">
 
                         <div class="row">
@@ -257,15 +262,16 @@
                         </div>
 
                     </div>
-                                                                }
+                }
                 <div class="col-md-3 p-0  position-relative">
                     <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
                 </div>
 
-                <div class="col-md-4 ps-5">
+                <div class="col-md-5 ps-5">
                     <p class="border-bottom fs-2">@Model.Name</p>
+                    @{ Html.RenderAction("RateViewProductDetail", "Home", new { id = Model.ID });}
                     <span class="text-danger fs-3">
-                        Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")
+                        Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")₫
                     </span>
                     @*<span class="ms-2 fs-3" style="color:gray">
                         <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
@@ -307,8 +313,8 @@
 
 
                 </div>
-                                                                //voucher
-                <div class="col-md-3">
+                //voucher
+                <div class="col-md-2">
                     <div class="container-voucher">
                         <div class="voucher">
                             @foreach (var item in listVoucher)
@@ -348,14 +354,14 @@
 
 
                                 </div>
-                                                            }
+                            }
 
 
                         </div>
                     </div>
 
                 </div>
-                                                            }
+            }
 
 
         </div>
@@ -453,33 +459,34 @@
                                             @{Html.RenderAction("_ChildComment", "ReView", new { parentId = item.ID, productId = item.MaSach });}
                                         </div>
 
-                                                    }
-                                                }
+                                    }
+                                }
                                 @*@Html.Action("_Load_Review", "ReView", new { productId = Model.ID })*@
                             </div>
 
 
                             <!-- User Review -->
                         </div>
-                    @*</div>*@
+                        @*</div>*@
 
-                    @*</div>*@
-                                                }
-                                                else
-                                                {// chưa tồn tại session user
-               <p>Mời đăng nhập</p>
-                                                }
+                        @*</div>*@
+                    }
+                    else
+                    {// chưa tồn tại session user
+                        <p>Mời đăng nhập</p>
+                    }
 
 
 
                 </div>
 
-            <!-- Add Review -->
-             </div>
+                <!-- Add Review -->
+            </div>
             @*sách cx tác giả -hàng 2*@
-         
-            <div class="col-sm-3 border " id="author-together">
+
+            <div class="col-sm-3" id="author-together">
                 <h5 class="text-dark text-center">SÁCH CÙNG TÁC GIẢ</h5>
+                <hr />
                 @if (countSachCungTacGia > 0)
                 {
                     foreach (var item in sachCungTacGia)
@@ -521,14 +528,14 @@
                                     </p>
                                     @if (saleTacGia != 0)
                                     {// sale còn hạn
-                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                        <span style="color:gray">
-                                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                        <span>
+                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
                                         </span>
                                     }
                                     else
                                     {// sale hết hạn
-                                        <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+                                        <span class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</span>
 
                                     }
 
@@ -556,7 +563,7 @@
                                     <p class="text-break">
                                         @item.Name
                                     </p>
-                                    <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
+                                    <span class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</span>
 
 
                                 </div>
@@ -595,7 +602,7 @@
                     int? saleTheLoai = 0;
                     var khuyenMaiTheLoai = item.KhuyenMai_Sach.ToList();
                     var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
-
+                    var rate = Html.Action("RateView", "Home", new { id = @item.ID });
                     if (imgTheLoai != null)
                     {
                         imgUrlTheLoai = imgTheLoai.Image1;
@@ -619,26 +626,61 @@
                             {// sale còn hạn
                                 <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
                                 <p class="fs-5 product-name multi-line">@item.Name</p>
-                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                <span class="text-bg-danger">
-                                    <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                                </span>
+                                if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                {
+                                    @Html.Raw(rate);
+                                    <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                    <span>
+                                        <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <div class="mt-4">
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                        <span>
+                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                        </span>
+                                    </div>
+
+                                }
+
                             }
                             else
                             {// sale hết hạn
                                 <p class="fs-5 product-name multi-line">@item.Name</p>
-                                <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
+                                if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                {
+                                    @Html.Raw(rate);
+                        <p class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                                }
+                                else
+                                {
+                        <p class="text-danger mt-4 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+
+                                }
+
                             }
 
                         </div>
                     }
                     else
                     {// sale k tồn tại
-                        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
-                            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
-                            <p class="fs-5 product-name multi-line">@item.Name</p>
-                            <span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>
-                        </div>
+        <div class="col-md-12 product-item my-3 p-0 m-2 position-relative text-center">
+            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+            <p class="fs-5 product-name multi-line">@item.Name</p>
+            @if (!MvcHtmlString.IsNullOrEmpty(rate))
+            {
+                @Html.Raw(rate);
+        <p class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+            }
+            else
+            {
+        <p class="text-danger mt-4 me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+
+            }
+
+        </div>
                     }
 
                 }
@@ -713,48 +755,7 @@
                 // settings: "unslick"
                 // instead of a settings object
             ]
-        });
-
-
-
-        $('.voucher').slick({
-            /* dots: true,*/
-            infinite: true,
-            vertical: true, // Thiết lập cuộn theo chiều dọc
-            verticalSwiping: true, // Cho phép cuộn theo chiều dọc trên thiết bị cảm ứng
-            speed: 500,
-            slidesToShow: 3,
-            /* autoplay: true,*/
-            slidesToScroll: 2,
-            responsive: [
-                {
-                    breakpoint: 1024,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 1,
-                        infinite: true,
-                        /*  dots: true,*/
-                        vertical: false // Vô hiệu hóa cuộn theo chiều dọc ở breakpoint này
-                    }
-                },
-                {
-                    breakpoint: 600,
-                    settings: {
-                        slidesToShow: 2,
-                        slidesToScroll: 1,
-                        vertical: false // Vô hiệu hóa cuộn theo chiều dọc ở breakpoint này
-                    }
-                },
-                {
-                    breakpoint: 480,
-                    settings: {
-                        slidesToShow: 1,
-                        slidesToScroll: 1,
-                        vertical: false // Vô hiệu hóa cuộn theo chiều dọc ở breakpoint này
-                    }
-                }
-            ]
-        });
+        }); voucher
     </script>
     @*<script src="~/Scripts/Client/Controller/comment.js"></script>*@
 

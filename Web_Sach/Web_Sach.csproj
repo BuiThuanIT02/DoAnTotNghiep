@@ -1702,6 +1702,7 @@
     <Content Include="Views\PayOrder\Index.cshtml" />
     <Content Include="Views\ViewAll\_FillerProductTopHot.cshtml" />
     <Content Include="Views\Home\RateView.cshtml" />
+    <Content Include="Views\Home\RateViewProductDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
