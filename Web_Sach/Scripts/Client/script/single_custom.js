@@ -15,6 +15,7 @@ $(document).ready(function()
 				var dem = 0;
 				star.on('click', function()
 				{
+				
 					var i = star.index();
 					dem = 0;
 					stars.find('i').each(function()
@@ -30,7 +31,7 @@ $(document).ready(function()
 						dem++;
 					};
 					$('#txtRate').val(dem);
-					console.log(dem);
+				/*	console.log(dem);*/
 				});
 			});
 		}

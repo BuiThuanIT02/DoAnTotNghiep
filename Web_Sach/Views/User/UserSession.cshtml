@@ -16,28 +16,46 @@
     .tab-content {
         width: 100%; /* Đảm bảo nội dung của tab rộng 100% */
     }
+    #container--silderbar .active {
+        background-color: orangered ;
+    }
+    #container--ContentOfSilderBar .active{
+        background-color:#fff;
+    }
+   
 </style>
 
 
 <div class="container mt-3">
     <div class="d-flex">
+       
         <!-- Nav tabs -->
-        <ul class="nav flex-column nav-pills w-25 text-center" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#infoUser">Cập nhật thông tin</a>
+        <ul class="nav flex-column nav-pills w-25 text-center" role="tablist" id="container--silderbar">
+            <li style="height:50px">
+              
+                    <a> <img src="~/Data/Images/avatar.jpg" class="imgInfoClient img-fluid" style="border-radius:50%;height:50px"/>
+               @sessionUser.UserName
+                
+                </a>
+                   
+
+               
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#orderUser">Quản lý đơn hàng</a>
+                <a class="nav-link active" data-bs-toggle="pill" href="#infoUser"><i class="fa-solid fa-pen-to-square me-2"></i>Tài khoản</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="pill" href="#voucherUser">Voucher</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#orderUser"><i class="fa-solid fa-list me-2"></i>Đơn mua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#voucherUser"><i class="fa-solid fa-ticket me-2"></i>Voucher</a>
             </li>
         </ul>
 
         <!-- Tab panes -->
         @if (sessionUser != null)
         {
-            <div class="tab-content">
+            <div class="tab-content" id="container--ContentOfSilderBar">
                 @*infouser*@
                 <div id="infoUser" class="container tab-pane active">
                     @{Html.RenderAction("UpdateInfo", "User", new { userId = sessionUser.UserID });}

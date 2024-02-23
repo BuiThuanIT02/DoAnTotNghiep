@@ -158,9 +158,10 @@
                 dataType: "json",
                 success: function (res) {
                     if (res.success) {
+                        debugger;
                         $('#container_comment').load('/ReView/GetComment?productId=' + MaSach);
-                        /*$('#review_form')[0].reset();*/
-                        Content = "";
+                        $('#review_form')[0].reset();
+                      
                         alert("Đã thêm bình luận thành công !");
                     }
                     else {

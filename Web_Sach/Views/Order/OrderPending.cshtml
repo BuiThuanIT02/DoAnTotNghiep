@@ -4,7 +4,7 @@
 
 <div class="wrap">
 
-    <h6>Đơn hàng chờ xử lý</h6>
+ 
     <div class="container">
         @if (Model != null)
         {
@@ -48,7 +48,7 @@
                         }
 
                     </table>
-            
+
                 </div>
 
 
@@ -61,7 +61,11 @@
         }
         else
         {
-            <p class="text-dark">Đơn hàng trống</p>
+            <div class="text-center" style="padding:50px">
+                <img src="~/Data/Images/don-hang-trong.jpg" class="d-block m-auto" />
+                <h5>Đơn hàng xử lý trống</h5>
+            </div>
+
         }
 
     </div>

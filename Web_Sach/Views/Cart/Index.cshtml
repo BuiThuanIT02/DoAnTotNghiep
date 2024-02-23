@@ -8,10 +8,10 @@
 <div class=" d-block my-5 p-0">
     @if (Model.Count > 0)
     {
-        <table class="table table-bordered w-100 table-striped m-auto">
+        <table class="table w-100 m-auto">
             <tr class="text-center">
 
-                <th>Mã sản phẩm</th>
+              
                 <th>Tên sản phẩm</th>
                 <th>Ảnh sản phẩm</th>
                 <th>Số lượng</th>
@@ -31,7 +31,7 @@
                 }
                 <tbody id="tbodyTable">
                     <tr class="text-center rowItemCart">
-                        <td class="p-0">@item.sach.ID</td>
+                      
                         <td>@item.sach.Name</td>
                         <td>
                             <img src="@imgUrl" width="100px" alt="san_pham" />
@@ -64,7 +64,7 @@
         </button>
         @*<button id="btnUpdate" class="btn text-success"><i class="fa-solid fa-pen-to-square"></i>Update All</button>*@
         <button id="btnDeleteAll" class="btn btn-danger">Xóa giỏ hàng</button>
-        <button id="btnPayment" class="btn btn-secondary">Thanh toán</button>
+        <button id="btnPayment" class="btn btn-success">Thanh toán</button>
 
     }
     else
