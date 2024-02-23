@@ -68,7 +68,7 @@
                 int? sale = 0;
                 var khuyenMai = item.KhuyenMai_Sach.ToList();
                 var img = item.Images.FirstOrDefault(s => s.IsDefault);
-
+                var rate = Html.Action("RateView", "Home", new { id = @item.ID });
                 if (img != null)
                 {
                     imgUrl = img.Image1;
@@ -93,22 +93,44 @@
                         {// sale còn hạn
                             <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
                             <p class="fs-5 product-name multi-line">@item.Name</p>
-                            Html.RenderAction("RateView", "Home", new { id = @item.ID });
+                            if (!MvcHtmlString.IsNullOrEmpty(rate))
+                            {
+                                @Html.Raw(rate);
+                                <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                <span>
+                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                </span>
+                            }
+                            else
+                            {
+                                <div class="mt-4">
+                                    <span class="text-danger  me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                    <span>
+                                        <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                    </span>
+                                </div>
 
-                            <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
-                            <span>
-                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
-                            </span>
+
+                            }
+
+
                         }
                         else
                         {// sale hết hạn
                             <p class="fs-5 product-name multi-line">@item.Name</p>
-                            Html.RenderAction("RateView", "Home", new { id = @item.ID });
-
-
-                            <span class="text-danger">
-                                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
-                            </span>
+                            if (!MvcHtmlString.IsNullOrEmpty(rate))
+                            {
+                                @Html.Raw(rate);
+                                <span class="text-danger">
+                                    @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                                </span>
+                            }
+                            else
+                            {
+                                <p class="text-danger mt-4">
+                                    @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                                </p>
+                            }
 
                         }
 
@@ -118,20 +140,30 @@
                 else
                 {// không có khuyến mại
                  //var priceSale = item.Price - (item.Price * item.Sale / 100);
-        <div class="col-md-12 product-item my-3 position-relative text-center">
+                    <div class="col-md-12 product-item my-3 position-relative text-center">
 
-            <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
-            @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
-            <p class="fs-5 product-name multi-line">@item.Name</p>
-            @{Html.RenderAction("RateView", "Home", new { id = item.ID });}
+                        <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                        @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                        @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <p class="text-danger">
+                                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="text-danger mt-4">
+                                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                            </p>
+                        }
 
-            @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
-            <span class="text-danger">
-                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
-            </span>
+                        @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
 
 
-        </div>
+
+                    </div>
                 }
 
 
@@ -169,6 +201,7 @@
                 int? sale = 0;
                 var khuyenMai = item.KhuyenMai_Sach.ToList();
                 var img = item.Images.FirstOrDefault(s => s.IsDefault);
+                var rate = Html.Action("RateView", "Home", new { id = @item.ID });
                 if (img != null)
                 {
                     imgUrl = img.Image1;
@@ -193,19 +226,40 @@
                         {// sale còn hạn
                             <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
                             <p class="fs-5 product-name multi-line">@item.Name</p>
-                            Html.RenderAction("RateView", "Home", new { id = @item.ID });
+                            if (!MvcHtmlString.IsNullOrEmpty(rate))
+                            {
+                                @Html.Raw(rate);
+                                <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                <span>
+                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                </span>
+                            }
+                            else
+                            {
+                                <div class="mt-4">
+                                    <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                    <span>
+                                        <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                    </span>
+                                </div>
 
-                            <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
-                            <span>
-                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
-                            </span>
+                            }
+
                         }
                         else
                         {// sale hết  hạn
                             <p class="fs-5 product-name multi-line">@item.Name</p>
 
-                            Html.RenderAction("RateView", "Home", new { id = @item.ID });
-                            <span class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</span>
+                            if (!MvcHtmlString.IsNullOrEmpty(rate))
+                            {
+                                @Html.Raw(rate);
+                                <p class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                            }
+                            else
+                            {
+                                <p class="text-danger me-4 mt-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                            }
+                        
 
 
                         }
@@ -221,14 +275,22 @@
             <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
             @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
             <p class="fs-5 product-name multi-line">@item.Name</p>
-            @{Html.RenderAction("RateView", "Home", new { id = @item.ID });}
+            @if (!MvcHtmlString.IsNullOrEmpty(rate))
+            {
+                @Html.Raw(rate);
+                <p class="text-danger">
+                    @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                </p>
+            }
+            else
+            {
+                <p class="text-danger mt-4">
+                    @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                </p>
+            }
 
             @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
-            <span class="text-danger">
-                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
-            </span>
-
-
+          
         </div>
                 }
 
@@ -377,6 +439,6 @@
             });
         })
     </script>
-    
-    
-    }
+
+
+}

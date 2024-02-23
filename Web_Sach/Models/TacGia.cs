@@ -24,14 +24,7 @@
         [Display(Name = "Tiểu sử")]
         [Required(ErrorMessage = "Mời bạn tiểu sử ")]
         public string TieuSu { get; set; }
-        [StringLength(250)]
-        [Display(Name = "Địa chỉ")]
-        [Required(ErrorMessage = "Mời bạn nhập địa chỉ ")]
-        public string Address { get; set; }
-        [StringLength(13)]
-        [Display(Name = "Số điện thoại")]
-        [Required(ErrorMessage = "Mời bạn nhập SDT tác giả")]
-        public string Phone { get; set; }
+       
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<Sach> Saches { get; set; }

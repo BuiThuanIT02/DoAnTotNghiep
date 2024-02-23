@@ -18,7 +18,7 @@ namespace Web_Sach.Controllers
         }
 
 
-        public ActionResult Info(int authorID, int page =1, int pageSize =1)
+        public ActionResult Info(int authorID, int page =1, int pageSize =3)
         {
             var author = db.TacGias.Find(authorID);// thông tin tác giả
             // sản phẩm cùng tác giả

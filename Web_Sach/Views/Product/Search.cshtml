@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Kết quả tìm kiếm";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
 <div class="row">
@@ -27,13 +28,13 @@
             int? sale = 0;
             var khuyenMai = item.KhuyenMai_Sach.ToList();
             var img = item.Images.FirstOrDefault(s => s.IsDefault);
-
+            var rate = Html.Action("RateView", "Home", new { id = @item.ID });
             if (img != null)
             {
                 imgUrl = img.Image1;
             }
 
-            if (khuyenMai.Count() >0)
+            if (khuyenMai.Count() > 0)
             {// có khuyến mại
              // kiểm tra xem thời gian khuyến mại
                 foreach (var itemKM in khuyenMai)
@@ -52,29 +53,67 @@
                     {//sale còn hạn
                         <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@sale%</span>
                         <p class="fs-5 product-name ">@item.Name</p>
-                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
-                <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
-                        <span>
-                            <del class="price-sale">@((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))₫</del>
-                        </span>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") : "")₫</span>
+                            <span>
+                                <del class="price-sale">@((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))₫</del>
+                            </span>
+                        }
+                        else
+                        {
+                            <div class="mt-4">
+                                <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") : "")₫</span>
+                                <span>
+                                    <del class="price-sale">@((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))₫</del>
+                                </span>
+                            </div>
+
+                        }
+
+
+
+
                     }
                     else
                     {// sale hết hạn
                         <p class="fs-5 product-name ">@item.Name</p>
-                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
-                <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") : "")₫</p>
+
+                        }
+                        else
+                        {
+                            <p class="text-danger mt-4 text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") : "")₫</p>
+                        }
+
+
+
                     }
                 </div>
             }
             else
             {// không có khuyến mại
-    <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
-        <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail" alt="san_pham"> </a>
-        <p class="fs-5 product-name ">@item.Name</p>
-        @{Html.RenderAction("RateView", "Home", new { id = @item.ID });}
-    <p class="text-danger text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail" alt="san_pham"> </a>
+                    <p class="fs-5 product-name ">@item.Name</p>
 
-    </div>
+                    @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                    {
+                        @Html.Raw(rate);
+                        <p class="text-danger  text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                    }
+                    else
+                    {
+                        <p class="text-danger mt-4 text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                    }
+
+
+
+                </div>
             }
 
 

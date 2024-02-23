@@ -47,8 +47,8 @@ namespace Web_Sach.Models.EF
                             MaTacGia = tg.ID,
                             MaSach = s.ID,
                             TenTacGia = tg.TenTacGia,
-                            Address = tg.Address,
-                            Phone = tg.Phone,
+                            //Address = tg.Address,
+                            //Phone = tg.Phone,
                             TieuSu = tg.TieuSu,
                             TenSach = s.Name,
                         };
@@ -127,8 +127,8 @@ namespace Web_Sach.Models.EF
                             MaTacGia = tg.ID,
                             MaSach = s.ID,
                             TenTacGia = tg.TenTacGia,
-                            Address = tg.Address,
-                            Phone = tg.Phone,
+                            //Address = tg.Address,
+                            //Phone = tg.Phone,
                             TieuSu = tg.TieuSu,
                         };
 

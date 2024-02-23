@@ -14,178 +14,173 @@
     </div>
     @* tác phẩm cùng tác giả *@
 
-<div class="row">
-    <h5 class="text-dark text-left">Tác phẩm của @Model.TenTacGia</h5>
-    @foreach (var item in sach)
-    {
-        var imgUrl = "";
-        int? sale = 0;
-        var khuyenMai = item.KhuyenMai_Sach.ToList();
-        var img = item.Images.FirstOrDefault(s => s.IsDefault);
-        if (img != null)
+    <div class="row">
+        <h5 class="text-dark text-left">Tác phẩm của @Model.TenTacGia</h5>
+        @foreach (var item in sach)
         {
-            imgUrl = img.Image1;
-        }
-
-        if (khuyenMai.Count() >0)
-        {// có sale
-            foreach (var itemKM in khuyenMai)
-            {// lặp qua danh sách khuyến mại
-                if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
-                {
-                    sale = itemKM.Sale;
-                    break;
-                }
+            var imgUrl = "";
+            int? sale = 0;
+            var khuyenMai = item.KhuyenMai_Sach.ToList();
+            var img = item.Images.FirstOrDefault(s => s.IsDefault);
+            var rate = Html.Action("RateView", "Home", new { id = @item.ID });
+            if (img != null)
+            {
+                imgUrl = img.Image1;
             }
-            var priceSale = item.Price - (item.Price * sale / 100);
-            <div class="col-md-3 product-item my-3 position-relative text-center">
 
-                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
-                @if (sale != 0)
-                {
-                    <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
-                    <p class="fs-5 product-name multi-line">@item.Name</p>
-
-
-                    <span class="text-dark me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                    <span class="text-bg-danger">
-                        <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
-                    </span>
-                }
-                else
-                {
-                   
-                    <p class="fs-5 product-name multi-line">@item.Name</p>
-                    <span class="text-dark">
-                        @((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))
-                    </span>
-                }
-
-
-
-            </div>
-        }
-        else
-        {// không sale
-        
-            <div class="col-md-3 product-item my-3 position-relative text-center">
-
-                <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
-             
-                <p class="fs-5 product-name multi-line">@item.Name</p>
-               
-                <span class="text-dark">
-                   @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))
-                </span>
-
-
-            </div>
-        }
-
-
-    }
-
-
-
-
-    <!--Phân trang -->
-
-    @if (ViewBag.totalRecord > 1)
-    { // số bản ghi  > kích thước mỗi trang
-        var pageMax = (int)ViewBag.maxPage;
-        var totalPage = (int)ViewBag.totalPage;
-        var currentPage = (int)ViewBag.page;
-        var starIndex = (int)Math.Max(1, currentPage - pageMax / 2);
-        var endIndex = (int)Math.Min(totalPage, currentPage + pageMax / 2);
-
-
-        var link = "/tac-gia/" + Model.ID;
-        <nav>
-            <ul class="pagination justify-content-end mt-2 ">
-                <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
-                @if (currentPage > ViewBag.First)
-                {
-                    <li class="page-item"><a href="@link?page=@ViewBag.Prev" class="previous page-link" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
-                }
-
-
-
-                @for (int i = starIndex; i <= endIndex; i++)
-                {
-                    if (currentPage == i)
+            if (khuyenMai.Count() > 0)
+            {// có sale
+                foreach (var itemKM in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
                     {
-                        <li class="page-item"><a href="@link?page=@i" class="page-link active">@i</a></li>
+                        sale = itemKM.Sale;
+                        break;
+                    }
+                }
+                var priceSale = item.Price - (item.Price * sale / 100);
+                <div class="col-md-3 product-item my-3 position-relative text-center">
+
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                    @if (sale != 0)
+                    {
+                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                            <span>
+                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                            </span>
+                        }
+                        else
+                        {
+                            <div class="mt-4">
+                                <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                <span>
+                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                </span>
+                            </div>
+
+                        }
+
 
                     }
                     else
                     {
-                        <li class="page-item"><a href="@link?page=@i" class="page-link pos">@i</a></li>
+
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <p class="text-danger">
+                                @((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))₫
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="text-danger mt-4">
+                                @((priceSale.HasValue ? priceSale.Value.ToString("N0") : ""))₫
+                            </p>
+                        }
 
                     }
 
 
-                }
 
+                </div>
+            }
+            else
+            {// không sale
 
-                @if (currentPage < totalPage)
-                {
-                    <li class="page-item"><a href="@link?page=@ViewBag.Next" class="page-link next"> <span aria-hidden="true">&raquo;</span>    </a></li>
+                <div class="col-md-3 product-item my-3 position-relative text-center">
 
-                }
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
 
+                    <p class="fs-5 product-name multi-line">@item.Name</p>
+                    @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                    {
+                        @Html.Raw(rate);
+                        <p class="text-danger">
+                            @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-danger mt-4">
+                            @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                        </p>
 
-            </ul>
-        </nav>
-
-
-
-
-
-    }
-</div>
-
-
-
-
-
-
-
-
-
+                    }
 
 
 
 
+                </div>
+            }
+
+
+        }
+
+
+
+
+        <!--Phân trang -->
+
+        @if (ViewBag.totalRecord > 1)
+        { // số bản ghi  > kích thước mỗi trang
+            var pageMax = (int)ViewBag.maxPage;
+            var totalPage = (int)ViewBag.totalPage;
+            var currentPage = (int)ViewBag.page;
+            var starIndex = (int)Math.Max(1, currentPage - pageMax / 2);
+            var endIndex = (int)Math.Min(totalPage, currentPage + pageMax / 2);
+
+
+            var link = "/tac-gia/" + Model.ID;
+            <nav>
+                <ul class="pagination justify-content-end mt-2 ">
+                    <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
+                    @if (currentPage > ViewBag.First)
+                    {
+                        <li class="page-item"><a href="@link?page=@ViewBag.Prev" class="previous page-link" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
+                    }
+
+
+
+                    @for (int i = starIndex; i <= endIndex; i++)
+                    {
+                        if (currentPage == i)
+                        {
+                            <li class="page-item"><a href="@link?page=@i" class="page-link active">@i</a></li>
+
+                        }
+                        else
+                        {
+                            <li class="page-item"><a href="@link?page=@i" class="page-link pos">@i</a></li>
+
+                        }
+
+
+                    }
+
+
+                    @if (currentPage < totalPage)
+                    {
+                        <li class="page-item"><a href="@link?page=@ViewBag.Next" class="page-link next"> <span aria-hidden="true">&raquo;</span>    </a></li>
+
+                    }
+
+
+                </ul>
+            </nav>
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
+    </div>
 </div>
 
 

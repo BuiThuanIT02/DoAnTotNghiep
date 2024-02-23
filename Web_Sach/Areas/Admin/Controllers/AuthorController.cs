@@ -64,8 +64,8 @@ namespace Web_Sach.Areas.Admin.Controllers
                 var author = new TacGia()
                 {
                     TenTacGia = inputTacGia.TenTacGia,
-                    Address = inputTacGia.Address,
-                    Phone = inputTacGia.Phone,
+                    //Address = inputTacGia.Address,
+                    //Phone = inputTacGia.Phone,
                     TieuSu = inputTacGia.TieuSu,
                 };
                 if (tacGia.Compare(author.TenTacGia) != null)
@@ -127,8 +127,8 @@ namespace Web_Sach.Areas.Admin.Controllers
                 {
                     ID=inputTacGia.MaTacGia,
                     TenTacGia = inputTacGia.TenTacGia,
-                    Address = inputTacGia.Address,
-                    Phone = inputTacGia.Phone,
+                    //Address = inputTacGia.Address,
+                    //Phone = inputTacGia.Phone,
                     TieuSu = inputTacGia.TieuSu,
                 };
 

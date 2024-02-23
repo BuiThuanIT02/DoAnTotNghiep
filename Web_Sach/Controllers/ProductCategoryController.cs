@@ -134,7 +134,7 @@ namespace Web_Sach.Controllers
                             case "100000-200000":
                                 {
                                     var a = query;
-                                    query = query.Union(query.Where(x => x.Price > 100000 && x.Price <= 200000));
+                                    query =query.Where(x => x.Price > 100000 && x.Price <= 200000);
                                     query = a.Union(query);
                                     break;
                                 }
@@ -182,7 +182,7 @@ namespace Web_Sach.Controllers
                             case "100000-200000":
                                 {
                                  
-                                    query = query.Union(query.Where(x => x.Price > 100000 && x.Price <= 200000));
+                                    query =query.Where(x => x.Price > 100000 && x.Price <= 200000);
                                  
                                     break;
                                 }

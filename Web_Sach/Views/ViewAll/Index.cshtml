@@ -30,7 +30,7 @@
 
             </div>
         </div>
-       
+
 
 
         <!--chi tiết -->
@@ -52,7 +52,7 @@
                         <option value="z-a">
                             Tên Z-A
                         </option>
-                       
+
                         <option value="cunhat">
                             Cũ nhất
                         </option>
@@ -75,7 +75,7 @@
                             int? sale = 0;
                             var khuyenMai = item.KhuyenMai_Sach.ToList();
                             var img = item.Images.FirstOrDefault(s => s.IsDefault);
-
+                            var rate = Html.Action("RateView", "Home", new { id = @item.ID });
                             if (img != null)
                             {
                                 imgUrl = img.Image1;
@@ -101,17 +101,40 @@
                                     {// còn hạn sale
                                         <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@sale%</span>
                                         <p class="fs-5 product-name ">@item.Name</p>
-                                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
-                                <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
-                                        <span>
-                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
-                                        </span>
+                                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                        {
+                                            @Html.Raw(rate);
+                                            <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                            <span>
+                                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <div class="mt-4">
+                                                <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                                <span>
+                                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                                </span>
+                                            </div>
+
+                                        }
+
                                     }
                                     else
                                     {// sale hết hạn
                                         <p class="fs-5 product-name ">@item.Name</p>
-                                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
-                                <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                        {
+                                            @Html.Raw(rate);
+                                            <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-danger mt-4 text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+
+                                        }
+                                     
 
                                     }
 
@@ -129,10 +152,16 @@
                         <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail  " alt="san_pham"> </a>
 
                         <p class="fs-5 product-name ">@item.Name</p>
-                        @{Html.RenderAction("RateView", "Home", new { id = @item.ID });}
+                        @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <p class="text-danger text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                        }
+                        else
+                        {
+                            <p class="text-danger mt-4 text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
 
-                    <p class="text-danger text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
-
+                        }
 
                     </div>
                             }
@@ -158,7 +187,7 @@
                                     <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
                                     @if (currentPage > ViewBag.First)
                                     {
-                                        <li class="page-item"><a href="@link?page=@ViewBag.Prev&sort_by=@ViewBag.sortBy" class="previous page-link" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
+                                        <li class="page-item"><a href="@link?page=@ViewBag.Prev" class="previous page-link" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
                                     }
 
 
@@ -167,12 +196,12 @@
                                     {
                                         if (currentPage == i)
                                         {
-                                            <li class="page-item"><a href="@link?page=@i&sort_by=@ViewBag.sortBy" class="page-link active">@i</a></li>
+                                            <li class="page-item"><a href="@link?page=@i" class="page-link active">@i</a></li>
 
                                         }
                                         else
                                         {
-                                            <li class="page-item"><a href="@link?page=@i&sort_by=@ViewBag.sortBy" class="page-link pos">@i</a></li>
+                                            <li class="page-item"><a href="@link?page=@i" class="page-link pos">@i</a></li>
 
                                         }
 
@@ -182,7 +211,7 @@
 
                                     @if (currentPage < totalPage)
                                     {
-                                        <li class="page-item"><a href="@link?page=@ViewBag.Next&sort_by=@ViewBag.sortBy" class="page-link next"> <span aria-hidden="true">&raquo;</span>    </a></li>
+                                        <li class="page-item"><a href="@link?page=@ViewBag.Next" class="page-link next"> <span aria-hidden="true">&raquo;</span>    </a></li>
 
                                     }
 
@@ -203,12 +232,12 @@
                 }
 
             </div>
-            </div>
         </div>
+    </div>
 
 </div>
 
 
 @section jsFooter{
     <script src="~/Scripts/Client/Controller/filterProduct.js"></script>
-    }
+}
