@@ -209,13 +209,10 @@ namespace Web_Sach.Models.EF
             // skip :lấy từ bản ghi 0 ,lấy 2 bản ghi , khi page 1
         }
 
-        // save quản lý sách moreImages
-        //public void UpdateImages(int id, string images)
-        //{
-        //    var sach = db.Saches.Find(id);
-        //    sach.MoreImages = images;
-        //    db.SaveChanges();
-        //}
+        public List<string> ListName(string keyword)
+        {
+            return db.Saches.Where(x=>x.Name.ToLower().Contains(keyword.ToLower())).Select(x=> x.Name).ToList();
+        }
 
     }
 }

@@ -1,8 +1,8 @@
 ﻿var filterCate = {
     init: function () {
-        filterCate.removeEventListener();
+        filterCate.registerEvents();
     },
-    removeEventListener: function () {
+    registerEvents: function () {
         $('.sidebar_sort input[type="checkbox"]').change(function () {
             let selectedFilter = [];
             let cateId = $('#filter1').data('cate');

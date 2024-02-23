@@ -64,6 +64,7 @@ namespace Web_Sach.Common
         public static string HtmlRate(int? rate)
         {
             var str = "";
+          
             if (rate == 1)
             {
                 str += @"<li><i class='fa-solid fa-star'></i></li>

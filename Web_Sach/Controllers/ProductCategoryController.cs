@@ -117,42 +117,103 @@ namespace Web_Sach.Controllers
             if (filterOb != null)
             {
                 var filter = new JavaScriptSerializer().Deserialize<List<string>>(filterOb);
-
-                foreach (var item in filter)
+                if(filter.Count() >1)
                 {
-                    switch (item)
+                    foreach (var item in filter)
                     {
-                        case "100000":
-                            {
-                                query = query.Where(x => x.Price <= 100000);
-                                break;
-                            }
+                        switch (item)
+                        {
+                            case "100000":
+                                {
+                                    var a = query;
+                                    query = query.Where(x => x.Price <= 100000);
+                                    query = a.Union(query);
+                                    break;
+                                }
 
-                        case "100000-200000":
-                            {
-                                query = query.Where(x => x.Price > 100000 && x.Price <= 200000);
-                                break;
-                            }
-                        case "200000-300000":
-                            {
-                                query = query.Where(x => x.Price > 200000 && x.Price <= 300000);
-                                break;
+                            case "100000-200000":
+                                {
+                                    var a = query;
+                                    query = query.Union(query.Where(x => x.Price > 100000 && x.Price <= 200000));
+                                    query = a.Union(query);
+                                    break;
+                                }
+                            case "200000-300000":
+                                {
+                                    var a = query;
+                                    query = query.Where(x => x.Price > 200000 && x.Price <= 300000);
+                                    query = a.Union(query);
+                                    break;
 
-                            }
-                        case "300000-400000":
-                            {
-                                query = query.Where(x => x.Price > 300000 && x.Price <= 400000);
-                                break;
+                                }
+                            case "300000-400000":
+                                {
+                                    var a = query;
+                                    query = query.Where(x => x.Price > 300000 && x.Price <= 400000);
+                                    query = a.Union(query);
+                                    break;
 
-                            }
-                        case "400000":
-                            {
-                                query = query.Where(x => x.Price > 400000);
-                                break;
-                            }
+                                }
+                            case "400000":
+                                {
+                                    var a = query;
+                                    query = query.Where(x => x.Price > 400000);
+                                    query = a.Union(query);
+                                    break;
+                                }
 
+                        }
                     }
                 }
+                else
+                {
+                    foreach (var item in filter)
+                    {
+                        switch (item)
+                        {
+                            case "100000":
+                                {
+                                   
+                                    query = query.Where(x => x.Price <= 100000);
+                                  
+                                    break;
+                                }
+
+                            case "100000-200000":
+                                {
+                                 
+                                    query = query.Union(query.Where(x => x.Price > 100000 && x.Price <= 200000));
+                                 
+                                    break;
+                                }
+                            case "200000-300000":
+                                {
+                                  
+                                    query = query.Where(x => x.Price > 200000 && x.Price <= 300000);
+                                 
+                                    break;
+
+                                }
+                            case "300000-400000":
+                                {
+                                  
+                                    query = query.Where(x => x.Price > 300000 && x.Price <= 400000);
+                                 
+                                    break;
+
+                                }
+                            case "400000":
+                                {
+                                   
+                                    query = query.Where(x => x.Price > 400000);
+                                 
+                                    break;
+                                }
+
+                        }
+                    }
+                }
+             
             }
             return query;
         }

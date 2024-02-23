@@ -1,8 +1,8 @@
 ﻿var filterProduct = {
     init: function () {
-        filterProduct.removeEventListener();
+        filterProduct.registerEvents();
     },
-    removeEventListener: function () {
+    registerEvents: function () {
         $('.sidebar_sort input[type="checkbox"]').change(function () {
             let selectedFilter = [];
          

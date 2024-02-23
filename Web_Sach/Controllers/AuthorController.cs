@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Web_Sach.Models;
+using Web_Sach.Models.EF;
 
 namespace Web_Sach.Controllers
 {
@@ -50,16 +51,6 @@ namespace Web_Sach.Controllers
             ViewBag.Prev = page - 1;
             return View(author);
         }
-
-
-
-
-
-
-
-
-
-
 
     }
 }

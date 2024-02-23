@@ -101,16 +101,17 @@
                                     {// còn hạn sale
                                         <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@sale%</span>
                                         <p class="fs-5 product-name ">@item.Name</p>
-
-                                        <span class="text-dark ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</span>
-                                        <span class="text-bg-danger">
-                                            <del>@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))</del>
+                                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
+                                <span class="text-danger ms-5 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                        <span>
+                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
                                         </span>
                                     }
                                     else
                                     {// sale hết hạn
                                         <p class="fs-5 product-name ">@item.Name</p>
-                                        <p class="text-dark me-4 text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")</p>
+                                        Html.RenderAction("RateView", "Home", new { id = @item.ID });
+                                <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
 
                                     }
 
@@ -123,17 +124,17 @@
                             {// không có khuyến mại
 
 
-                                <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
+                    <div class="col-md-3 my-3 product-item p-0 m-4 position-relative ">
 
-                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail  " alt="san_pham"> </a>
+                        <a href="/chi-tiet/@item.MetaTitle-@item.ID"><img src="@imgUrl" class="img-thumbnail  " alt="san_pham"> </a>
 
-                                    <p class="fs-5 product-name ">@item.Name</p>
+                        <p class="fs-5 product-name ">@item.Name</p>
+                        @{Html.RenderAction("RateView", "Home", new { id = @item.ID });}
+
+                    <p class="text-danger text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
 
 
-                                    <p class="text-dark me-4 text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</p>
-
-
-                                </div>
+                    </div>
                             }
 
 

@@ -1,8 +1,8 @@
 ﻿var getOrder = {
     init: function () {
-        getOrder.releaseEvents();
+        getOrder.registerEvents();
     },
-    releaseEvents: function () {
+    registerEvents: function () {
         $('.getOrer').off("click").on("click", function () {
             let orderId = $(this).data('orderid');
             $.ajax({

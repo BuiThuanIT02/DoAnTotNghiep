@@ -48,6 +48,31 @@ namespace Web_Sach.Models.EF
             return user.ID;
 
         }
+        public int InserForFaceBook(TaiKhoan user)
+        {
+            var entity = db.TaiKhoans.SingleOrDefault(x => x.TaiKhoan1 == user.TaiKhoan1);
+            if (entity == null)
+            {
+                db.TaiKhoans.Add(user);
+              
+                try
+                {  db.SaveChanges();
+                    return user.ID;
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine(ex);
+                }
+                return user.ID;
+            }
+            else
+            {
+                return entity.ID;
+            }
+
+
+        }
 
         //End Thêm mới user
 
@@ -99,7 +124,7 @@ namespace Web_Sach.Models.EF
                 user.Email = tk.Email;
                 user.NgaySinh = tk.NgaySinh;
                 user.Status = tk.Status;
-                user.Role = tk.Role;
+                user.Role = 0;
                 db.SaveChanges();
                 return true;
             }

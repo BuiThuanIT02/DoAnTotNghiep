@@ -1,8 +1,8 @@
 ﻿var productDetail = {
     init: function () {
-        productDetail.releaseEvents();
+        productDetail.registerEvents();
     },
-    releaseEvents: function () {
+    registerEvents: function () {
 
         $('#addCart').off("click").on("click", function () {
             var id = $(this).data('id');

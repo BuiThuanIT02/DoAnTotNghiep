@@ -1,8 +1,8 @@
 ﻿var cart = {
     init: function () {
-        cart.releaseEvents();
+        cart.registerEvents();
     },
-    releaseEvents: function () {
+    registerEvents: function () {
         $('#btnContinue').off("click").on("click", function () {
             window.location.href = "/";
         }) // trở lại mua tiếp

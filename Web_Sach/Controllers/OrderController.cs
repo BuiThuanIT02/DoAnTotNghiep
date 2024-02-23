@@ -25,16 +25,15 @@ namespace Web_Sach.Controllers
             var order = db.DonHangs.Find(id);
             if (order != null)
             {
-                var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id);
-                if (orderDetail.Any())
-                {
+                var orderDetail = db.ChiTietDonHangs.Where(x => x.MaDonHang == id).ToList();
+               
                     foreach (var item in orderDetail)
                     {// cập nhật số lượng
                         var sachUpdate = db.Saches.Find(item.MaSach);// cập nhật lại số lượng sản phẩm
                         sachUpdate.Quantity = sachUpdate.Quantity + item.Quantity;
                     } 
                     db.ChiTietDonHangs.RemoveRange(orderDetail);
-                }
+                
 
                 db.DonHangs.Remove(order);
 

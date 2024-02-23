@@ -1,8 +1,8 @@
 ﻿var order = {
     init: function () {
-        order.releaseEvents();
+        order.registerEvents();
     },
-    releaseEvents: function () {
+    registerEvents: function () {
         $('.moveOrder').off('click').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('order-id');

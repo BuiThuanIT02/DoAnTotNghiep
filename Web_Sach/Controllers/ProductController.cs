@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,15 +25,22 @@ namespace Web_Sach.Controllers
         //[Route("chi-tiet/{metatilte}-{detailId}")]
         public ActionResult Product(int detailId)
         {
+            var query = (from dt in db.Saches
+                         where dt.ID == detailId
+                         select dt);
+            if (query == null)
+            {
+                return RedirectToAction("Index", "Error");
+            }
             // bình luận sản phẩm
             var sessionUser = (UserLoginSession)Session[SessionHelper.USER_KEY];
-            if(sessionUser != null )
+            if (sessionUser != null)
             {
                 ViewBag.UserId = sessionUser.UserID;
-                ViewBag.ListComment = new CommentDao().ListCommentViewModel(0,detailId);
-            // bình luận sản phẩm
+                ViewBag.ListComment = new CommentDao().ListCommentViewModel(0, detailId);
+                // bình luận sản phẩm
             }
-          
+
             // lấy nhiều ảnh từ bảng Images
             var imagesBook = from img in db.Images
                              join s in db.Saches on img.MaSP equals s.ID
@@ -46,13 +54,13 @@ namespace Web_Sach.Controllers
                           join tg in db.ThamGias on s.ID equals tg.MaSach
                           join outhur in db.TacGias on tg.MaTacGia equals outhur.ID
                           where s.ID == detailId
-                          select new 
+                          select new
                           {
                               Names = outhur.TenTacGia,
                               IDs = outhur.ID
-                          }).AsEnumerable().Select(x=> new ThamGiaViewModels
+                          }).AsEnumerable().Select(x => new ThamGiaViewModels
                           {
-                              Name= x.Names,
+                              Name = x.Names,
                               ID = x.IDs
                           });
 
@@ -74,13 +82,7 @@ namespace Web_Sach.Controllers
 
             // lấy chi tiết sách
 
-            var query = (from dt in db.Saches
-                         where dt.ID == detailId
-                         select dt);
-            if(query == null)
-            {
-                return RedirectToAction("Index", "Error");
-            }
+          
             var productDetail = query.FirstOrDefault();
 
             if (productDetail != null)
@@ -232,7 +234,18 @@ namespace Web_Sach.Controllers
         }
 
 
+        public ActionResult ListName(string term)
 
+        {
+            var data = new Book().ListName(term);
+
+            return Json(new
+            {
+                data = data,
+                status = true
+            }, JsonRequestBehavior.AllowGet);
+
+        }
 
 
 

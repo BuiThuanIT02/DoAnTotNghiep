@@ -479,6 +479,7 @@ namespace Web_Sach.Controllers
 
             var cart = Session[SessionHelper.CART_KEY] as List<CartItem>;
             var orderDetail = new List<ChiTietDonHang>();
+           
             foreach (var item in cart)
             {
                 var orderDetails = new ChiTietDonHang();
