@@ -6,11 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web_Sach.Models;
 using Web_Sach.Models.EF;
 using Web_Sach.Session;
+using GoogleAuthentication.Services;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace Web_Sach.Controllers
 {
@@ -36,7 +40,72 @@ namespace Web_Sach.Controllers
 
         public ActionResult LoignClients()
         {
+            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
+            var url = "https://localhost:44377/User/GoogleCallBack";
+            var response = GoogleAuth.GetAuthUrl(clientId, url);
+            ViewBag.response = response;
             return View();
+        }
+        public ActionResult LoginGoogle()
+        {
+            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
+            var url = "https://localhost:44377/User/GoogleCallBack";
+            var response = GoogleAuth.GetAuthUrl(clientId, url);
+            ViewBag.response = response;
+            return View();
+
+        }
+
+        public async Task<ActionResult> GoogleCallBack(string code)
+        {
+            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
+            var url = "https://localhost:44377/User/GoogleCallBack";
+            var clientsecret = "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";
+            var token = await GoogleAuth.GetAuthAccessToken(code, clientId, clientsecret, url);
+            if (token == null)
+            {
+                return Redirect("LoignClients");
+            }
+            var userProfile = await GoogleAuth.GetProfileResponseAsync(token.AccessToken);
+            if (userProfile != null)
+            {
+                var userGooGle = JObject.Parse(userProfile);
+                string email = userGooGle["email"].ToString();
+                string family_name = userGooGle["family_name"].ToString();
+                string give_name = userGooGle["given_name"].ToString();
+
+                // lưu thông tin vào session 
+                var user = new TaiKhoan();
+                user.TaiKhoan1 = family_name + " " + give_name;
+                user.Password = "123";
+                user.Email = email;
+                user.Address = "NULL";
+                user.Phone = "NULL";
+                user.GioiTinh = "Nam";
+
+                user.Role = 0;
+                user.Status = true;
+
+                user.NgaySinh = DateTime.Now;
+
+                user.FullName = family_name + " " + give_name;
+                var resultInsert = new TaiKhoanModels().InserForFaceBook(user);
+                if (resultInsert > 0)
+                {
+                    var userSession = new UserLoginSession();
+                    userSession.UserID = user.ID;
+                    userSession.UserName = user.TaiKhoan1;
+                    userSession.FullName = user.FullName;
+                    userSession.Address = user.Address;
+                    userSession.Phone = user.Phone;
+                    userSession.Email = user.Email;
+                    Session.Add(SessionHelper.USER_KEY, userSession);
+                    return RedirectToAction("Index", "Home");
+                }
+
+
+            }
+            return Redirect("LoignClients");
         }
         public ActionResult LoginFacebook()
         {
@@ -51,7 +120,7 @@ namespace Web_Sach.Controllers
             });
             return Redirect(loginUrl.AbsoluteUri);
         }
-        public ActionResult FacebookCallback(string code)
+        public async Task<ActionResult> FacebookCallback(string code)
         {
             var fb = new FacebookClient();
             dynamic result = fb.Post("oauth/access_token", new
@@ -61,7 +130,7 @@ namespace Web_Sach.Controllers
                 redirect_uri = RedirectUri.AbsoluteUri,
                 code = code,
             });
-            var accessToken = result.access_token;
+            var accessToken = await result.access_token;
             if (!string.IsNullOrEmpty(accessToken))
             {
                 fb.AccessToken = accessToken;
@@ -95,11 +164,12 @@ namespace Web_Sach.Controllers
                     userSession.Phone = user.Phone;
                     userSession.Email = user.Email;
                     Session.Add(SessionHelper.USER_KEY, userSession);
-
+                    return RedirectToAction("Index", "Home");
                 }
 
             }
-            return RedirectToAction("Index", "Home");
+            return Redirect("LoignClients");
+
 
         }
         [HttpPost]
