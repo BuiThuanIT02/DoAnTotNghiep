@@ -26,6 +26,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             var query = from o in db.DonHangs
                         join od in db.ChiTietDonHangs on o.ID equals od.MaDonHang
                         join p in db.Saches on od.MaSach equals p.ID
+                        where o.Status == 5
                         select new
                         {
                             CreatedDate = o.NgayDat,
@@ -83,6 +84,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             var query = from o in db.DonHangs
                         join od in db.ChiTietDonHangs on o.ID equals od.MaDonHang
                         join p in db.Saches on od.MaSach equals p.ID
+                        where o.Status == 5
                         select new
                         {
                             CreatedDate = o.NgayDat,
@@ -139,6 +141,7 @@ namespace Web_Sach.Areas.Admin.Controllers
             var query = from o in db.DonHangs
                         join od in db.ChiTietDonHangs on o.ID equals od.MaDonHang
                         join p in db.Saches on od.MaSach equals p.ID
+                        where o.Status == 5
                         select new
                         {
                             CreatedDate = o.NgayDat,

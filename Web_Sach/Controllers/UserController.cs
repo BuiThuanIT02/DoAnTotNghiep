@@ -108,7 +108,7 @@ namespace Web_Sach.Controllers
             });
             return Redirect(loginUrl.AbsoluteUri);
         }
-        public async Task<ActionResult> FacebookCallback(string code)
+        public ActionResult FacebookCallback(string code)
         {
             var fb = new FacebookClient();
             dynamic result = fb.Post("oauth/access_token", new
@@ -118,7 +118,7 @@ namespace Web_Sach.Controllers
                 redirect_uri = RedirectUri.AbsoluteUri,
                 code = code,
             });
-            var accessToken = await result.access_token;
+            var accessToken = result.access_token;
             if (!string.IsNullOrEmpty(accessToken))
             {
                 fb.AccessToken = accessToken;
