@@ -1708,6 +1708,7 @@
     <Content Include="Views\ViewAll\_FillerProductTopHot.cshtml" />
     <Content Include="Views\Home\RateView.cshtml" />
     <Content Include="Views\Home\RateViewProductDetail.cshtml" />
+    <Content Include="Views\User\Email.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

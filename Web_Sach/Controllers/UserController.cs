@@ -15,6 +15,7 @@ using Web_Sach.Session;
 using GoogleAuthentication.Services;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNet.Identity;
 
 namespace Web_Sach.Controllers
 {
@@ -32,12 +33,7 @@ namespace Web_Sach.Controllers
                 return uriBuilder.Uri;
             }
         }
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-
+      
         public ActionResult LoignClients()
         {
             var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
@@ -46,15 +42,7 @@ namespace Web_Sach.Controllers
             ViewBag.response = response;
             return View();
         }
-        public ActionResult LoginGoogle()
-        {
-            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
-            var url = "https://localhost:44377/User/GoogleCallBack";
-            var response = GoogleAuth.GetAuthUrl(clientId, url);
-            ViewBag.response = response;
-            return View();
-
-        }
+      
 
         public async Task<ActionResult> GoogleCallBack(string code)
         {
@@ -230,18 +218,42 @@ namespace Web_Sach.Controllers
             return Redirect("/");
         }
 
+        public async Task<ActionResult> ChooseEmail(string code)
+        {
+            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
+            var url = "https://localhost:44377/User/ChooseEmail";
+            var clientsecret = "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";
+            var token = await GoogleAuth.GetAuthAccessToken(code, clientId, clientsecret, url);
+            if (token == null)
+            {
+                return Redirect("/dang-ky");
+            }
+            var userProfile = await GoogleAuth.GetProfileResponseAsync(token.AccessToken);
+            if (userProfile != null)
+            {
+                var userGooGle = JObject.Parse(userProfile);
+                string email = userGooGle["email"].ToString();
+             
+                TempData["Email"] = email;
+            }
+            return Redirect("/dang-ky");
+        }
 
-
-
+        public ActionResult Register()
+        {
+      
+            var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
+            var url = "https://localhost:44377/User/ChooseEmail";
+            var response = GoogleAuth.GetAuthUrl(clientId, url);
+            ViewBag.response = response;
+            return View();
+        }
 
 
         [HttpPost]
-        //  [CaptchaValidationActionFilter("CaptchaCode", "registerCaptcha", "Mã xác nhận chưa đúng!")]
-        public ActionResult Register(Register model)
+       
+        public ActionResult RegisterPost(Register model)
         {
-
-            //  string pass = model.Password;
-
             if (ModelState.IsValid)
             {
 
@@ -373,22 +385,6 @@ namespace Web_Sach.Controllers
 
             return View(tk);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
