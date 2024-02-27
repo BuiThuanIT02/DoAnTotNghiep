@@ -137,9 +137,9 @@
             //let FullName = $('#review_name').val();
             //let Email = $('#review_email').val();
             let Content = $('#review_message').val();
-            debugger;
+          
             if (Content == "") {
-                debugger;
+              
                 alert("Nội dung bình luận trống!");
                 return;
             }
@@ -158,7 +158,7 @@
                 dataType: "json",
                 success: function (res) {
                     if (res.success) {
-                        debugger;
+                      
                         $('#container_comment').load('/ReView/GetComment?productId=' + MaSach);
                         $('#review_form')[0].reset();
                       

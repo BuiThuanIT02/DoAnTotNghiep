@@ -5,7 +5,7 @@
     removeEventListener: function () {
         $('sidebar_sort input[type="checkbox"]').change(function () {
             let selectedFilter = [];
-            debugger;
+        
             $('sidebar_sort input[type="checkbox"]:checked').each(function () {
                 selectedFilter.push($(this).val());
             })// theo dõi input khi đc chọn

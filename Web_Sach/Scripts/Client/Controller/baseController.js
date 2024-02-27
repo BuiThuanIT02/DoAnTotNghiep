@@ -3,7 +3,7 @@
         common.registerEvents();
     },
     registerEvents: function () {
-     
+       
         $('#txtkeyword').autocomplete({
             minLength: 0,
             source: function (request, response) {
@@ -16,19 +16,19 @@
                         term: request.term
                     },
                     success: function (res) {
-                        debugger;
+                    
                      
                         response(res.data);
                     }
                 });
             }, 
             focus: function (event, ui) {
-                debugger;
+          
                 $('#txtkeyword').val(ui.item.label);
                 return false;
             },
             select: function (event, ui) {
-                debugger;
+            
                 $('#txtkeyword').val(ui.item.label);    
                 return false;
             }

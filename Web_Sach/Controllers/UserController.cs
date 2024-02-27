@@ -59,12 +59,12 @@ namespace Web_Sach.Controllers
             {
                 var userGooGle = JObject.Parse(userProfile);
                 string email = userGooGle["email"].ToString();
-                string family_name = userGooGle["family_name"].ToString();
+                //string family_name = userGooGle["family_name"].ToString();
                 string give_name = userGooGle["given_name"].ToString();
 
                 // lưu thông tin vào session 
                 var user = new TaiKhoan();
-                user.TaiKhoan1 = family_name + " " + give_name;
+                user.TaiKhoan1 =  give_name;
                 user.Password = "123";
                 user.Email = email;
                 user.Address = "NULL";
@@ -76,7 +76,7 @@ namespace Web_Sach.Controllers
 
                 user.NgaySinh = DateTime.Now;
 
-                user.FullName = family_name + " " + give_name;
+                user.FullName =  give_name;
                 var resultInsert = new TaiKhoanModels().InserForFaceBook(user);
                 if (resultInsert > 0)
                 {
