@@ -16,11 +16,59 @@ using GoogleAuthentication.Services;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Web_Sach.Models.Dao;
+using Web_Sach.App_Start;
+using System.Net;
+using Microsoft.Owin.Host.SystemWeb;
+
 
 namespace Web_Sach.Controllers
 {
     public class UserController : Controller
     {
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
+        public UserController()
+        {
+        }
+
+        public UserController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        {
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+               
+                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            }
+            private set
+            {
+                _signInManager = value;
+            }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+
+
+
         WebSachDb db = new WebSachDb();
         private Uri RedirectUri
         {
@@ -239,6 +287,53 @@ namespace Web_Sach.Controllers
             return Redirect("/dang-ky");
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(UserLoginClients model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    var mdUser = UserManager.FindByEmail(model.Email);
+                    if (!mdUser.EmailConfirmed)
+                    {
+                        HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        return View("NottificationEmailConfirm");
+                    }
+                    else
+                    {
+
+                    }
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(model);
+            }
+        }
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+
         public ActionResult Register()
         {
       
@@ -248,84 +343,52 @@ namespace Web_Sach.Controllers
             ViewBag.response = response;
             return View();
         }
-
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
 
         [HttpPost]
        
-        public ActionResult RegisterPost(Register model)
+        public async Task<ActionResult> RegisterPost(Register model)
         {
             if (ModelState.IsValid)
             {
-
-
-                var userNameUnique = from tk in db.TaiKhoans
-
-                                     select tk;
-                if (userNameUnique.Where(x => x.TaiKhoan1 == model.UserName).FirstOrDefault() != null)
-                {// đã tồn tại tên tài khoản
-                    ModelState.AddModelError("UserName", "Tên tài khoản đã tồn tại");
-                    return View(model);
-
-                }
-                else if (!model.Password.Any(char.IsUpper) || !model.Password.Any(char.IsDigit) || model.Password.Length < 8)
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,EmailConfirmed = false};
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
                 {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "User", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    ModelState.AddModelError("Password", "Mật khẩu  chứa ít nhất 1 chữ viết hoa , 1 số và hơn 8 ký tự");
-
-                    //    model.Password = pass;
-                    return View(model);
-
+                    Web_Sach.Common.common.SendMailRgister(user.Email, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>", "");
                 }
-                else if (userNameUnique.Where(x => x.Email == model.Email).FirstOrDefault() != null)
-                {//đã tồn tại email
-                    ModelState.AddModelError("Email", "Email đã tồn tại");
-                    return View(model);
-
-                }
-                var user = new TaiKhoan();
-                user.TaiKhoan1 = model.UserName;
-                user.Password = model.Password;
-                user.Email = model.Email;
-                user.FullName = model.Name;
-                user.Address = model.Address;
-                user.Phone = model.Phone;
-                user.GioiTinh = model.GioiTinh;
-                user.Role = 0;
-                user.Status = true;
-                user.NgaySinh = model.NgaySinh;
-
-                db.TaiKhoans.Add(user);
-                db.SaveChanges();
-                if (user.ID > 0)
-                {
-                    ViewBag.Success = "Đăng ký thành công!!";
-                    //model = null;
-                    ModelState.Clear();
-                    model.UserName = string.Empty;
-                    model.Password = string.Empty;
-                    model.Email = string.Empty;
-                    model.Name = string.Empty;
-                    model.Address = string.Empty;
-                    model.Phone = string.Empty;
-                    model.GioiTinh = "Nam";
-
-                    //return RedirectToAction("LoignClients","User");
-                    return View();
-
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Đăng ký thất bại");
-
-                }
-
-
+                AddErrors(result);
+                return View("NottificationEmailConfirm");
             }
 
             return View(model);
 
 
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
         public ActionResult UserSession()

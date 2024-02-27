@@ -16,8 +16,10 @@ namespace Web_Sach.Models.EF
         [Display(Name = "Mật khẩu")]
         [Required(ErrorMessage = "Mời nhập mật khẩu")]
         public string Password { get; set; }
-
-        public bool Remeber { get; set; }
+        [Display(Name = "Email")]
+        [Required(ErrorMessage = "Mời nhập Email")]
+        public string Email { get; set; }
+        public bool RememberMe { get; set; }
 
 
     }

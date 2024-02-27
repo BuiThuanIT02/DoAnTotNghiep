@@ -57,6 +57,9 @@
         [Display(Name = "Quyền")]
        
         public int? Role { get; set; }
+        [Display(Name = "Xác thực email")]
+
+        public bool EmailConfirm { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DonHang> DonHangs { get; set; }

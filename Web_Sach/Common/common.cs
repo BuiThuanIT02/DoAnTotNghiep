@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BotDetect;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Web_Sach.Common
 {
-    public class common
+    public static class common
     {
         private static string password = ConfigurationManager.AppSettings["PasswordEmail"];
         private static string Email = ConfigurationManager.AppSettings["Email"];
@@ -56,7 +57,37 @@ namespace Web_Sach.Common
 
 
 
+        public static bool SendMailRgister(string to, string subject, string body, string attachFile)
+        {
+        
+            try
+            {
+                MailMessage msg = new MailMessage(ConstandHelper.emailSender, to,subject,body);
+                if(!string.IsNullOrEmpty(attachFile))
+                {
 
+                    Attachment attchment = new Attachment(attachFile);
+                    msg.Attachments.Add(attchment);
+                }
+                using(var client = new SmtpClient(ConstandHelper.hostEmail, ConstandHelper.portEmail))
+                {
+                    client.EnableSsl = true;
+                    NetworkCredential credential = new NetworkCredential(ConstandHelper.emailSender,ConstandHelper.passwordSender);
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = credential;
+                    client.Send(msg);
+                }
+               
+            }
+
+            catch (Exception)
+            {
+              return false;
+            }
+            return true;
+
+
+        }
 
 
 

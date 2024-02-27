@@ -97,12 +97,13 @@
                         <div class="form-group  m-3">
                             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2", @style = "margin:3px" })
                             <div class="col-md-10">
-                                @if (TempData["Email"] != null)
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @style = "width:100%" })
+                                @*@if (TempData["Email"] != null)
                                 {
                                     <div class="registerEmail">@TempData["Email"]</div>
                                 }
 
-                                <a href="@ViewBag.response">Chọn</a>
+                                <a href="@ViewBag.response">Chọn</a>*@
                                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                             </div>
                         </div>
