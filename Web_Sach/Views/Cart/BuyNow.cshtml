@@ -209,12 +209,12 @@
                 <span>@Model.Quantity</span>
             </td>
             <td>@priceSale.ToString("N0")</td>
-            <td>@((Model.Quantity * priceSale).ToString("N0"))</td>
+            <td>@((Model.Quantity * priceSale).ToString("N0"))₫</td>
 
         </tr>
         <tbody id="totalVoucher">
             <tr>
-                <th colspan="6" style="text-align:right " class="text-dark fs-5">Tổng tiền:@total.ToString("N0")</th>
+                <th colspan="6" style="text-align:right " class="text-dark fs-5">Tổng tiền:@total.ToString("N0")₫</th>
             </tr>
         </tbody>
       
