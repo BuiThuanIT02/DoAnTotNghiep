@@ -7,12 +7,15 @@ using System;
 using System.Threading.Tasks;
 using Web_Sach.Models.Dao;
 
-[assembly: OwinStartup(typeof(Web_Sach.App_Start.Startup))]
 
 namespace Web_Sach.App_Start
 {
-    public class Startup
+    public partial class Startup
     {
+        public void Configuration(IAppBuilder app)
+        {
+            ConfigureAuth(app);
+        }
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {

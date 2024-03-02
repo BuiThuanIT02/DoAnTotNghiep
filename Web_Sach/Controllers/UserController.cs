@@ -1,5 +1,4 @@
-﻿using BotDetect.Web;
-using BotDetect.Web.Mvc;
+﻿
 using CKFinder.Connector;
 using Facebook;
 using System;
@@ -21,6 +20,7 @@ using Web_Sach.Models.Dao;
 using Web_Sach.App_Start;
 using System.Net;
 using Microsoft.Owin.Host.SystemWeb;
+
 
 
 namespace Web_Sach.Controllers
@@ -57,6 +57,7 @@ namespace Web_Sach.Controllers
         {
             get
             {
+              
 
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
