@@ -247,7 +247,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AuthorController.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
@@ -339,6 +339,7 @@
     <Compile Include="Session\checkVoucher.cs" />
     <Compile Include="Session\SessionHelper.cs" />
     <Compile Include="Session\UserLoginSession.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\plugins\ckeditor\adapters\jquery.js" />

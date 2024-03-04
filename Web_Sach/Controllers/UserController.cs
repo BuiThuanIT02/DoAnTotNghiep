@@ -25,6 +25,7 @@ using Microsoft.Owin.Host.SystemWeb;
 
 namespace Web_Sach.Controllers
 {
+   
     public class UserController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -44,8 +45,17 @@ namespace Web_Sach.Controllers
         {
             get
             {
-               
+                try
+                {
+                    return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine(ex.Message);
+                }
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+
             }
             private set
             {
@@ -57,7 +67,7 @@ namespace Web_Sach.Controllers
         {
             get
             {
-              
+
 
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
@@ -82,7 +92,7 @@ namespace Web_Sach.Controllers
                 return uriBuilder.Uri;
             }
         }
-      
+
         public ActionResult LoignClients()
         {
             var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
@@ -91,7 +101,7 @@ namespace Web_Sach.Controllers
             ViewBag.response = response;
             return View();
         }
-      
+
 
         public async Task<ActionResult> GoogleCallBack(string code)
         {
@@ -282,7 +292,7 @@ namespace Web_Sach.Controllers
             {
                 var userGooGle = JObject.Parse(userProfile);
                 string email = userGooGle["email"].ToString();
-             
+
                 TempData["Email"] = email;
             }
             return Redirect("/dang-ky");
@@ -311,9 +321,6 @@ namespace Web_Sach.Controllers
                         return View("NottificationEmailConfirm");
                     }
                     else
-                    {
-
-                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -334,10 +341,10 @@ namespace Web_Sach.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        [AllowAnonymous]
         public ActionResult Register()
         {
-      
+
             var clientId = "805765781650-aaelc156djulnfc7oe7n8ldcpa8mb7k5.apps.googleusercontent.com";
             var url = "https://localhost:44377/User/ChooseEmail";
             var response = GoogleAuth.GetAuthUrl(clientId, url);
@@ -353,12 +360,12 @@ namespace Web_Sach.Controllers
         }
 
         [HttpPost]
-       
+
         public async Task<ActionResult> RegisterPost(Register model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email,EmailConfirmed = false};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = false};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
