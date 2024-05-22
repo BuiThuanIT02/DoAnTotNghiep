@@ -1,0 +1,8 @@
+﻿@model Web_Sach.Models.Dao.rateView
+
+@if (Model.rateCount > 0)
+{
+    <ul class="user_star_rating w-100 p-0 m-0">
+        @Html.Raw(Web_Sach.Common.common.HtmlRate((int)Model.rateCount))
+    </ul>
+}

@@ -1,0 +1,23 @@
+﻿@keyframes show-dropdown {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1; 
+        margin-top:11px;
+       
+    }
+}
+
+.dropdown-menu {
+    opacity: 0;
+    animation: show-dropdown 0.9s forwards;
+    overflow:hidden;
+}
+    .dropdown-menu li a{
+        transition: all 0.3s ease;
+    }
+        .dropdown-menu li:hover a{ 
+            color:rgba(0,159,127,1);
+            transform: translateX(8px);
+        }

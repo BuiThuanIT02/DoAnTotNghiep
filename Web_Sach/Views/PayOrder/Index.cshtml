@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .vnpayStaus {
+        position: relative;
+        height: 50vh;
+    }
+
+    .vnpayStatus_Success {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .vnpayStatus--Icon_success, .vnpayStatus--Icon_erro {
+        font-size: 20vh;
+        border-radius: 50%;
+    }
+
+    .vnpayStatus--Icon_success {
+        color: forestgreen;
+        border: 5px solid forestgreen;
+    }
+
+    .vnpayStatus--Icon_erro {
+        color: red;
+        border: 5px solid red;
+    }
+</style>
+<div class="container" id="containerVnpayStatus">
+    <div class="vnpayStaus">
+        <div class="vnpayStatus_Success">
+           
+                <p class="text-center"><i class="fa-solid fa-check vnpayStatus--Icon_success"></i></p>
+                <p>Bạn đã đặt hàng thành công!</p>
+
+              
+            
+        </div>
+
+
+    </div>
+
+</div>
+
+
+

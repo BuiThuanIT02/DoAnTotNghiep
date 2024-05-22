@@ -1,0 +1,83 @@
+﻿@model Web_Sach.Models.Tin_Tuc
+
+@{
+    ViewBag.Title = "Thêm mới";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="tab-title">THÊM MỚI TIN TỨC</h2>
+<div class="wrap">
+    <div class="container  mt-5 w-75">
+        @using (Html.BeginForm("CreatePost", "News", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group mt-2">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                @Html.LabelFor(model => model.MetaTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.MetaTitle, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MetaTitle, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group  mb-3">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @row = "20", @column = "20", @style = "width:100%", @id = "txtContent" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group me-2">
+                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Image, new { @class = "form-control", @id = "txtImage", @style = "width:100%" })
+                    <a id="btnSelectImage" href="#" class="btn btn-dark mt-1">Chọn ảnh</a>
+                    @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Tạo" class="btn btn-dark submitbtn" />
+                    <input type="reset" value="Xóa" class="btn btn-danger" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "submitbtn" })
+</div>
+@section jsFooter{
+
+    <script type="text/javascript">
+         var editor = CKEDITOR.replace('txtContent', {
+                customConfig: "/Assets/plugins/ckeditor/config.js",
+
+         }); // ckeditor
+
+        $('#btnSelectImage').on('click', function (e) {// jquery
+            e.preventDefault();
+            var finder = new CKFinder();
+            finder.selectActionFunction = function (url) {// function này là call back của selectActionFunction
+                $('#txtImage').val(url);
+            };
+            finder.popup(); // hiện thỉ cửa sổ lấy ảnh
+        })
+    </script>
+
+
+}

@@ -1,0 +1,125 @@
+﻿@{ 
+    var listProductNew = (List<Web_Sach.Models.Sach>)ViewBag.listProductNew;
+}
+<div id="img-bookNew" class="mt-5">
+</div>
+<div class="container">
+    <!--Title product-->
+    <div class="product-title border-bottom">
+        <div class="row">
+            <div class="col-md-12 ">
+                <h3 class="text-center mt-5">SÁCH MỚI</h3>
+            </div>
+        </div>
+    </div>
+    <!--Product list sách mới-->
+    <div class="row slick-productNew">
+        @foreach (var item in listProductNew)
+        {
+            var imgUrl = "";
+            int? sale = 0;
+            var khuyenMai = item.KhuyenMai_Sach.ToList();
+            var img = item.Images.FirstOrDefault(s => s.IsDefault);
+            var rate = Html.Action("RateView", "Home", new { id = @item.ID });
+            if (img != null)
+            {
+                imgUrl = img.Image1;
+            }
+
+            if (khuyenMai.Count() > 0)
+            {// có khuyến mại
+             // kiểm tra xem thời gian khuyến mại
+                foreach (var itemKM in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                    {
+                        sale = itemKM.Sale;
+                        break;
+                    }
+                }
+                var priceSale = item.Price - (item.Price * sale / 100);
+                <div class="col-md-12 product-item my-3 position-relative text-center">
+
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                    @if (sale != 0)
+                    {// sale còn hạn
+                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@sale%</span>
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                            <span>
+                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                            </span>
+                        }
+                        else
+                        {
+                            <div class="mt-4">
+                                <span class="text-danger  me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                <span>
+                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                </span>
+                            </div>
+
+
+                        }
+
+
+                    }
+                    else
+                    {// sale hết hạn
+                        <p class="fs-5 product-name multi-line">@item.Name</p>
+                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                        {
+                            @Html.Raw(rate);
+                            <span class="text-danger">
+                                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                            </span>
+                        }
+                        else
+                        {
+                            <p class="text-danger mt-4">
+                                @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                            </p>
+                        }
+
+                    }
+
+
+                </div>
+            }
+            else
+            {// không có khuyến mại
+             //var priceSale = item.Price - (item.Price * item.Sale / 100);
+                <div class="col-md-12 product-item my-3 position-relative text-center">
+
+                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrl" class="img-fluid" alt="san_pham"> </a>
+                    @*<span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: -10px;">-@item.Sale%</span>*@
+                    <p class="fs-5 product-name multi-line">@item.Name</p>
+                    @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                    {
+                        @Html.Raw(rate);
+                        <p class="text-danger">
+                            @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="text-danger mt-4">
+                            @((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫
+                        </p>
+                    }
+
+                    @*<span class="text-dark me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")</span>*@
+                </div>
+            }
+        }
+
+    </div>
+    @*xem all*@
+    <p class="row">
+        <a href="/sach-moi" class="showAdd submitbtn">Xem thêm >></a>
+    </p>
+</div>
+

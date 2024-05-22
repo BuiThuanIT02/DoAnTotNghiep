@@ -1,0 +1,235 @@
+﻿@model List<Web_Sach.Models.Silde>
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+   
+    
+    var flashSale = Html.Action("FlashSale", "Home");
+}
+@section slide{
+    <div class="slider">
+        <div class="container">
+            <div class="row slick-slider">
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-12">
+                        <img src="@item.Image" class="img-fluid rounded" alt="">
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+}
+@section csHeader{
+    <style>
+        #img-bookNew {
+            background: url('../../data/images/cachep.jpg') no-repeat center center;
+            height: 139px;
+            width: 100vw;
+            background-position: center;
+            background-size: cover;
+        }
+        #img-bookTopHot {
+            background: url('../../data/images/wingsbooks.jpg') no-repeat center center;
+            height: 139px;
+            width: 100vw;
+        }
+        .showAdd {
+            text-align: right;
+            color: #d51c24;
+        }
+
+            .showAdd:hover {
+                color: #e48173;
+            }
+        .fs_bg {
+            background: url('../../data/images/flash_sale.jpg') no-repeat center center;
+           position:relative;
+           z-index:1;
+           border-radius:10px;
+        }
+        .flashsale-slider {
+            width:89%;
+            margin:auto;
+            position: relative;
+            z-index: 1;
+        }
+        .flashsale_header {
+            display: -webkit-flex;
+            flex-direction: row;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            background-color: #fff;
+            -webkit-border-radius: 8px;
+        }
+        .flashsale-content {
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+        }
+        .flashsale-slider-title {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            text-decoration:none;
+            color:black;
+        }
+        .showAdd, .flashsale_showAll {
+            color: #1478FC;
+            text-decoration:none;
+        }
+        .flashsale_showAll {
+            position: absolute;
+            right: 25px;
+        }
+        .flashsale-countdown-number {
+            padding: 6px;
+            background-color: #000;
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+    </style>
+}
+<div class="mt-5" id="product">
+    @if (flashSale != MvcHtmlString.Empty && flashSale != null)
+    {
+       @flashSale
+    }
+
+
+
+    <div class="wrap">
+        @*sách mới*@
+        @{ Html.RenderAction("BookNew", "Home");}
+        @*sách bán chạy*@
+        @{ Html.RenderAction("BookTopHot", "Home");}
+    </div>
+
+</div>
+@section jsFooter{
+    <script>
+        $(document).ready(function () {
+            //slider
+            $('.slick-slider').slick({
+                dots: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 1,
+                autoplay: true,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                    // You can unslick at a given breakpoint now by adding:
+                    // settings: "unslick"
+                    // instead of a settings object
+                ]
+            });
+            //product New
+
+            $('.slick-productNew').slick({
+                // dots: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 6,
+                // autoplay: true,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4,
+                            slidesToScroll: 1,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                    // You can unslick at a given breakpoint now by adding:
+                    // settings: "unslick"
+                    // instead of a settings object
+                ]
+            });
+
+            // sách hot
+
+            $('.slick-productTopHot').slick({
+                // dots: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 6,
+                // autoplay: true,
+                slidesToScroll: 1,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 4,
+                            slidesToScroll: 1,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 1
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                    // You can unslick at a given breakpoint now by adding:
+                    // settings: "unslick"
+                    // instead of a settings object
+                ]
+            });
+        })
+    </script>
+}

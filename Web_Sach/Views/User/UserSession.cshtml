@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "Thông tin người dùng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var sessionUser = Session[Web_Sach.Session.SessionHelper.USER_KEY] as Web_Sach.Session.UserLoginSession;
+}
+<style>
+    /* Định dạng cho các tab */
+    .nav-pills {
+        flex-direction: column;
+    }
+
+    /* Định dạng cho các tab content */
+    .tab-content {
+        width: 100%; /* Đảm bảo nội dung của tab rộng 100% */
+    }
+
+    #container--silderbar .active {
+        background-color: orangered;
+    }
+
+    #container--ContentOfSilderBar .active {
+        background-color: #fff;
+    }
+</style>
+
+<div class="container mt-3">
+    <div class="d-flex">
+        <!-- Nav tabs -->
+        <ul class="nav flex-column nav-pills w-25 text-center" role="tablist" id="container--silderbar">
+            <li style="height:50px;text-align:left" class="my-2">
+                <a>
+                    <img src="~/Data/Images/avatar.jpg" class="imgInfoClient img-fluid" style="border-radius:50%;height:50px;" />
+                    @sessionUser.UserName
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#infoUser"><i class="fa-solid fa-pen-to-square me-2"></i>Tài khoản</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#orderUser"><i class="fa-solid fa-list me-2"></i>Đơn mua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#voucherUser"><i class="fa-solid fa-ticket me-2"></i>Voucher</a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        @if (sessionUser != null)
+        {
+            <div class="tab-content ms-2" id="container--ContentOfSilderBar">
+                @*infouser*@
+                <div id="infoUser" class="container tab-pane active">
+                    @{Html.RenderAction("UpdateInfo", "User", new { userId = sessionUser.UserID });}
+                </div>
+                @*orderUser*@
+                <div id="orderUser" class="container tab-pane fade">
+                    <!-- Nội dung của tab "Quản lý đơn hàng" -->
+                    @{Html.RenderAction("Order", "Cart");}
+                </div>
+                @*voucherUser*@
+                <div id="voucherUser" class="container tab-pane fade">
+                    <!-- Nội dung của tab "Voucher" -->
+                    @{Html.RenderAction("listVoucher", "Vouchers");}
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+@section jsFooter{
+    <script src="~/Scripts/Client/Controller/RemoveOrder.js"></script>
+    <script src="~/Scripts/Client/Controller/getOrder.js"></script>
+}
+
+
+
+
+
+
+
+
+

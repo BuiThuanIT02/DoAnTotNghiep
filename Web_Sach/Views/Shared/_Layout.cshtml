@@ -1,0 +1,397 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <link href="~/Scripts/Client/UI.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @*tìm kiếm selection*@
+    <link href="~/Scripts/Client/CSS/jquery-ui.css" rel="stylesheet" />
+
+    @*tìm kiếm selection*@
+    <!--Tạo slick slider-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--End slick slider-->
+    @*VueJS*@
+    <link href="~/Scripts/Client/CSS/cartItem.css" rel="stylesheet" />   @*css CartItem*@
+    @*css review*@
+
+    <link href="~/Scripts/Client/CSS/single_responsive.css" rel="stylesheet" />
+    @*css review*@
+    <link href="~/Scripts/Client/CSS/loading.css" rel="stylesheet" />
+    <link href="~/Scripts/Client/CSS/Category.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f9f5ee;
+            height: 100vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-item {
+            /* padding: 0;*/
+            padding: 5px;
+            /* border: 1px  black;*/
+            border-radius: 2%;
+            background-color: #fff;
+            box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            width: 200px;
+            height: 400px;
+            /*overflow: hidden;
+            position: relative;*/
+        }
+
+            .product-item a img {
+                display: block;
+                width: 100%;
+                height: 304px;
+                border: 1px solid #cd1817;
+            }
+
+        #product-category a {
+            display: block;
+            padding: 4px;
+        }
+
+        #product .product-item img,
+        #product-category .product-item img,
+        .cateBook-together .product-item img,
+        #author .product-item img {
+            transition: all 1s ease;
+        }
+
+            #product .product-item img:hover,
+            #product-category .product-item img:hover,
+            .cateBook-together .product-item img:hover,
+            #author .product-item img:hover {
+                transform: scale(0.9);
+            }
+
+        .product-item .product-name {
+            padding-top: 5px;
+            text-align: center;
+            white-space: nowrap; /* Ngăn ngừng dòng */
+            overflow: hidden; /* Ẩn phần vượt quá kích thước của phần tử cha */
+            text-overflow: ellipsis; /* Thêm dấu "..." khi dòng vượt quá */
+            margin-bottom: 0;
+        }
+
+        .ui-autocomplete {
+            width: 40.2%; /* Đặt chiều rộng của autocomplete bằng với input */
+        }
+
+        .product-item .price-sale,
+        .author .price-sale {
+            color: gray;
+        }
+
+        /*********************************
+        6. Product Details
+        *********************************/
+        .star_rating {
+            display: flex;
+            /* padding:2px;*/
+            /*margin-left: 33px;*/
+        }
+
+            .star_rating li {
+                display: inline-block;
+                margin-right: -2px;
+                cursor: pointer;
+            }
+
+                .star_rating li i {
+                    color: #fac451;
+                }
+
+
+        /*********************************
+        7.3 Reviews
+        *********************************/
+
+        .reviews_title {
+            margin-bottom: 58px;
+        }
+
+        .user_review_container {
+            width: 100%;
+            margin-bottom: 37px;
+        }
+
+        .reviews_col {
+            padding-right: 30px;
+        }
+
+        .user_pic {
+            width: 70px;
+            height: 70px;
+            /* background: #ebebeb;*/
+            border-radius: 50%;
+        }
+
+        .user_rating .star_rating {
+            margin-left: 5px;
+            margin-top: 13px;
+        }
+
+            .user_rating .star_rating li {
+                margin-right: -3px;
+            }
+
+                .user_rating .star_rating li i {
+                    font-size: 10px;
+                }
+
+
+        .review_date {
+            color: #fe4c50;
+            margin-top: -4px;
+        }
+
+        .user_name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .review p {
+            font-weight: 400;
+        }
+
+        /*********************************
+        8. Add Review
+        *********************************/
+
+        .add_review {
+            margin-top: 94px;
+        }
+
+        #review_form > div {
+            margin-bottom: 40px;
+        }
+
+        #review_form div:nth-child(2) h1 {
+            display: inline-block;
+        }
+
+        #review_form div:nth-child(2) {
+            margin-bottom: 20px;
+        }
+
+        #review_form > div:last-child {
+            margin-bottom: 0px;
+        }
+
+        .add_review h1 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .form_input {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border: solid 1px #e5e5e5;
+            padding-left: 20px;
+        }
+
+        .input_name {
+            margin-bottom: 19px;
+            margin-top: 31px;
+        }
+
+        .input_review {
+            display: block;
+            width: 100%;
+            border: solid 1px #e5e5e5;
+            margin-top: 23px;
+            padding-left: 20px;
+            padding-top: 13px;
+        }
+
+        .user_star_rating {
+            display: inline-block;
+            text-align: left;
+        }
+
+            .user_star_rating li {
+                display: inline-block;
+                margin-right: -3px;
+                cursor: pointer;
+            }
+
+                .user_star_rating li i {
+                    color: #f5c136;
+                    font-size: 10px;
+                }
+
+        .review_submit_btn {
+            width: 170px;
+            border: none;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .content {
+            min-height: calc(100% - 395px); /* 60px là chiều cao của footer */
+            padding-bottom: 60px; /* Đảm bảo footer không che phủ nội dung */
+            overflow-x: hidden;
+        }
+
+        footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            height: 395px; /* Đặt chiều cao của footer */
+        }
+
+        .iconMXH {
+            cursor: pointer;
+        }
+    </style>
+    @RenderSection("csHeader", false)
+
+</head>
+<body>
+    @{
+        var session = Session[Web_Sach.Session.SessionHelper.USER_KEY] as Web_Sach.Session.UserLoginSession;
+    }
+    <!--Header-->
+    <section class="myheader mb-2">
+        <div class="container pt-3 ">
+            <div class="row">
+                <!--Cot 1-->
+                <div class="col-md-1">
+                    <a href="/" class="submitbtn">
+                        <img src="~/Data/Images/kim-dong.jpg" class="img-fluid" width="151px" height="40px" alt="logo" style="border-radius:50%" />
+                    </a>
+                </div>
+                <!--Cot 2 Tìm kiếm-->
+                <div class="col-md-6">
+                    <form class="input-group mt-3" method="get" action="/tim-kiem">
+                        <input type="text" class="form-control" id="txtkeyword" name="keyword" placeholder="Nhập từ khóa tìm kiếm...">
+                        <button class="btn submitbtn" id="basic-addon2" style="color: rgb(10, 104, 255);background-color:#ccc;">
+                            <i class="fa fa-search " aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+                <!--Cot 3 tư vấn-->
+                <div class="col-md-4">
+                    <div class="row">
+                        <!--Cột 1 trong cột 3-->
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-3 p-0" style="text-align:right">
+                                    <div class="fs-3 text-danger">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    Tư vấn hỗ trợ <br>
+                                    <strong class="text-danger">098754263</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Cột 2 trong cột 3 icon đăng nhập-->
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-2 my-3">
+                                    <div class="fs-3 text-danger  text-center" style="margin:-19px 0 0 0; padding: 5px">
+                                        @if (session != null)
+                                        {
+                                            <a href="/thong-tin-nguoi-dung" class=" d-block w-100 pointer-event submitbtn">
+                                                <i class="fa fa-user" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                        }
+                                    </div>
+                                </div>
+                                @RenderPage("/Views/Shared/TopMenu.cshtml")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Cot 4-->
+                <div class="col-md">
+                    <div class="row">
+                        @{ Html.RenderAction("HeaderCart", "Home");}
+                    </div>
+                </div>
+                <!--End-->
+            </div>
+        </div>
+    </section>
+    <!--Kết thúc header-->
+    <!--Menu-->
+    <section id="menu" class="mymainmenu bg-danger mb-5">
+        @{ Html.RenderAction("Menu", "Home");}
+        <!-- dùng cho tất cả -->
+    </section>
+    <!--Kết thúc Menu-->
+    <!--Slide-->
+    <!--Content-->
+    <section class="mymaincontent my-3">
+        <div class="container">
+            <!--Slider-->
+            @RenderSection("slide", false)
+
+            <!--End Slide-->
+            <!--Product list-->
+            @RenderSection("product", false)
+            <!-- gọi đến thì có, k thì thôi-->
+            <!--End product list-->
+        </div>
+    </section>
+
+    @if (TempData["AlertContent"] != null)
+    {
+        <div id="AlertBox" class="alert  @TempData["AlertMessage"] hide">
+            @TempData["AlertContent"]
+        </div>
+    }
+    <div class="content">
+        @RenderBody()
+    </div>
+    <!--End Content-->
+    <div id="preloader" style="display:none;">
+        <div class="loader"></div>
+    </div>
+    <!--Footer-->
+    @RenderPage("~/Views/Shared/Footer.cshtml")
+    <!--End Footer-->
+    @*chatbox*@
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger intent="WELCOME"
+                  chat-title="KimDong"
+                  agent-id="ae41d01f-e335-4c52-b3cc-d0d7102b58fa"
+                  language-code="vi"></df-messenger>
+    @*end chatbox*@
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    @*tìm kiếm*@
+    <script src="~/Scripts/Client/script/jquery-ui.js"></script>
+    @*tìm kiếm*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/Scripts/Admin/Controller/AlertMessage.js"></script>
+    <script src="~/Scripts/Client/Controller/baseController.js"></script>
+    <script src="~/Scripts/Client/script/loading.js"></script>
+    @RenderSection("jsFooter", false)
+</body>
+</html>

@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var orderDetail = (List<Web_Sach.Models.EF.OrderDetail>)ViewBag.OrderDetail;
+    var voucherOrder = (Web_Sach.Models.EF.VoucherOrder)ViewBag.voucherOrder;
+    double totalAll = 0;
+    double totalItem = 0;
+}
+<h6 class="ms-5">Chi tiết đơn hàng#@ViewBag.OrderId</h6>
+<div id="containBox">
+    <div id="boxTransation">
+        <div class="title text-center">
+            <p>HÌNH THỨC GIAO HÀNG</p>
+        </div>
+        <div class="content mt-2">
+           
+            <p>
+            <i class="fa-solid fa-bolt fs-5" style="color: rgb(253, 216, 53)"></i>
+            <span>Giao Hàng Tiết Kiệm</span>
+            </p>
+            <p>Được giao bởi Nhà sách Kim Đồng</p>
+            <p>Phí vận chuyển: 30.000₫</p>
+        </div>
+    </div>
+    <div id="boxStatus">
+        <div class="title text-center mt-2">HÌNH THỨC THANH TOÁN</div>
+        <div class="content mt-2">
+            @if (ViewBag.DaThanhToan == 0)
+            {
+                <p>Thanh toán tiền mặt khi nhận hàng</p>
+            }
+            else
+            {
+                <p>Đã thanh toán bằng hình thức online</p>
+            }
+
+        </div>
+    </div>
+</div>
+
+<table class="table w-75 m-auto">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tạm tính</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in orderDetail)
+        {
+
+             totalItem = item.PriceBuy * item.QuantityBuy;
+
+            totalAll += totalItem;
+            <tr>
+                <td class="border w-25 p-3">
+                    <div class="product-item1 d-flex ms-2">
+                        <img src="@item.Image" width="50px" height="100px" />
+                        <div class="product-info w-75">
+                            <p class="ms-2">@item.sachName</p>
+                            <p class="product-seller ms-2" style=" font-size: 12px;">Cung cấp bởi <span style="color: rgb(10 104 255)">Nhà sách Kim Đồng</span></p>
+                            <div class="product-review ms-2">
+                                <a href="/chi-tiet/@item.metaTile-@item.sachId" target="_blank">Mua lại</a>
+                            </div>
+                        </div>       
+                    </div>
+                </td>
+                <td>@item.PriceBuy.ToString("N0")₫</td>
+                <td>@item.QuantityBuy</td>
+                
+                <td>
+                    <span>@totalItem.ToString("N0")₫</span>
+                </td>
+
+            </tr>
+
+        }
+
+    </tbody>
+    <tfoot>
+        <tr class="tfootRight">
+            <td colspan="3">
+                <span class="tfootText">Tạm tính</span>
+            </td>
+            <td>@totalAll.ToString("N0")₫</td>
+        </tr>
+        @if (voucherOrder != null)
+        {
+            if (voucherOrder.maVoucher != 0)
+            {
+                <tr class="tfootRight">
+                    <td colspan="3">
+                        <span class="tfootText">Voucher</span>
+                    </td>
+                    <td>-@(voucherOrder.SoTienGiams.HasValue ? voucherOrder.SoTienGiams.Value.ToString("N0"):"")₫</td>
+                </tr>
+                <tr class="tfootRight">
+                    <td colspan="3">
+                        <span  class="tfootText">Phí vận chuyển</span>
+                    </td>
+                    <td>30,000₫</td>
+                </tr>
+                <tr class="tfootRight">
+                    <td colspan="3">
+                        <span class="tfootText">Tổng tiền</span>
+                    </td>
+                    <td>
+                        @{
+                            double? thanhTien = totalAll - voucherOrder.SoTienGiams + 30000;
+                        }
+
+                        <span class="sum fs-4 text-danger">@thanhTien.Value.ToString("N0")₫</span>
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="tfootRight">
+                <td colspan="3">
+                    <span  class="tfootText">Phí vận chuyển</span>
+                </td>
+                <td>30,000đ</td>
+            </tr>
+            <tr class="tfootRight">
+                <td colspan="3">
+                    <span  class="tfootText">Tổng tiền</span>
+                </td>
+                <td>
+                    @{
+                        double? thanhTienExesion = totalAll + 30000;
+                    }
+                    <span class="sum fs-4 text-danger">@thanhTienExesion.Value.ToString("N0")₫</span>
+                </td>
+            </tr>
+        }
+
+    </tfoot>
+</table>
+
+
+<style>
+    #containBox{
+        display:flex;
+    }
+    #boxTransation, #boxStatus {
+        background-color: #fff;
+        box-shadow: 2px 2px 2px 2px #ccc;
+        width: 22%;
+        border-radius: 5px;
+        margin: 20px 0 50px 50px;
+    }
+        #boxTransation .content, #boxStatus .content {
+            padding: 0;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+    tfoot tr td {
+        border: none;
+    }
+    .table {
+        text-align: center;
+        vertical-align: middle;
+        border-radius: 5px;
+    }
+    .product-review a {
+        display: inline-block;
+        margin-right: 10px;
+        background: rgb(255, 255, 255);
+        border: 1px solid rgb(24, 158, 255);
+        font-size: 12px;
+        color: rgb(24, 158, 255);
+        padding: 5px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration:none;
+    }
+    .tfootRight{
+        text-align:right;
+     
+    }
+        .tfootRight .tfootText {
+            color: #787a7c;
+        }
+</style>

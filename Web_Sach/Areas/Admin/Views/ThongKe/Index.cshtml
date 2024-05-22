@@ -1,0 +1,244 @@
+﻿
+@{
+    ViewBag.Title = "Thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<!-- BAR CHART -->
+<div class="card card-success">
+    <div class="card-header">
+        <h3 class="card-title">Thống kê doanh thu theo ngày</h3>
+
+        <div class="card-tools">
+                   <input type="date" name="fromDate" id="fromDate" />
+                    <input type="date" name="toDate" id="toDate" />
+                </div>
+            </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="chart">
+                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ngày</th>
+                            <th>Doanh thu</th>
+                            <th>Lợi nhuận</th>
+                        </tr>
+                    </thead>
+                    <tbody id="load_data"></tbody>
+
+
+                </table>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+<!-- /.card -->
+@section jsFooter{
+
+    @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script src="~/Scripts/Admin/js/chart.js/Chart.min.js"></script>
+    <script src="~/Scripts/Admin/js/moment/moment.min.js"></script>
+    <script>
+        $(function () {
+            let arrDoanThu = [];
+            let arrLoiNhuan = [];
+            let arrDate = [];
+            let fromDate = $("#fromDate").val();
+            let toDate = $("#toDate").val();
+            $.ajax({
+                url: '/ThongKe/GetStatistical',
+                type: 'GET',
+                data: { fromDate, toDate },
+                success: function (res) {
+                    $.each(res.Data, function (i, item) {
+                        let strDate = moment(item.Dates).format('DD/MM/yyyy');
+                        arrDate.push(strDate);
+                        arrDoanThu.push(item.DoanhThu);
+                        arrLoiNhuan.push(item.LoiNhuan);
+                    }); // Đóng $.each() ở đây
+
+                    var areaChartData = {
+                        labels: arrDate,
+                        datasets: [
+                            {
+                                label: 'Lợi nhuận',
+                                backgroundColor: 'rgba(60,141,188,0.9)',
+                                borderColor: 'rgba(60,141,188,0.8)',
+                                pointRadius: false,
+                                pointColor: '#3b8bba',
+                                pointStrokeColor: 'rgba(60,141,188,1)',
+                                pointHighlightFill: '#fff',
+                                pointHighlightStroke: 'rgba(60,141,188,1)',
+                                data: arrLoiNhuan
+                            },
+                            {
+                                label: 'Doanh thu',
+                                backgroundColor: 'rgba(210, 214, 222, 1)',
+                                borderColor: 'rgba(210, 214, 222, 1)',
+                                pointRadius: false,
+                                pointColor: 'rgba(210, 214, 222, 1)',
+                                pointStrokeColor: '#c1c7d1',
+                                pointHighlightFill: '#fff',
+                                pointHighlightStroke: 'rgba(220,220,220,1)',
+                                data: arrDoanThu
+                            },
+                        ]
+                    }
+
+
+                    //- BAR CHART -
+                    //-------------
+                    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+                    var barChartData = $.extend(true, {}, areaChartData)
+                    var temp0 = areaChartData.datasets[0]
+                    var temp1 = areaChartData.datasets[1]
+                    barChartData.datasets[0] = temp1
+                    barChartData.datasets[1] = temp0
+
+                    var barChartOptions = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        datasetFill: false
+                    }
+
+                    new Chart(barChartCanvas, {
+                        type: 'bar',
+                        data: barChartData,
+                        options: barChartOptions
+                    })
+
+                    load_data(res.Data);
+
+                },
+                error: function (res) {
+                    alert("lỗi");
+                },
+
+            });
+
+            // xử lý bảng
+            function load_data(data) {
+                var strHtml = "";
+                $.each(data, function (i, item) {
+                    let strDate = moment(item.Dates).format('DD/MM/yyyy');
+                    let doanhThu = item.DoanhThu != null ? numberWithCommas(item.DoanhThu) : "";
+                    let loiNhuan = item.LoiNhuan != null ? numberWithCommas(item.LoiNhuan) : "";
+
+                    strHtml += "<tr>";
+                    strHtml += "<td>" + (i + 1) + "</td>";
+                    strHtml += "<td>" + strDate + "</td>";
+                    strHtml += "<td>" + doanhThu + "</td>";
+                    strHtml += "<td>" + loiNhuan + "</td>";
+                    strHtml += "</tr>";
+                });
+
+                function numberWithCommas(x) {
+                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+
+                $('#load_data').html(strHtml);
+            }
+
+            let isFromDateChanged = false;
+            let isToDateChanged = false;
+
+            $("#fromDate").change(function () {
+                isFromDateChanged = true;
+                performActionIfBothChanged();
+            });
+
+            $("#toDate").change(function () {
+                isToDateChanged = true;
+                performActionIfBothChanged();
+            });
+
+            function performActionIfBothChanged() {
+                if (isFromDateChanged && isToDateChanged) {
+                    let arrDoanThu = [];
+                    let arrLoiNhuan = [];
+                    let arrDate = [];
+                    let fromDate = $("#fromDate").val();
+                    let toDate = $("#toDate").val();
+                    $.ajax({
+                        url: '/ThongKe/GetStatistical',
+                        type: 'GET',
+                        data: { fromDate, toDate },
+                        success: function (res) {
+                            $.each(res.Data, function (i, item) {
+                                let strDate = moment(item.Dates).format('DD/MM/yyyy');
+                                arrDate.push(strDate);
+                                arrDoanThu.push(item.DoanhThu);
+                                arrLoiNhuan.push(item.LoiNhuan);
+                            }); // Đóng $.each() ở đây
+
+                            var areaChartData = {
+                                labels: arrDate,
+                                datasets: [
+                                    {
+                                        label: 'Lợi nhuận',
+                                        backgroundColor: 'rgba(60,141,188,0.9)',
+                                        borderColor: 'rgba(60,141,188,0.8)',
+                                        pointRadius: false,
+                                        pointColor: '#3b8bba',
+                                        pointStrokeColor: 'rgba(60,141,188,1)',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                                        data: arrLoiNhuan
+                                    },
+                                    {
+                                        label: 'Doanh thu',
+                                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                                        borderColor: 'rgba(210, 214, 222, 1)',
+                                        pointRadius: false,
+                                        pointColor: 'rgba(210, 214, 222, 1)',
+                                        pointStrokeColor: '#c1c7d1',
+                                        pointHighlightFill: '#fff',
+                                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                                        data: arrDoanThu
+                                    },
+                                ]
+                            }
+                            //- BAR CHART -
+                            //-------------
+                            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+                            var barChartData = $.extend(true, {}, areaChartData)
+                            var temp0 = areaChartData.datasets[0]
+                            var temp1 = areaChartData.datasets[1]
+                            barChartData.datasets[0] = temp1
+                            barChartData.datasets[1] = temp0
+
+                            var barChartOptions = {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                datasetFill: false
+                            }
+
+                            new Chart(barChartCanvas, {
+                                type: 'bar',
+                                data: barChartData,
+                                options: barChartOptions
+                            })
+
+                            load_data(res.Data);
+
+                        },
+                        error: function (res) {
+                            alert("Lỗi hệ thống");
+                        },
+
+                    });
+                }
+            }
+        }) 
+    </script>
+
+}

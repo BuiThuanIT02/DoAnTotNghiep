@@ -1,0 +1,109 @@
+﻿@model PagedList.IPagedList<Web_Sach.Models.TacGia>
+@using PagedList.Mvc
+@using System.Web.Mvc.Ajax
+@{
+    ViewBag.Title = "Bảo trì tác giả"; //truyền vào cho Layou chung
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section User{
+    <h2 class="tab-title">BẢO TRÌ TÁC GIẢ</h2>
+}
+@section csHeader{
+    <style>
+        .paging-container li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: inline-block;
+        }
+    </style>
+}
+<div class="card mb-4">
+    <div class="card-header   ">
+
+        @using (Html.BeginForm("Index", "Author", FormMethod.Get))
+        {
+            <div class="row justify-content-sm-end">
+
+                <div class="col-sm-2 ">
+                    <input type="text" value="@ViewBag.SearchString" name="searchString" />
+
+                </div>
+                <div class="col-sm-2 ">
+                    <button type="submit" class="submitbtn">Tìm kiếm</button>
+
+                </div>
+
+            </div>
+        }
+    </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            <a href="@Url.Action("ExportExcel_EPPLUS","Author")" class="btn btn-success mb-2">Dowload Excel</a>
+
+            <a href="~/Admin/Author/Create" class="btn btn-info mb-2 submitbtn">Thêm mới</a>
+            <table class="table table-bordered" style="text-align:center;vertical-align:middle;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên tác giả</th>
+                        <th>Tiểu sử</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+                            <td style="width:10%">
+                                <a href="~/Admin/Author/Update/@item.ID" style="text-decoration:none;color:green" class="submitbtn">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    Sửa
+                                </a>
+
+                                <span style="text-decoration:none ;color:red">
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                               {
+                                   Confirm = "Bạn có muốn xóa bản ghi này!!",
+                                   OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                   HttpMethod = "Delete"
+                               },
+                                 new
+                                 {
+                                     @class = "btn text-danger p-0"
+                                 }
+
+                                        )
+                                </span>
+                            </td>
+                            <td>@item.TenTacGia</td>
+
+                            <td>@item.TieuSu</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            @{
+                var options = new PagedListRenderOptions
+                {
+                    ContainerDivClasses = new[] { "paging-container" }
+                };
+            }
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @ViewBag.SearchString }), options)
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+</div>
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+

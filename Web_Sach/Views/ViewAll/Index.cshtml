@@ -1,0 +1,290 @@
+﻿@model List<Web_Sach.Models.Sach>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var category = (List<Web_Sach.Models.DanhMucSP>)ViewBag.Category;
+
+    //var link_Sort = "/sach-moi";
+}
+@section csHeader{
+    <style>
+        .filter-category {
+            list-style-type: none;
+            display: flex;
+            line-height: 5px;
+            margin-left: 17px;
+        }
+
+            .filter-category li i {
+                color: #f5c136;
+                font-size: 10px;
+            }
+    </style>
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <!-- Price Range Filtering -->
+            <div class="sidebar_section border mt-3">
+                <div class="sidebar_title text-bg-info text-left">
+                    <h3>Khoảng giá</h3>
+                </div>
+                <div class="sidebar_sort">
+                    <ul class="list-unstyled ms-2">
+                        <li class="p-2"><input type="checkbox" id="filter1" value="100000">Nhỏ hơn 100,000₫</li>
+                        <li class="p-2"><input type="checkbox" id="filter2" value="100000-200000">Từ 100,000₫ đến 200,000₫</li>
+                        <li class="p-2"><input type="checkbox" id="filter3" value="200000-300000">Từ 200,000₫ đến 300,000₫</li>
+                        <li class="p-2"><input type="checkbox" id="filter4" value="300000-400000">Từ 300,000₫ đến 400,000₫</li>
+                        <li class="p-2"><input type="checkbox" id="filter5" value="400000">Lớn hơn 400,000₫</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Đánh giá Filtering -->
+            <div class="sidebar_section border mt-3">
+                <div class="sidebar_title text-bg-info text-left">
+                    <h3>Đánh giá sản phẩm</h3>
+                </div>
+
+                <div class="review_sort">
+                    <ul class="filter-category w-100 p-0">
+                        <li class="me-2"><input type="checkbox" value="5" id="reviewFive" data-review="@ViewBag.cateID" /></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                    <ul class="filter-category w-100 p-0">
+                        <li class="me-2"><input type="checkbox" value="4" /></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                    </ul>
+                    <ul class="filter-category w-100 p-0">
+                        <li class="me-2"><input type="checkbox" value="3" /></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                    </ul>
+                    <ul class="filter-category w-100 p-0">
+                        <li class="me-2"><input type="checkbox" value="2" /></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                    </ul>
+                    <ul class="filter-category w-100 p-0">
+                        <li class="me-2"><input type="checkbox" value="1" /></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                        <li><i class="fa-regular fa-star"></i></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <!--chi tiết -->
+        <div class="col-md-9">
+            <!--Hàng một-->
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>SÁCH MỚI</h3>
+                </div>
+                <div class="col-md-4" style="text-align:right;">
+                    <select name="sort_by" class="bg-body-secondary" id="select_Sort" data-selectsort="@ViewBag.cateID">
+                        <option value="">
+                            Tùy chọn
+                        </option>
+                        <option value="a-z">
+                            Tên A-Z
+                        </option>
+                        <option value="z-a">
+                            Tên Z-A
+                        </option>
+                        <option value="cunhat">
+                            Cũ nhất
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <!--Hàng 2-->
+            <div id="products-container-New">
+                @if (Model.Count > 0)
+                {
+                    <div class="row ms-5" id="product-category">
+                        @foreach (var item in Model)
+                        {
+                            var imgUrl = "";
+                            int? sale = 0;
+                            var khuyenMai = item.KhuyenMai_Sach.ToList();
+                            var img = item.Images.FirstOrDefault(s => s.IsDefault);
+                            var rate = Html.Action("RateView", "Home", new { id = @item.ID });
+                            if (img != null)
+                            {
+                                imgUrl = img.Image1;
+                            }
+                            if (khuyenMai.Count > 0)
+                            {// có khuyến mại
+                             // kiểm tra xem thời gian khuyến mại
+                                foreach (var itemKM in khuyenMai)
+                                {// lặp qua danh sách khuyến mại
+                                    if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                                    {
+                                        sale = itemKM.Sale;
+                                        break;
+                                    }
+                                }
+                                var priceSale = item.Price - (item.Price * sale / 100);
+                                <div class="col-md-3 my-3 product-item p-0 position-relative ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrl" class="img-fluid  " alt="san_pham"> </a>
+                                    @if (sale != 0)
+                                    {// còn hạn sale
+                                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@sale%</span>
+                                        <p class="fs-5 product-name ">@item.Name</p>
+                                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                        {
+                                            @Html.Raw(rate);
+                                            <span class="text-danger ms-4 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                            <span>
+                                                <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <div class="mt-4">
+                                                <span class="text-danger ms-4 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                                <span>
+                                                    <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                                </span>
+                                            </div>
+
+                                        }
+
+                                    }
+                                    else
+                                    {// sale hết hạn
+                                        <p class="fs-5 product-name ">@item.Name</p>
+                                        if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                        {
+                                            @Html.Raw(rate);
+                                            <p class="text-danger text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-danger mt-4 text-center">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {// không có khuyến mại
+                                <div class="col-md-3 my-3 product-item p-0 position-relative ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrl" class="img-fluid  " alt="san_pham"> </a>
+                                    <p class="fs-5 product-name ">@item.Name</p>
+                                    @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                    {
+                                        @Html.Raw(rate);
+                                        <p class="text-danger text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger mt-4 text-center">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                                    }
+                                </div>
+                            }
+                        }
+                        <!--Phân trang -->
+                        @if (ViewBag.totalRecord > ViewBag.PageSize)
+                        { // số bản ghi  > kích thước mỗi trang
+                            var pageMax = (int)ViewBag.maxPage;
+                            var totalPage = (int)ViewBag.totalPage;
+                            var currentPage = (int)ViewBag.page;
+                            var starIndex = (int)Math.Max(1, currentPage - pageMax / 2);
+                            var endIndex = (int)Math.Min(totalPage, currentPage + pageMax / 2);
+                            var link = "/sach-moi";
+                            <nav>
+                                <ul class="pagination justify-content-end mt-2 ">
+                                    <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
+                                    @if (currentPage > ViewBag.First)
+                                    {
+                                        <li class="page-item"><a href="@link?page=@ViewBag.Prev" class="previous page-link submitbtn" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
+                                    }
+                                    @for (int i = starIndex; i <= endIndex; i++)
+                                    {
+                                        if (currentPage == i)
+                                        {
+                                            <li class="page-item"><a href="@link?page=@i" class="page-link active submitbtn">@i</a></li>
+
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item"><a href="@link?page=@i" class="page-link pos submitbtn">@i</a></li>
+
+                                        }
+
+                                    }
+                                    @if (currentPage < totalPage)
+                                    {
+                                        <li class="page-item"><a href="@link?page=@ViewBag.Next" class="page-link next submitbtn"> <span aria-hidden="true">&raquo;</span>    </a></li>
+
+                                    }
+                                </ul>
+                            </nav>
+
+                        }
+
+
+                    </div>
+                }
+                else
+                {
+                    <span>Không có bản ghi nào</span>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section jsFooter{
+    <script src="~/Scripts/Client/Controller/filterProduct.js"></script>
+    <script>
+        $('.sidebar_sort input[type="checkbox"], .review_sort input[type="checkbox"]').change(function () {
+            let selectedFilter = [];
+            let selectedFilterReView = [];
+            $('.sidebar_sort input[type="checkbox"]:checked').each(function () {
+                selectedFilter.push($(this).val());
+            })// theo dõi input khi đc chọn
+            $('.review_sort input[type="checkbox"]:checked').each(function () {
+                selectedFilterReView.push($(this).val());
+            })// theo dõi input khi đc chọn số sao(đánh giá)
+            $.ajax({
+                type: "GET",
+                url: '/ViewAll/_FillerProductViewAll',
+                data:
+                {
+                    filterOb: JSON.stringify(selectedFilter),
+                    reviewOb: JSON.stringify(selectedFilterReView)
+                }
+                ,
+
+                success: function (res) {
+                    $('#products-container-New').html(res);
+
+
+                }
+
+            })// end ajax
+        })// theo dõi all input
+    </script>
+}

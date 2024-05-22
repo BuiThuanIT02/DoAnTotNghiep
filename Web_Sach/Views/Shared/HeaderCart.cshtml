@@ -1,0 +1,31 @@
+﻿@model List<Web_Sach.Models.EF.CartItem>
+@{
+    var sessionUser = Session["USER_KEY"];
+}
+@section csHeader{
+    <link href="~/Scripts/Client/CSS/loading.css" rel="stylesheet" />
+    }
+<div class="col-md-4">
+    <a href="/gio-hang" class="position-relative submitbtn">
+        <span class="fs-4" style="color: rgb(11, 116, 229)">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </span>
+        <span class="position-absolute top-0  start-100 translate-middle badge rounded-pill bg-danger" id="gioHang">
+            @if (sessionUser == null)
+            {
+                <span>0</span>
+            }
+            else
+            {
+                @Model.Count
+            }
+            <span class="visually-hidden">unread messages</span>
+            <!--..-hidden : ẩn nội dung trước mắt-->
+        </span>
+    </a>
+
+</div>
+<div id="preloader" style="display:none;">
+    <div class="loader"></div>
+</div>
+<script src="~/Scripts/Client/script/loading.js"></script>

@@ -1,0 +1,56 @@
+﻿
+@model List<Web_Sach.Models.DonHang>
+<link href="~/Scripts/Client/CSS/loading.css" rel="stylesheet" />
+<div class="wrap">
+    <div class="container">
+        @if (Model != null)
+        {
+            <div id="order">
+                <div class="container">
+                    <table class="table table-bordered text-center">
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+
+                            <th>Thông tin</th>
+
+
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="orderRow_@item.ID">
+                                <td>@item.ID</td>
+                                <td>@item.NgayDat</td>
+                                <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") :"")</td>
+
+                                <td class="text-success">Đã nhận được hàng</td>
+                                <td>
+                                    <a href="~/Cart/OrderDetail/@item.ID">Xem chi tiết</a>
+                                </td>
+                            </tr>
+
+                        }
+
+                    </table>
+                </div>
+
+            </div>
+            <div id="preloader" style="display:none;">
+                <div class="loader"></div>
+            </div>
+            @section jsFooter{
+                <script src="~/Scripts/Client/script/loading.js"></script>
+            }
+        }
+        else
+        {
+            <div class="text-center" style="padding:50px">
+                <img src="~/Data/Images/don-hang-trong.jpg" class="d-block m-auto" />
+                <h5>Đơn hàng thành công trống</h5>
+            </div>
+        }
+    </div>
+</div>
+

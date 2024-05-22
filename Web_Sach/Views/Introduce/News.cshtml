@@ -1,0 +1,81 @@
+﻿@model List<Web_Sach.Models.Tin_Tuc>
+@{
+    ViewBag.Title = "Tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section csHeader{
+    <style>
+        .itemNew {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 2px 2px 2px 2px #ccc;
+            width: 350px;
+        }
+
+        .imgNew {
+            border-radius: 10px;
+            padding-top: 12px;
+        }
+
+        .new-para {
+            display: -webkit-box; /* Sử dụng mô hình hộp flex WebKit */
+            -webkit-box-orient: vertical; /* Xác định hướng của các hộp con: dọc */
+            overflow: hidden; /* Ẩn nội dung vượt quá phạm vi */
+            -webkit-line-clamp: 3; /* Số dòng tối đa mà bạn muốn hiển thị */
+        }
+    </style>
+}
+<div class="container d-flex">
+
+    @foreach (var item in Model)
+    {
+        <div class="row itemNew m-4">
+            <div class="col-md">
+                <a href="/tin-tuc/@item.MetaTitle-@item.ID" class="submitbtn">
+                    <img src="@item.Image" class="img-fluid imgNew" alt="san_pham">
+                </a>
+                <p class="fs-5 new-para">@item.Name</p>
+            </div>
+        </div>
+
+    }
+
+
+</div>
+@if (ViewBag.totalRecord > 1)
+{ // số bản ghi  > kích thước mỗi trang
+    var pageMax = (int)ViewBag.maxPage;
+    var totalPage = (int)ViewBag.totalPage;
+    var currentPage = (int)ViewBag.page;
+    var starIndex = (int)Math.Max(1, currentPage - pageMax / 2);
+    var endIndex = (int)Math.Min(totalPage, currentPage + pageMax / 2);
+
+    var link = "/tin-tuc";
+    <nav>
+        <ul class="pagination justify-content-end mt-2 ">
+            <!--Nếu trang hiện tại > 1 thì xuất hiện << -->
+            @if (currentPage > ViewBag.First)
+            {
+                <li class="page-item"><a href="@link?page=@ViewBag.Prev" class="previous page-link submitbtn" title="Trang trước"> <span aria-hidden="true">&laquo;</span>  </a></li>
+            }
+            @for (int i = starIndex; i <= endIndex; i++)
+            {
+                if (currentPage == i)
+                {
+                    <li class="page-item"><a href="@link?page=@i" class="page-link active submitbtn">@i</a></li>
+
+                }
+                else
+                {
+                    <li class="page-item"><a href="@link?page=@i" class="page-link pos submitbtn">@i</a></li>
+
+                }
+            }
+            @if (currentPage < totalPage)
+            {
+                <li class="page-item"><a href="@link?page=@ViewBag.Next" class="page-link next submitbtn"> <span aria-hidden="true">&raquo;</span>    </a></li>
+
+            }
+        </ul>
+    </nav>
+}

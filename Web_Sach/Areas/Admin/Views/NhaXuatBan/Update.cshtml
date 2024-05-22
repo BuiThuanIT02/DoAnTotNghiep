@@ -1,0 +1,62 @@
+﻿@model Web_Sach.Models.NhaXuatBan
+
+@{
+    ViewBag.Title = "Cập nhật";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 class="tab-title">CẬP NHẬT NHÀ XUẤT BẢN</h2>
+
+<div class="wrap">
+    <div class="container-fluid  mt-5 w-50">
+        @using (Html.BeginForm("Update", "NhaXuatBan", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+             
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.ID)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TenNXB, htmlAttributes: new { @class = "control-label col-md-2", @style = "width:100%" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TenNXB, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TenNXB, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SDT, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10  mt-1  mb-3">
+                            @Html.TextBoxFor(model => model.SDT, new { @class = "form-control", @type = "tel", @pattern = "[0-9]{3}[0-9]{3}[0-9]{4}", @placeholder = "0354569871" })
+                            @Html.ValidationMessageFor(model => model.SDT, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DiaChi, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10  mt-1 mb-3">
+                            @Html.TextBoxFor(model => model.DiaChi, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10  mt-1 mb-3">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @type = "email" })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Cập nhật" class="btn btn-success submitbtn" />
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+<div>
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "submitbtn" })
+</div>

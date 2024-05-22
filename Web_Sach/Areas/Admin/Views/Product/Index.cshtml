@@ -1,0 +1,172 @@
+﻿@model PagedList.IPagedList<Web_Sach.Models.Sach>
+@using PagedList.Mvc;
+@using System.Web.Mvc.Ajax;
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@section jsFooter{
+
+
+    <script src="~/Scripts/Admin/Controller/productController.js"></script>
+
+}
+<h2 class="tab-title">BẢO TRÌ SẢN PHẨM</h2>
+@*card mb-4 w-100*@
+<div class="card mb-4 " style="border:none">
+    <!--card-header-->
+
+    <div class="card-header">
+
+        @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+        {
+            <div class="row justify-content-sm-end">
+
+                <div class="col-sm-2 ">
+                    <input type="text" value="@ViewBag.Search" name="search" />
+
+                </div>
+                <div class="col-sm-2 ">
+                    <button type="submit" class="submitbtn">Tìm kiếm</button>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    <div class="card-body">
+        <div class="container-fluid">
+            <a href="@Url.Action("ExportExcel_EPPLUS","Product")" class="btn btn-success mb-2">Dowload Excel</a>
+
+            <a href="/Admin/Product/Create" class="btn btn-info mb-2 submitbtn">Thêm mới</a>
+            <table class="table table-sm table-bordered " style="text-align:center;vertical-align:middle;">
+                <thead>
+                    <tr style="text-align:center;vertical-align:middle;">
+                        <th>#</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Thể loại</th>
+                        <th>Nhà xuất bản</th>
+                        <th>Ảnh</th>
+                        <th>Giá bán</th>
+                        <th>Giá nhập vào</th>
+                        <th>Số lượng</th>
+                        <th>Kích thước</th>
+                        <th>Trọng lượng</th>
+                        <th>Số trang</th>
+                        <th>Meta Title</th>
+                        <th>Trạng thái</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+                            <td style="width:10%; padding:0px">
+                                        <a href="/Admin/Product/Update/@item.ID" class="submitbtn" style="text-decoration:none;color:green">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            Sửa
+                                        </a>
+                                        <span style="text-decoration:none ;color:red">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = @item.ID }, new AjaxOptions
+                                         {
+                                             Confirm = "Bạn có muốn xóa bản ghi này!!",
+                                            OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                             HttpMethod = "Delete"
+                                         },
+                                         new
+                                          {
+                                               @class = "btn text-danger p-0"
+                                          }
+
+                                                )
+
+                                        </span>
+     
+                            </td>
+                            <td>@item.Name</td>
+                            <td>@item.DanhMucSP.Name</td>
+                            <td>@item.NhaXuatBan.TenNXB</td>
+                            <td class="text-center w-25">
+                                @if (item.Images.Count > 0)
+                                {
+                                    <img src="@item.Images.FirstOrDefault(x=>x.IsDefault==true).Image1" class="img-thumbnail" style="width:50%" />
+                                }
+                            </td>
+                            <td>
+                                @(item.Price.HasValue ? item.Price.Value.ToString("N0") : "")
+                            </td>
+                            <td>
+                                @(item.GiaNhap.HasValue ? item.GiaNhap.Value.ToString("N0") : "")
+                            </td>
+                            <td>@item.Quantity</td>
+
+                            <td>@item.KichThuoc </td>
+                            <td>@item.TrongLuong </td>
+                            <td>@item.SoTrang </td>
+
+                            <td>@item.MetaTitle </td>
+
+
+                            @if (item.Status)
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-start-text text-success " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+
+                            }
+                            else
+                            {
+                                <td><a href="#" style="text-decoration:none" class="btn-active btn-block-text text-danger " data-id="@item.ID">@(item.Status ? "Kích hoạt" :"Khóa")</a></td>
+
+                            }
+                        </tr>
+                    }
+
+
+
+                </tbody>
+
+            </table>
+            @section csHeader{
+                <style>
+                    .paging-container li {
+                        border: 1px solid #ccc;
+                        padding: 10px;
+                        display: inline-block;
+                    }
+                </style>    }
+
+            @{
+                var options = new PagedListRenderOptions
+                {
+                    ContainerDivClasses = new[] { "paging-container" }
+                };
+            }
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @ViewBag.Search }), options)
+
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+
+@*<script src="~/Assets/plugins/ckeditor/ckeditor.js"></script>*@

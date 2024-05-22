@@ -1,0 +1,76 @@
+﻿
+@model PagedList.IPagedList<Web_Sach.Models.Comment>
+@using PagedList.Mvc
+@using System.Web.Mvc.Ajax
+@{
+    ViewBag.Title = "Phản hồi";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section csHeader{
+    <style>
+        .paging-container li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: inline-block;
+        }
+    </style>
+}
+<div class="card mb-4 mt-5">
+    <h2 class="tab-title">PHẢN HỒI BÌNH LUẬN</h2>
+    <div class="card-body">
+        <div class="container-fluid">
+
+            <table class="table table-bordered" style="text-align:center">
+                <thead>
+                    <tr>
+
+                        <th>Tên tài khoản</th>
+                        <th>Tên sách</th>
+                        <th>Đánh giá</th>
+                        <th>Ngày đánh giá</th>
+                        <th>Nội dung</th>
+                        <th>Phản hỏi</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.Status == 0)
+                        {
+                            <tr id="row_@item.ID">
+
+                                <td>@item.TaiKhoan.TaiKhoan1</td>
+                                <td>@item.Sach.Name</td>
+                                <td>@item.Rate sao</td>
+                                <td>@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy"):"")</td>
+
+                                <td>@item.Content</td>
+                                @if (item.Status == 0)
+                                {
+                                    <td>
+                                        <a href="/Admin/Comment/Retry?masach=@item.MaSach&&maComment=@item.ID" class="submitbtn">Phản hồi</a>
+                                    </td>
+                                }
+                                <td>
+                                    <a href="/Admin/Comment/RemoveComment?masach=@item.MaSach&&maComment=@item.ID&&parentID=@item.parentId" class="submitbtn text-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    Xóa</a>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+                </tbody>
+            </table>
+            @{
+                var options = new PagedListRenderOptions
+                {
+                    ContainerDivClasses = new[] { "paging-container" }
+                };
+            }
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), options)
+        </div>
+    </div>
+</div>

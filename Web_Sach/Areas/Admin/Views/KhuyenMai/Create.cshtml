@@ -1,0 +1,216 @@
+﻿@*@model Web_Sach.Models.DTO.KhuyenMaiModel*@
+@model Web_Sach.Areas.Admin.Data.KhuyenMaiModel
+
+@{
+    ViewBag.Title = "Thêm mới";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<h2 class="tab-title">THÊM MỚI KHUYẾN MẠI</h2>
+<div class="wrap">
+    <div class="container-fluid  mt-5 w-50">
+
+
+        @*@using (Html.BeginForm("CreatePost", "KhuyenMai", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()*@
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.TenKhuyenMai, htmlAttributes: new { @class = "control-label col-md-2", @style = "width:100%" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TenKhuyenMai, new { htmlAttributes = new { @class = "form-control" } })
+                        <p class="name-error text-danger"></p>
+                    
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.NgayBatDau, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NgayBatDau, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                        <p class="dateStart-error text-danger"></p>
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    @Html.LabelFor(model => model.NgayKeThuc, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.NgayKeThuc, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                        <p class="dateEnd-error text-danger"></p>
+                    </div>
+                </div>
+                <div class="form-group  mt-3 w-100" id="dmSale">
+                    <h6 class="mb-2">Danh mục sản phẩm</h6>
+                    <p class="text-danger cateCheck"></p>
+                    <div class="row flex-column">
+                        @foreach (var item in ViewBag.Dm)
+                        {
+                            <label style="display: inline-block;" class="mb-2">
+                                <input type="checkbox" value="@item.ID" name="dm" class="me-1" />@item.Name
+                            </label>
+
+                            <div class="contain-dmSale ms-5" id="sachSale_@item.ID" data-cate="@item.ID" style="display:none">
+                               
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Tạo" id="createSale" class="btn btn-dark " />
+                    <input type="reset" value="Xóa" class="btn btn-danger" />
+                </div>
+            </div>
+
+        @*}*@
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "submitbtn" })
+</div>
+@section jsFooter{
+    <script>
+        // Biến lưu trữ dữ liệu các input của từng phần tử
+        let inputValues = [];
+
+        // Bắt sự kiện thay đổi của checkbox
+        $(document).on("change", '#dmSale input[type="checkbox"]', function () {
+            let arrId = [];
+            $('#dmSale input[type="checkbox"]:checked').each(function () {
+                $("#sachSale_" + $(this).val()).show();
+                arrId.push($(this).val());
+            });
+            $('#dmSale input[type="checkbox"]:not(:checked)').each(function () {
+                $("#sachSale_" + $(this).val()).hide();
+                // Xóa dữ liệu của phần tử không được chọn khỏi biến inputValues
+                delete inputValues[$(this).val()];
+            });
+
+        //    console.log("Arr Id", arrId);
+
+            // Kiểm tra xem có checkbox nào được chọn không
+            if (arrId.length > 0) {
+                $.ajax({
+                    url: '/KhuyenMai/GetProducts',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        arrId: JSON.stringify(arrId)
+                    },
+                    success: function (res) {
+                        for (let i = 0; i < res.length; i++) {
+                            let checkBoxId = res[i].CheckBoxId;
+                            let selectedOptions = res[i].SelectedOptions;
+
+                            // Cập nhật dữ liệu cho các input của phần tử chỉ khi nó đã được hiển thị
+                            if ($("#sachSale_" + checkBoxId).is(":visible")) {
+                                let inputHtml = "";
+                                for (let j = 0; j < selectedOptions.length; j++) {
+                                    let inputValue = inputValues[checkBoxId] && inputValues[checkBoxId][selectedOptions[j].Id]
+                                        ? inputValues[checkBoxId][selectedOptions[j].Id]
+                                        : "";
+                                    inputHtml += `<div class="row mb-3" data-id="${selectedOptions[j].Id}">
+                                <p class="p-0">${selectedOptions[j].Name}</p>
+                                <input type="number" class=" w-75" value="${inputValue}" />
+                            </div>`;
+                                }
+                                $("#sachSale_" + checkBoxId).html(inputHtml);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // Bắt sự kiện thay đổi của input number
+        $(document).on("change", '#dmSale .contain-dmSale .row input[type="number"]', function () {
+            let checkBoxId = $(this).closest('.contain-dmSale').attr("id").split('_')[1];
+            let optionId = $(this).closest('.row').data("id");
+            let value = $(this).val();
+
+            // Lưu trữ dữ liệu của input
+            if (!inputValues[checkBoxId]) {
+                inputValues[checkBoxId] = {};
+            }
+            inputValues[checkBoxId][optionId] = value;
+
+        //   console.log("Input Values:", inputValues);
+        });
+
+        $('#createSale').off("click").on("click", function () {
+            let tenKM = $("#TenKhuyenMai").val();
+            let ngayBD = $('#NgayBatDau').val();
+            let ngayKT = $('#NgayKeThuc').val();
+            let cateCheck = $('#dmSale input[type="checkbox"]:checked').val();
+            if (tenKM == "") {
+                $(".name-error").text("Tên khuyến mại trống!");
+                return;
+            }
+            else {
+                $(".name-error").text("");
+            }
+          
+            if (ngayBD == "") {
+                $(".dateStart-error").text("Ngày bắt đầu không để trống!");
+                return;
+            }
+            else {
+                $(".dateStart-error").text("");
+            }
+     
+            if (ngayKT == "") {
+                $(".dateEnd-error").text("Ngày kết thức không để trống!");
+                return;
+            }
+            else {
+                $(".dateEnd-error").text("");
+            }
+            if (ngayBD > ngayKT) {
+                $(".dateStart-error").text("Ngày bắt đầu phải nhỏ hơn ngày kết thúc!");
+                return;
+            }
+            else {
+                $(".dateStart-error").text("");
+            }
+
+            if (cateCheck == "" || cateCheck == undefined) {
+                $("#dmSale .cateCheck").text("Chọn danh mục muốn sale!");
+                return;
+            }
+            else {
+                $("#dmSale .cateCheck").text("");
+            }
+        
+            let sale = {
+                tenKM,
+                ngayBD,
+                ngayKT
+            }
+            $.ajax({
+                url: '/KhuyenMai/CreatePost',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    sale: JSON.stringify(sale),
+                    inputValues: JSON.stringify(inputValues)
+                },
+                success: function (res) {
+                    if (res.status) {
+                        window.location.href = ('/Admin/KhuyenMai/Index');
+                    }
+                    if (!res.status && res.error == 204){
+                        $(".name-error").text("Tên khuyến mại bị trùng!");
+                    }
+                    if (!res.status && res.error == 500) {
+                        window.location.href = ('/Admin/KhuyenMai/Index');
+                    }
+                   
+                }
+            })
+        })
+    </script>
+}

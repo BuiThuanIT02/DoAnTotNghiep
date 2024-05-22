@@ -1,0 +1,716 @@
+﻿@model Web_Sach.Models.Sach
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //binh luan
+    var listcomment = (List<Web_Sach.Models.EF.CommentViewModel>)ViewBag.ListComment;
+    // binh luan
+    var listVoucher = (List<Web_Sach.Models.Voucher>)ViewBag.listVoucher;
+    var tg = (List<Web_Sach.Models.EF.ThamGiaViewModels>)ViewBag.NameOuthur;
+    var listImageBook = (List<Web_Sach.Models.Image>)ViewBag.listImageBook;
+    var count = tg.Count();
+    var sachDM = (List<Web_Sach.Models.Sach>)ViewBag.SachDM;
+    var sachCungTacGia = (List<Web_Sach.Models.Sach>)ViewBag.SachCungTacGia;
+    var countSachCungTacGia = sachCungTacGia.Count();
+    var imgUrl = "";
+    int? sale = 0;
+    var khuyenMai = Model.KhuyenMai_Sach.ToList(); // lấy danh sách khuyến mại
+    var img = Model.Images.FirstOrDefault(s => s.IsDefault);
+    if (img != null)
+    {
+        imgUrl = img.Image1;
+    }
+
+}
+@section csHeader{
+    <style>
+    #author-together .author:hover {
+        color: red;
+    }
+
+    .author-img {
+        position: relative;
+        overflow: hidden;
+    }
+
+    #author-together .author-img img {
+        /* position:absolute;*/
+        transition: all 0.5s ease;
+    }
+
+    #author-together .author:hover img {
+        transform: scale(1.1);
+    }
+
+    .container-voucher .voucher {
+        height: 560px; /* hoặc bất kỳ giá trị nào bạn muốn */
+        overflow: scroll; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+
+        .btnAddVoucher:hover {
+            background-color: #FC6736;
+        }
+
+    .contain-imgVoucher {
+        position: relative;
+    }
+
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+}
+<section id="product-info">
+    <p class="ms-4 text-lowercase">Trang chủ/@ViewBag.NameDM/@Model.Name</p>
+    <div class="container-fluid ms-5">
+        <div class="row">
+            @if (khuyenMai.Count() > 0)
+            {// tồn tại sale
+             // kiểm tra thời gian sale
+                foreach (var item in khuyenMai)
+                {// lặp qua danh sách khuyến mại
+                    if (DateTime.Now >= item.KhuyenMai.NgayBatDau && DateTime.Now <= item.KhuyenMai.NgayKeThuc)
+                    {
+                        sale = item.Sale;
+                        break;
+                    }
+                }
+                var price = Model.Price - (Model.Price * sale / 100);
+                //hình ảnh
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-3" style="width:10%">
+
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
+                                {
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
+
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                <div class="col-md-3 border p-0  position-relative">
+                    <!-- Hiển thị ảnh chính -->
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                    @if (sale != 0)
+                    {<span class="text-bg-danger position-absolute badge rounded translate-middle  " style="top:19px; right:0">-@sale%</span>
+
+                }
+                </div>
+                <div class="col-md-5 ps-5">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    @{ Html.RenderAction("RateViewProductDetail", "Home", new { id = Model.ID });}
+                    @if (sale != 0)
+                    {// sale còn hạn sd
+                        <div class="mb-2">
+                            <span class="text-danger fs-3">
+
+                                Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")₫
+
+                            </span>
+                            <span class="ms-2 fs-3" style="color:gray">
+                                <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")₫</del>
+                            </span>
+                            <span>(Tiết kiệm: @((Model.Price - price).Value.ToString("N0"))₫)</span>
+                        </div>
+
+                    }
+                    else
+                    {// sale hết hạn sử dụng
+                        <span class="text-danger fs-3">
+                            Giá bán: @(price.HasValue ? price.Value.ToString("N0") : "")₫
+                        </span>
+                    }
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger submitbtn">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
+
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                        <button class="mt-5 bg-danger text-white submitbtn" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết hàng
+
+                        <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
+
+
+                </div>
+                // voucher
+                <div class="col-md-2">
+                    <div class="container-voucher">
+                        <div class="voucher">
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="card">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
+
+                                        <div class="col-sm-9">
+
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))₫</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" style=" word-wrap: break-word;">Lưu</button>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+            else
+            {// không có sale
+
+                if (listImageBook != null)
+                {
+                    <div class="col-sm-2" style="width:10%">
+
+                        <div class="row">
+                            <!-- Hiển thị danh sách ảnh nhỏ -->
+                            <div>
+                                @foreach (var image in listImageBook)
+                                {
+                                    <img class="img-fluid" src="@Url.Content(image.Image1)" onclick="changeMainImage('@Url.Content(image.Image1)')" width="100px" />
+
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                <div class="col-md-3 p-0  position-relative">
+                    <img id="mainImage" src="@Url.Content(imgUrl)" class="img-fluid" />
+                </div>
+                <div class="col-md-5 ps-5">
+                    <p class="border-bottom fs-2">@Model.Name</p>
+                    @{ Html.RenderAction("RateViewProductDetail", "Home", new { id = Model.ID });}
+                    <span class="text-danger fs-3">
+                        Giá bán: @(Model.Price.HasValue ? Model.Price.Value.ToString("N0") : "")₫
+                    </span>
+                    @*<span class="ms-2 fs-3" style="color:gray">
+                        <del>@(Model.Price.HasValue ? Model.Price.Value.ToString("N0") :"")</del>
+                        </span>*@
+                    <p>
+                        Tác giả:
+                        @for (int i = 0; i < count; i++)
+                        {
+                            <span class="text-danger">
+                                <a href="/tac-gia/@tg[i].ID" class="text-decoration-none text-danger submitbtn">@tg[i].Name</a>
+                            </span>
+                            if (i < count - 1)
+                            {
+                                <span>,</span>
+                            }
+                        }
+
+                    </p>
+                    <p>Khuôn khổ: @Model.KichThuoc</p>
+                    <p>Trọng lượng: @Model.TrongLuong</p>
+                    <p>Số trang: @Model.SoTrang</p>
+                    @if (Model.Quantity > 0)
+                    {// còn số lượng
+                        <div id="buy-amount">
+                            <button class="minus-btn"><i class="fa-solid fa-minus"></i></button>
+                            <input type="text" name="amount" id="amount" max="@Model.Quantity" min="1" value="1" class="text-center">
+                            <button class="plus-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
+                        <button class="mt-5 bg-danger text-white" id="addCart" data-id="@Model.ID">Thêm giỏ hàng</button>
+
+                        <button class="mt-5 bg-danger text-white submitbtn" id="buyNow" data-id="@Model.ID">Mua ngay</button>
+                    }
+                    else
+                    {// hết số lượng
+                        <span class="mt-5 bg-danger text-white">Tạm thời hết hàng</span>
+                    }
+                </div>
+                //voucher
+                <div class="col-md-2">
+                    <div class="container-voucher">
+                        <div class="voucher">
+                            @foreach (var item in listVoucher)
+                            {
+                                <div class="card">
+                                    <div class="row m-1 border border-danger">
+                                        <div class="col-sm-3 contain-imgVoucher">
+                                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                                        </div>
+
+                                        <div class="col-sm-9">
+
+                                            <h6>Voucher giảm giá</h6>
+                                            <hr />
+                                            <div class="card-body p-0 ps-2">
+                                                <div class="row">
+                                                    <div class="col-sm-9 p-0">
+                                                        <span class="dateCreated">từ:@(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        <span class="dateEnd">đến:@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                                        @{
+                                                            var donGiaToiThieu = (int)item.DonGiaToiThieu;
+                                                        }
+                                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))₫</p>
+                                                    </div>
+                                                    <div class="col-sm-3 m-auto p-0">
+
+                                                        <button class="btn text-center p-0 d-block w-10 btnAddVoucher" data-id="@item.ID" style=" word-wrap: break-word;">Lưu</button>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            }
+
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+
+        </div>
+
+
+        <!--Hàng 2-->
+        <div class="row mt-5">
+            <ul class="nav nav-pills col-sm-8" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="pill" href="#mota">Mô tả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="pill" href="#binhluan">Đánh giá</a>
+                </li>
+
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content col-sm-8">
+
+                <div id="mota" class="container tab-pane active">
+                    <p>@Html.Raw(Model.MoTa)</p>
+                </div>
+                <div id="binhluan" class="container tab-pane fade">
+                    @if (listcomment != null)
+                    {// tồn tại session user
+                        <!-- Add Review -->
+                        <div class="row">
+                            <div class="col-sm">
+                                @*class add_review_col*@
+                                @Html.Action("_ReView", "ReView", new { productId = Model.ID })
+                            </div>
+                        </div>
+                        @*Add ReView*@
+                        <!-- User Review -->
+                        <div class="row mt-5">
+                            @*<div class="col-lg-4 reviews_col">*@
+                            <!-- User Review -->
+                            <div id="container_comment">
+                                @foreach (var item in listcomment)
+                                {
+                                    if (item.parentId == 0)
+                                    {
+                                        <div class="row">
+                                            <div class="user_review_container d-flex">
+                                                @*class : *@
+
+                                                <div class="user">
+                                                    <div class="user_pic">
+                                                        <img src="~/Data/Images/avatar.jpg" class="img-fluid" alt="avatar" />
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="review p-0 w-100">
+                                                    @*reply*@
+                                                    <div class="user_rating">
+                                                        <ul class="star_rating p-0">
+                                                            @Html.Raw(Web_Sach.Common.common.HtmlRate(item.Rate))
+                                                        </ul>
+                                                    </div>
+                                                    <div class="review_date">@(item.CreatedDate.HasValue ? item.CreatedDate.Value.ToString("dd/MM/yyyy") : "")</div>
+                                                    <div class="user_name">@item.FullName</div>
+
+                                                    <div class="mt-2">
+                                                        <p class="mb-2">@item.Content</p>
+                                                        <div class="bg-white"></div>
+                                                        <div class="d-flex flex-row">
+                                                            <a class="accordion-collapse collapse show" href="#commmentreply-@item.ID" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapse-1">
+                                                                <i class="fas fa-reply me-2"></i>Reply
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div id="commmentreply-@item.ID" class="bg-light p-2 collapse ">
+                                                        <div class="d-flex flex-row align-items-start">
+                                                            @*<img class="avatar-img rounded-circle" src="/assets/client/images/avatar/09.jpg" alt="avatar" width="40">*@
+                                                            <textarea class="form-control" id="txtCommentMsg_@item.ID" placeholder="Viết nhận xét tại đây" rows="3"></textarea>
+
+                                                        </div>
+                                                        <div class="mt-2 text-right">
+                                                            <a class="abcdefghkj" data-productid="@item.MaSach" data-userid="@ViewBag.UserId" data-parentid="@item.ID" data-commentmsg="txtCommentMsg_@item.ID">
+                                                                <input type="button" class="btn btn-primary mb-0" value="Gửi" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    @*reply*@
+
+
+                                                </div>
+
+
+                                            </div>
+                                            @{Html.RenderAction("_ChildComment", "ReView", new { parentId = item.ID, productId = item.MaSach });}
+                                        </div>
+
+                                    }
+                                }
+                                @*@Html.Action("_Load_Review", "ReView", new { productId = Model.ID })*@
+                            </div>
+
+
+                            <!-- User Review -->
+                        </div>
+                        @*</div>*@
+
+                        @*</div>*@
+                    }
+                    else
+                    {// chưa tồn tại session user
+                        <p class="mt-2">Mời đăng nhập</p>
+                    }
+
+
+
+                </div>
+
+                <!-- Add Review -->
+            </div>
+            @*sách cx tác giả -hàng 2*@
+
+            <div class="col-sm-3" id="author-together">
+                <h5 class="text-dark text-center">SÁCH CÙNG TÁC GIẢ</h5>
+                <hr />
+                @if (countSachCungTacGia > 0)
+                {
+                    foreach (var item in sachCungTacGia)
+                    {
+                        var imgUrlTacGia = "";
+                        int? saleTacGia = 0;
+                        var khuyenMaiTacGia = item.KhuyenMai_Sach.ToList();
+                        var imgTacGia = item.Images.FirstOrDefault(s => s.IsDefault);
+
+                        if (imgTacGia != null)
+                        {
+                            imgUrlTacGia = imgTacGia.Image1;
+                        }
+                        // kiểm tra xem có sale
+                        if (khuyenMaiTacGia.Count() > 0)
+                        {// có sale
+                         //kiểm tra sale còn hạn hay hết hạn
+
+                            foreach (var itemKM in khuyenMaiTacGia)
+                            {// lặp qua danh sách khuyến mại
+                                if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                                {
+                                    saleTacGia = itemKM.Sale;
+                                    break;
+                                }
+                            }
+                            var priceSale = item.Price - (item.Price * saleTacGia / 100);
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    @if (saleTacGia != 0)
+                                    {// sale còn hạn
+                                        <span class=" position-absolute  badge translate-middle  bg-danger" style="top: 7px; left: 45px; font-size: 8px;z-index:5">-@saleTacGia%</span>
+                                    }
+                                        <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item submitbtn">
+                                            <img src="@imgUrlTacGia" class="img-fluid" alt="">
+                                        </a>
+                                    </div>
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    @if (saleTacGia != 0)
+                                    {// sale còn hạn
+
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                        <span>
+                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                        </span>
+                                    }
+                                    else
+                                    {// sale hết hạn
+                                       
+                                        <span class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</span>
+
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {// không sale
+                            <div class="row border-bottom author mb-1">
+                                <div class="col-sm-2 col-md-2 author-img  ">
+                                    <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="nav-item submitbtn">
+                                        <img src="@imgUrlTacGia" class="img-fluid" alt="san_pham">
+                                    </a>
+
+                                </div>
+                                <div class="col-sm-10  col-md-10 ">
+                                    <p class="text-break">
+                                        @item.Name
+                                    </p>
+                                    <span class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</span>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                }
+                else
+                {
+                    <p>Không có sản phẩm</p>
+                }
+
+            </div>
+
+        </div>
+
+
+        <h4 class="text-center mt-5">SÁCH CÙNG THỂ LOẠI</h4>
+        <div class="row cateBook-together  mb-4" style="width:95%">
+            @foreach (var item in sachDM)
+            {
+                if (item.ID != Model.ID)
+                {
+                    var imgUrlTheLoai = "";
+                    int? saleTheLoai = 0;
+                    var khuyenMaiTheLoai = item.KhuyenMai_Sach.ToList();
+                    var imgTheLoai = item.Images.FirstOrDefault(s => s.IsDefault);
+                    var rate = Html.Action("RateView", "Home", new { id = @item.ID });
+                    if (imgTheLoai != null)
+                    {
+                        imgUrlTheLoai = imgTheLoai.Image1;
+                    }
+                    // kiểm tra sale tồn tại không
+                    if (khuyenMaiTheLoai.Count() > 0)
+                    {// sale tồn tại
+                     //kiểm tra sale còn hạn hay hết hạn
+                        foreach (var itemKM in khuyenMaiTheLoai)
+                        {// lặp qua danh sách khuyến mại
+                            if (DateTime.Now >= itemKM.KhuyenMai.NgayBatDau && DateTime.Now <= itemKM.KhuyenMai.NgayKeThuc)
+                            {
+                                saleTheLoai = itemKM.Sale;
+                                break;
+                            }
+                        }
+                        var priceSale = item.Price - (item.Price * saleTheLoai / 100);
+                        <div class="col-md-12 product-item my-3 position-relative text-center">
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+                            @if (saleTheLoai != 0)
+                            {// sale còn hạn
+                                <span class=" position-absolute  badge translate-middle  bg-danger" style="top:19px; right: 0px;">-@saleTheLoai%</span>
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
+                                if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                {
+                                    @Html.Raw(rate);
+                                    <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                    <span>
+                                        <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <div class="mt-4">
+                                        <span class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</span>
+                                        <span>
+                                            <del class="price-sale">@((item.Price.HasValue ? item.Price.Value.ToString("N0") : ""))₫</del>
+                                        </span>
+                                    </div>
+
+                                }
+
+                            }
+                            else
+                            {// sale hết hạn
+                                <p class="fs-5 product-name multi-line">@item.Name</p>
+                                if (!MvcHtmlString.IsNullOrEmpty(rate))
+                                {
+                                    @Html.Raw(rate);
+                                    <p class="text-danger me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+                                }
+                                else
+                                {
+                                    <p class="text-danger mt-4 me-4 ">@(priceSale.HasValue ? priceSale.Value.ToString("N0") :"")₫</p>
+
+                                }
+
+                            }
+
+                        </div>
+                    }
+                    else
+                    {// sale k tồn tại
+                        <div class="col-md-12 product-item my-3  position-relative text-center">
+                            <a href="/chi-tiet/@item.MetaTitle-@item.ID" class="submitbtn"><img src="@imgUrlTheLoai" class="img-fluid" alt="san_pham"> </a>
+                            <p class="fs-5 product-name multi-line">@item.Name</p>
+                            @if (!MvcHtmlString.IsNullOrEmpty(rate))
+                            {
+                                @Html.Raw(rate);
+                                <p class="text-danger me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+                            }
+                            else
+                            {
+                                <p class="text-danger mt-4 me-4 ">@(item.Price.HasValue ? item.Price.Value.ToString("N0") :"")₫</p>
+
+                            }
+
+                        </div>
+                    }
+
+                }
+            }
+        </div>
+    </div>
+
+    <!-- JavaScript để cập nhật ảnh chính -->
+    <script type="text/javascript">
+        function changeMainImage(imagePath) {
+            document.getElementById('mainImage').src = imagePath;
+        }
+
+    </script>
+
+
+</section>
+
+@section jsFooter{
+    <script src="~/Scripts/Client/Controller/product.js"></script>
+    <script src="~/Scripts/Client/script/single_custom.js"></script>
+    <script>
+        // sách cùng danh mục
+        $('.cateBook-together').slick({
+            // dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 6,
+            // autoplay: true,
+            slidesToScroll: 1,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1,
+                        infinite: true,
+                        dots: true
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    }
+                }
+                // You can unslick at a given breakpoint now by adding:
+                // settings: "unslick"
+                // instead of a settings object
+            ]
+        });
+    </script>
+
+}
+
+
+
+
+
+

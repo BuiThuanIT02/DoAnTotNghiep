@@ -1,0 +1,84 @@
+﻿
+@model List<Web_Sach.Models.DonHang>
+
+
+<div class="wrap">
+  
+
+    <div class="container">
+        @if (Model != null)
+        {
+
+            <div id="order">
+                <div class="container">
+                    <table class="table table-bordered text-center">
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Ngày giao dự kiến</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thông tin</th>
+
+                            <th>#</th>
+
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr id="orderRow_@item.ID">
+                                <td>@item.ID</td>
+                                <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("dd-MM-yyyy") : "")</td>
+                                <td>@(item.NgayGiao.HasValue ? item.NgayGiao.Value.ToString("dd-MM-yyyy") : "")</td>
+                                <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") :"")</td>
+                                <td style="color: #c21882">Đang vận chuyển</td>
+                                @if (item.NgayGiao != null)
+                                {
+                                    if (DateTime.Now > item.NgayGiao)
+                                    {
+                                        <td>
+                                            <a href="#" class=" text-decoration-none text-bg-warning getOrer" data-orderid="@item.ID">Đã nhận được hàng</a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <p class="text-decoration-none">Đã nhận được hàng</p>
+                                        </td>
+
+                                    }
+
+
+                                }
+
+
+
+                                <td>
+                                    <a href="~/Cart/OrderDetail/@item.ID">Xem chi tiết</a>
+
+                                </td>
+
+
+
+                            </tr>
+
+                        }
+
+                    </table>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="text-center" style="padding:50px">
+                <img src="~/Data/Images/don-hang-trong.jpg" class="d-block m-auto" />
+                <h5>Đơn hàng vận chuyển trống</h5>
+            </div>
+        }
+
+    </div>
+
+
+
+
+</div>

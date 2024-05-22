@@ -1,0 +1,27 @@
+﻿@section csHeader{
+<link href="~/Scripts/Client/CSS/loading.css" rel="stylesheet" />
+    
+    }
+<div class="col-md-10" style="text-align:left">
+    @{
+        var session = (Web_Sach.Session.UserLoginSession)Session[Web_Sach.Session.SessionHelper.USER_KEY];
+    }
+    @if (session == null)
+    {
+        <ul style="list-style:none; padding:0px">
+            <li> <a href="/dang-nhap" class="submitbtn">Đăng nhập</a></li>
+            <li> <a href="/dang-ky" class="submitbtn">Đăng ký</a></li>
+        </ul>
+    }
+    else
+    {
+        <ul style="list-style:none; padding:0px">
+            <li>Xin chào: @session.UserName</li>
+            <li>@Html.ActionLink("Đăng xuất", "Logout", "User",null,new {@class= "submitbtn" })</li>
+        </ul>
+    }
+</div>
+<div id="preloader" style="display:none;">
+    <div class="loader"></div>
+</div>
+<script src="~/Scripts/Client/script/loading.js"></script>

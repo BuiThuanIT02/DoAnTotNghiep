@@ -1,0 +1,121 @@
+﻿@model PagedList.IPagedList<Web_Sach.Models.DonHang>
+@using PagedList.Mvc
+
+@using System.Web.Mvc.Ajax
+
+@{
+    ViewBag.Title = "Đóng hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="tab-title">Đơn hàng đang chờ đóng gói</h2>
+
+<div class="wrap">
+    <!-- Nav pills -->
+    <ul class="nav ms-2 mb-2">
+        <li class="nav-item border">
+            <a class="nav-link text-warning submitbtn" href="~/Admin/Order/Index">Chờ duyệt</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link submitbtn" href="~/Admin/Order/OrderTransportAd">Vận chuyển</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link text-success submitbtn" href="~/Admin/Order/OrderSuccessAd">Đơn hàng giao thành công</a>
+        </li>
+        <li class="nav-item border">
+            <a class="nav-link text-danger submitbtn" href="~/Admin/Order/OrderFailureAd">Đơn hàng giao thất bại</a>
+        </li>
+    </ul>
+
+    <div class="card-body">
+        <div class="container-fluid">
+
+            <table class="table table-bordered" style="text-align:center">
+                <thead>
+                    <tr>
+
+                        <th>Mã đơn hàng</th>
+                        <th>Tên người nhận</th>
+                        <th>Điện thoại</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>Ngày đặt</th>
+                        @*<th>Ngày giao</th>*@
+                        <th>Đã thanh toán</th>
+                        <th>Tổng tiền</th>
+                        <th>Tình trạng</th>
+                        <th>#</th>
+
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+
+
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.ID">
+                            <td>@item.ID</td>
+                            <td>@item.TenNguoiNhan</td>
+                            <td>@item.Moblie</td>
+                            <td>@item.Email</td>
+                            <td>@item.DiaChiNguoiNhan</td>
+                            <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("yyyy-MM-dd") : "")</td>
+                            @if (item.NgayGiao != null)
+                            {
+                                <td>@(item.NgayGiao.HasValue ? item.NgayGiao.Value.ToString("yyyy-MM-dd") : "")</td>
+                            }
+
+                            @if (item.DaThanhToan == 0)
+                            {
+                                <td>Chưa thanh toán</td>
+
+                            }
+                            else
+                            {
+                                <td>Đã thanh toán</td>
+                            }
+
+                            <td>@(item.TongTien.HasValue ? item.TongTien.Value.ToString("N0") : "")</td>
+                            <td>
+                                <a href="#" class="text-danger orderPackAd" data-id="@item.ID">
+                                   Đóng gói
+                                </a>
+                            </td>
+
+
+                            <td>
+                                <a class="text-dark submitbtn" href="/Admin/Order/OrderDetail/@item.ID">Xem chi tiết</a>
+                            </td>
+
+
+                        </tr>
+                    }
+
+
+
+                </tbody>
+
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("OrderPackAd", new { page }))
+            @* get trang mới *@
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+@section jsFooter{
+    <script src="~/Scripts/Admin/Controller/orderNew.js"></script>
+}
+
+

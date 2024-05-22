@@ -1,0 +1,109 @@
+﻿@model List<Web_Sach.Models.EF.voucherSession>
+
+
+<style>
+    .container-voucher {
+        overflow: hidden; /* Đảm bảo chỉ hiển thị nội dung trong container */
+    }
+
+    .vouchers {
+        width: 100%;
+       margin-left:14%;
+        display: flex;
+        flex-wrap: wrap; /* Allow flex items to wrap to the next line if needed */
+    }
+
+
+    .cardItem {
+        width: 38%;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .dateCreated, .dateEnd {
+        font-size: 10px;
+    }
+
+    .contain-imgVoucher, .btnAddVoucher {
+        background-color: #FC6736;
+    }
+    .btnAddVoucher {
+       /* tràn chữ sẽ xg dòng*/
+        word-wrap: break-word; 
+    }
+        .btnAddVoucher:hover {
+            background-color: #FC6736;
+        }
+
+    .contain-imgVoucher {
+        position: relative;
+    }
+
+    .imgVoucher {
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+
+<div class="container-voucher">
+    @if (Model.Count() > 0)
+    {
+        <div class="vouchers">
+
+            @foreach (var item in Model)
+            {
+                <div class="cardItem">
+                    <div class="row m-1 border border-danger">
+                        <div class="col-sm-3 contain-imgVoucher">
+                            <img class="card-img-top imgVoucher" src="~/Data/Images/kim-dong.jpg" />
+                        </div>
+
+                        <div class="col-sm-9">
+
+                            <h6>Voucher giảm giá</h6>
+                            <hr />
+                            <div class="card-body p-0 ps-2">
+                                <div class="row">
+                                    <div class="col-sm-9 p-0">
+                                        <span class="dateCreated">từ:@(item.voucher.NgayTao.HasValue ? item.voucher.NgayTao.Value.ToString("dd-MM-yyyy") : "")</span>
+                                        <span class="dateEnd">đến:@(item.voucher.NgayHetHan.HasValue ? item.voucher.NgayHetHan.Value.ToString("dd-MM-yyyy") : "")</span>
+                                        @{
+                                            var donGiaToiThieu = (int)item.voucher.DonGiaToiThieu;
+                                        }
+                                        <p>Áp dụng cho đơn giá tối thiểu:@(donGiaToiThieu.ToString("N0"))đ</p>
+                                    </div>
+                                    @*<div class="col-sm-3 m-auto p-0">
+                                            <button class="btn text-center btnAddVoucher p-0 d-block w-100">Áp dụng</button>
+
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            }
+
+
+
+        </div>
+    }
+    else
+    {
+        <div class="text-center" style="padding:50px">
+            <img src="~/Data/Images/don-hang-trong.jpg" class="d-block m-auto" />
+            <h5>Voucher trống</h5>
+        </div>
+    }
+
+</div>
+

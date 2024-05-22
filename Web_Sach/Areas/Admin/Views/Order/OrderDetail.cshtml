@@ -1,0 +1,175 @@
+﻿@model  List<Web_Sach.Models.EF.OrderDetail>
+@{
+    ViewBag.Title = "OrderDetail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var order = (Web_Sach.Models.DonHang)ViewBag.order;
+    var voucherOrder = (Web_Sach.Models.EF.VoucherOrder)ViewBag.voucherOrder;
+    int phiVanChuyen = 30000;
+    double tong = 30000;
+    var count = 1;
+}
+<h2 class="tab-title">Chi tiết đơn hàng</h2>
+<div class="card mb-4">
+    
+    <div class="card-body">
+        <div class="row ">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Mã đơn hàng</label>
+                    <p class="form-control"> @order.ID</p>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Họ tên khách hàng</label>
+                    <p class="form-control"> @order.TenNguoiNhan</p>
+
+                </div>
+            </div>
+
+        </div>
+
+     
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Ngày tạo</label>
+                    <p class="form-control"> @(order.NgayDat.HasValue ? order.NgayDat.Value.ToString("dd/MM/yyyy") :"")</p>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Email</label>
+                    <p class="form-control"> @order.Email </p>
+
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    @if (order.Status == 1)
+                    {
+                        <p class="form-control">Chờ xử lý</p>
+                    }
+                    else if (order.Status == 2)
+                    {
+                        <p class="form-control">Đóng gói</p>
+                    }
+                    else if (order.Status == 3)
+                    {
+                        <p class="form-control">Vận chuyển</p>
+                    }
+                    else if (order.Status == 4)
+                    {
+                        <p class="form-control">Thành công</p>
+                    }
+                    else
+                    {
+                        <p class="form-control">Thất bại</p>
+                    }
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <p class="form-control">@order.Moblie</p>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row mt-5 ">
+            <div class="col-md-12 text-center mb-4">
+               <h2>DANH SÁCH SẢN PHẨM</h2>
+            </div>
+
+            <div class="col-md-12">
+
+                <table class="table table-bordered"  style="text-align:center;vertical-align:middle;">
+                    <thead>
+                        <tr>
+                           <th>STT</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Ảnh sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+
+
+                            var total = item.PriceBuy * item.QuantityBuy;
+                            tong += total;
+                            <tr>
+                                <td>@count</td>
+                                <td>@item.sachName</td>
+                                <td>
+                                    <img src="@item.Image" class="img-thumbnail" width="80px" />
+                                </td>
+                                <td>@item.PriceBuy.ToString("N0")₫</td>
+                                <td>@item.QuantityBuy</td>
+                                <td>@(total.ToString("N0"))₫</td>
+
+
+                            </tr>
+                            count++;
+
+                        }
+                        <tr>
+                            <th colspan="6" style="text-align:right">
+                                Phí vận chuyển: @phiVanChuyen.ToString("N0")₫
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="6" style="text-align:right">
+                                Tạm tính: @tong.ToString("N0")₫
+                            </th>
+                        </tr>
+                        @if (voucherOrder != null)
+                        {
+                            if (voucherOrder.maVoucher != 0)
+                            {
+                                <tr>
+                                    <th colspan="6" style="text-align:right; ">
+                                        Voucher : -@(voucherOrder.SoTienGiams.HasValue ? voucherOrder.SoTienGiams.Value.ToString("N0"):"")₫
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="6" style="text-align:right; " class="fs-5 text-danger">
+                                        @{
+                                            double? thanhTien = tong - voucherOrder.SoTienGiams;
+                                        }
+                                        Thanh toán : @thanhTien.Value.ToString("N0")₫
+                                    </th>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

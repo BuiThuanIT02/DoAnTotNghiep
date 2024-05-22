@@ -1,0 +1,29 @@
+﻿@model List<Web_Sach.Models.DanhMucSP>
+
+@section csHeader{
+    <link href="~/Scripts/Client/CSS/loading.css" rel="stylesheet" />
+}
+
+<ul class="nav flex-column">
+    @foreach (var item in Model)
+    {
+        if (item.ID == ViewBag.cateId)
+        {
+            <li class="nav-item border border-dark"><a href="/san-pham/@item.MetaTitle-@item.ID" class="nav-link  text-bg-info submitbtn">@item.Name</a></li>
+
+        }
+        else
+        {
+            <li class="nav-item border border-dark"><a href="/san-pham/@item.MetaTitle-@item.ID" class="nav-link  text-dark submitbtn">@item.Name</a></li>
+
+        }
+
+    }
+
+</ul>
+<div id="preloader" style="display:none;">
+    <div class="loader"></div>
+</div>
+@section jsFooter{
+    <script src="~/Scripts/Client/script/loading.js"></script>
+}
